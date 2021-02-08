@@ -1,2 +1,2 @@
-# PolygenicSLiMBook
-A collection of tutorials and templates for SLiM to be used to study polygenic adaptation.
+# Polygenic SLiM: Tutorials and Templates
+A collection of tutorials and templates for SLiM. Hopefully useful for those wishing to study polygenic adaptation.
