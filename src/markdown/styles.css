@@ -1,0 +1,22 @@
+/* Fonts etc. */
+
+body {
+  font-family: Helvetica;
+  font-size: 16px;
+}
+
+
+
+/* Functions/styles */
+
+.extrabox {
+  padding: 1em;
+  background: #e8e8e8;
+  color: #000000;
+  border: 2px solid #000d2b;
+  border-radius: 5px;
+}
+
+.center {
+  text-align: center;
+}

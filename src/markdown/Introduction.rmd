@@ -1,0 +1,43 @@
+---
+title: "Introduction"
+author: "Nick O'Brien"
+date: "2/15/2021"
+output: html_document
+css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## 1.1 Preface
+
+The past couple of decades have seen the development of ridiculously powerful computer systems that have become pervasive in every human endeavour. Scientists have long regarded computation as a helpful tool for tackling difficult problems, however leaps in computational power have opened up research opportunities that simply did not exist before. Such is the case with forward-genetics simulation. Although such simulations have existed since the late 90s (SOURCE), their use was limited due to the complexity of the software, and the relative primitivity of the hardware. SLiM changes that, taking advantage of modern computers and an easy-to-learn scripting language that makes forward-genetics simulations relatively straightforward. While thorough documentation on introducing biologists to SLiM already exists in the form of the SLiM manual (SOURCE), for those studying complex, polygenic traits, there is a fair amount of trial and error. Unless you have happened across this document, in which I will provide a plethora of templates, tutorials, and tips that I have learned through my time experimenting with SLiM, as well as provide detail on where to find additional help.
+
+### References
+
+## 1.2 Overview
+
+In this book, I'll cover:
+
+- Installation of a Linux environment for Windows 10,
+- Installing SLiM (with some fixes for errors I have come across),
+- Modelling polygenic adaptation in SLiM, 
+- Running SLiM in parallel on your computer,
+- Running SLiM on a remote computer (such as a computing cluster or HPC),
+- Using Latin Hypercube Sampling to properly sample a range of genetic parameters,
+- Running SLiM on a larger computing cluster (connecting across multiple nodes),
+- and statistics for SLiM data.
+
+Throughout, I'll put additional information in boxes, so those interested can learn more.
+
+:::: {.extrabox data-latex=""}
+::: {.center data-latex=""}
+**Box 1.1**
+:::
+Boxes look like this!
+::::
+
+
