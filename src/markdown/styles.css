@@ -20,3 +20,7 @@ body {
 .center {
   text-align: center;
 }
+
+.smallnote {
+  font-size: 14px;
+}
