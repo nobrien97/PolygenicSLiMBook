@@ -1,0 +1,61 @@
+---
+title: 'Part II: Polygenic Adaptation in SLiM'
+author: "Nick O'Brien"
+date: "2/17/2021"
+output: html_document
+css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 3.0 Prerequisites
+
+This chapter contains a bunch of templates and tutorials for using SLiM to model a complex polygenic trait, with customisability for your own experiments. It does not introduce how to use SLiM, so I suggest checking out the [SLiM Online Workshop](http://benhaller.com/workshops/workshops.html) and completing it, which will give you a good grounding for using SLiM. At the very least, I recommend completing Workshops 1-6, and 9-13. More detail and help with these workshops can be found in the [SLiM manual](http://benhaller.com/slim/SLiM_Manual.pdf).
+
+
+## 3.1 Overview
+
+In this section, I'll explain the details of how to simulate the evolution of a polygenic trait in SLiM, providing a template with some basic parameters for you to adjust as you see fit. I'll give a description of what these parameters model, and some description of what the code does for those interested. But first, I'll start with a brief description of what we're trying to simulate here.
+
+
+## 3.2 What does this model do?
+
+The model I'm about to show you is intended to s(l)imulate the evolution of a single polygenic trait controlled by purely additive effects; that is, directly heritable alleles at many loci that combine additively to give a final phenotype. Hence, this model does not consider gene-gene interactions (epistasis) and allele-allele interactions (dominance). The reason for these exclusions stems from the basis of the model, Fisher's geometrical model (1933). In this model, Fisher describes genetic interactions as background noise which can be averaged out, leading to the more deterministic and concrete genetic background of the modelled trait (i.e. additive effects). While more recent research shows that gene networks are particularly important for coordinating trait evolution, a massive amount of quantitative genetics research focuses on Fisher's models which have been found to be reasonably accurate in many systems (SOURCE) despite the prevalence of genetic interactions in nature. Also a part of the geometrical model is a stabilising selection regime, where intermediate trait values are favoured over more extreme values. A fitness optimum lies somewhere in the trait space, leading to the population's mean phenotype moving towards that value over time. The ability for a population to adapt to this optimum value is determined by a variety of parameters, which are detailed in Table 3.2.1.
+
+**Table 3.2.1**
+| Parameter                  | Symbol   | Description                                                                       |
+-----------------------------------------------------------------------------------------------------------------------------
+| Deleterious mutation rate  | \mu_del_ | The genome-wide mutation rate for deleterious, non-QTL mutations                  |
+| Deleterious mutation effect| \sigma_del_ | The fitness effect of deleterious mutations on individuals - sampled from a gamma distribution | 
+| Mutation rate              | \mu      | The genome-wide mutation rate at QTLs                                             |
+| Number of QTLs             | n        | The number of QTLs randomly distributed across the genome                         |
+| Population size            | N        | The number of individuals in the population                                       |
+| Recombination rate         | r        | The genome-wide recombination rate                                                |
+| Number of chromosomes      | n_chr_   | The number of chromosomes in the genome                                           |
+| Chromosome assortment      | c        | The assortment of chromosomes. 0 = Equal length, 1 = random length and position   |
+|  
+
+
+
+::::{.extrabox data-latex=""}
+:::{.center data-latex=""}
+**Box 3.2.1**
+:::
+One good example of a polygenic trait is human height. So far, there have been over 400 loci found with small effects on height (SOURCE). Alleles at each of these loci are responsible for small adjustments to height, which when combined, provides the summed genetic component of height. Height is a good example of a polygenic, additive trait, as it has relatively high heritability (the amount of variation explained by additive effects versus non-additive effects) (SOURCE). However, 
+::::
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
