@@ -23,13 +23,18 @@ The past couple of decades have seen the development of ridiculously powerful co
 In this book, I'll cover:
 
 - Installation of a Linux environment for Windows 10,
+- Using the terminal, basic shortcuts,
 - Installing SLiM (with some fixes for errors I have come across),
 - Modelling polygenic adaptation in SLiM, 
 - Running SLiM in parallel on your computer,
 - Running SLiM on a remote computer (such as a computing cluster or HPC),
 - Using Latin Hypercube Sampling to properly sample a range of genetic parameters,
 - Running SLiM on a larger computing cluster (connecting across multiple nodes),
-- and statistics for SLiM data.
+- Using regex to sort data,
+- and statistics for SLiM data in R.
+
+- Genome assembly pipelines,
+- Statistics for genome assembly data,
 
 Throughout, I'll put additional information in boxes, so those interested can learn more.
 
