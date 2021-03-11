@@ -1,0 +1,43 @@
+---
+title: "Part II: Terminal Shortcuts and Basics"
+author: "Nick O'Brien"
+date: "11/03/2021"
+output: html_document
+css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 3.1 Overview
+
+One major difference between Windows/Mac and Linux operating systems is that it's necessary to learn how to use a command prompt (called the terminal) to use the operating system. You've already done a bit of that when you were installing Ubuntu and Gnome, but now I'll show you some of the most useful commands for navigating directories via the terminal, installing and updating your software, manipulating text files, and what programs you'll likely use for various tasks.
+
+## 3.2 Navigating folders
+
+When you open a terminal emulator in Gnome, you'll be met with a screen that looks something like this:
+![](images/chapter2/terminalex.jpg)
+
+Notice the start of the line: this tells you whereabouts in the filesystem you are. By default, when you open a terminal you'll start at the root directory: the first folder that contains all other folders and files within it. To check your current working directory, type `pwd`. Lets go to our home directory. To do that type `cd ~/`. Then, type `ls` to display a list of what's contained within your home directory. To go to our Desktop folder, type `cd ./Desktop`. `./` tells Linux that you are asking for a directory that exists within your current directory. To go back to your home directory (Desktop's parent directory), type `cd ../`.
+
+Now lets say we want to create a directory. We can use the `mkdir` command for that. Go back to your desktop and enter: 
+`mkdir Cool_Folder`. 
+On your Gnome desktop, you should see that folder appear. If we want to create folders within folders, we can use the recursive flag with `mkdir`, as follows:
+`mkdir -r Cool_Folder/Cooler_Folder`
+
+Now say we want to make a folder, and then enter it immediately after. We can do this a number of ways. You could simply call `cd` as a second command, but you can also use `&&` to chain together commands, like so:
+`mkdir -r Cool_Folder/Cooler_folder && cd ./Cool_Folder/Cooler_folder`
+
+If you ever want to learn about the flags that are available for a certain command, you can enter `man command_name` to view the manual, or `command-name --help` to view a usually shorter list of available options.
+
+
+:::: {.extrabox data-latex=""}
+::: {.center data-latex=""}
+**Box 3.2.1**
+:::
+Say you want to make a directory and then enter it immediately rather than having to chain together commands or enter them one at a time.
+::::
+
+
+## 3.3 

@@ -23,14 +23,67 @@ The past couple of decades have seen the development of ridiculously powerful co
 In this book, I'll cover:
 
 - Installation of a Linux environment for Windows 10,
-- Using the terminal, basic shortcuts,
+    Why Linux?
+    WSL: Running a fast Linux VM in Windows
+    Installing WSL & Ubuntu 20.04 LTS
+    Linux Desktops - pros and cons
+    Installing Gnome for Ubuntu
+- Using the terminal, basic shortcuts (with hyperlinked video tutorials),
+    cd, pwd, mkdir, and creating a custom mkcdir command
+    installing and updating software (apt get) - cowsay fortune
+    shortcuts (tab, arrow keys, !, etc.)
+    Linux filesystem, file descriptors, input/output
+    sed, grep, | and < and > 
 - Installing SLiM (with some fixes for errors I have come across),
+    Build tools necessary
+    CMake and make (extra box with info on compilation)
+    Installing SLiM - with install script
+    Installing SLiM - building from source
+    Troubleshooting - black screen, .bashrc fix
+    Additional useful software - R, RStudio, FileZilla, Visual Studio Code, Ranger
+- Polygenic adaptation crash course - featuring videos, animations, shiny apps
+    What is polygenic adaptation?
+    Quantitative vs population genetics (introduction - subsections go into more detail)
+    Neutral theory of molecular evolution and how it fits into quantitative traits
+    Background selection
+    Directional selection vs stabilising selection + balancing selection
+    Hard vs soft sweeps
+    Neutral evolution: Brownian motion and Uhrbeck-Ornstein
+    Linkage
+    Adaptability vs Adaptedness: Effect sizes and mutation rates (HoC vs Gaussian)
 - Modelling polygenic adaptation in SLiM, 
+    What can SLiM offer for studying polygenic adaptation?
+    The SLiM online workshop
+    Template 1: Neutral evolution of a single polygenic trait with variable recombination, selection strength, polygenicity, mutability, population size, background selection, and effect size distributions
+    Template 2: Stabilising selection model of the above
+    Template 3: Directional selection model of the above
+    Template 4: Stabilising selection model of two traits with the above parameters, and a level of pleiotropy between them, and configurable fitness impacts for each
 - Running SLiM in parallel on your computer,
+    Appending output from multiple simultaneous runs
+    Running SLiM in parallel via bash script - Template Bash script
+    Running SLiM in parallel via R (future, doParallel, foreach) - Template R script
+    Running SLiM in parallel via Python (joblib) - Template Python script
 - Running SLiM on a remote computer (such as a computing cluster or HPC),
+    Connecting to a remote computer
+    Building SLiM on a remote computer
+    Transferring files to a remote computer
+    Writing a PBS script to run SLiM - Template Script
+    Saving output
 - Using Latin Hypercube Sampling to properly sample a range of genetic parameters,
+    What is Latin Hypercube Sampling? 3D figure of 3D samples
+    Why LHS over Factorial designs?
+    LHS in R - DoE.Wrapper: Template R script
+    Diagnostics
+    Feeding your hypercube combinations as inputs to SLiM - Template R script
 - Running SLiM on a larger computing cluster (connecting across multiple nodes),
+    Why would you need more than 24 cores?
+    Job Array system - Template script
+    Embedded Nimrod system - Template script
+    Queue times - avoiding problems
+    Managing RAM
+    Big output - compression etc.
 - Using regex to sort data,
+    sed, grep for filtering for what you want
 - and statistics for SLiM data in R.
 
 - Genome assembly pipelines,

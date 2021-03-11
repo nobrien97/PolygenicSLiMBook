@@ -19,7 +19,7 @@ SLiM was built primarily with MacOS in mind, and so no native Windows version ex
 **Box 2.1.1**
 :::
 
-Linux (or any Unix based operating system) differs from Windows in the sense that absolutely everything is treated as a file - including devices like printers or monitors. These devices have specialised files that store information about that device. Programs can read those files (or write to them) to communicate with the device itself. Note that these aren't files in the sense that they are a .txt or something, but they are exposed to the filesystem and can be treated as different files depending on what commands you give it.
+Linux (or any Unix based operating system, such as MacOS) differs from Windows in the sense that absolutely everything is treated as a file - including devices like printers or monitors. These devices have specialised files that store information about that device. Programs can read those files (or write to them) to communicate with the device itself. Note that these aren't files in the sense that they are a .txt or something, but they are exposed to the filesystem and can be treated as different files depending on what commands you give it.
 
 For example, you could enter 
 ```{bash files, eval=FALSE}
@@ -52,33 +52,45 @@ od -d /dev/urandom | head # Generate random decimal integers
 The power of having these very specific commands which can act on a lot of different types of files is that Linux users can chain together these commands to efficiently solve a larger problem.
 ::::
 
+## 2.2 Why Linux?
+
+To many people, the term 'Linux user' is analogous to 'computer wizard' or 'weirdo'. Unfortunately for you, future weirdo, Linux is an incredibly helpful tool for scientific applications. I've already mentioned that SLiM doesn't run on Windows natively, but that is far from the only scientific program that requires (or runs better on ) a Linux operating system. Although user-friendly, both Windows and MacOS are extremely bloated, meaning that just running the operating system requires a massive amount of memory and CPU resources that your other applications _cannot use_. Linux is a barebones system, with the idea being that the user can build the operating system how they want by installing only the features that they will use, saving memory and processor power for the task/s at hand. Another reason for Linux's speed and low memory footprint is its way of storing files (as mentioned in Box 2.1.1), which is very different to Windows. 
+It takes a bit of getting used to, but in the end you will save massive amounts of time using Linux versus Windows or MacOS (but especially Windows). However, there are still programs that you might need to run in Windows. Sometimes specialised software is only built for one operating system, being Windows or Linux/MacOS. There are three options here: dual-boot by installing a Windows and Linux operating system on separate hard drives (or partitions on one hard drive), use a traditional virtual machine such as VMware or VirtualBox, or use the Windows 10 Subsystem for Linux (WSL). Dual-booting is great if you rarely use one of your installed operating systems, but generally a bit of a pain if you're constantly wanting to switch between using Windows and Linux software (you can only run one OS at a time, so you need to reboot if you want to use software in the other OS). VMware and VirtualBox are very resource-intensive, which negates the speed advantage you get from running Linux over Windows. WSL, however, is much faster.
+
+## 2.3 The Windows Subsystem for Linux
+
+Windows 10 introduced a new way to emulate a Linux machine via a Windows operating system. Through illegal^\*^ computer trickery, Microsoft managed to show everyone (through a feature in their own operating system) that a Linux machine running on a Windows machine is faster than a Windows machine by itself. The advantage of this approach is accessing your data between operating systems is very easy: your Windows files are visible in Linux, and you can save files to your Windows machine directly using Linux programs. This way, you can use Linux commands such as sed and grep to filter output (extremely quickly) and directly save the output to files that Windows programs can read! Hence, we can run SLiM simulations, storing the output wherever you want, and then use Windows to do data analysis (although you could do that analysis in Linux also). Below, I'll provide some instructions for installing WSL 2, a Linux distribution (Ubuntu 20.04), and some basics for getting started with Ubuntu.
+
+^\*^: Probably not actually illegal, but I'm not a lawyer.
+
 ## 2.2 Installing WSL
 
 There are two choices for running WSL: WSL 1 or WSL 2. Both are fairly similar in speed, however WSL 2 uses a real Linux kernel and an extremely fast virtual machine (along with a virtual hard drive), whereas WSL 1 used a translation layer (instead of a native kernel) to translate between windows and a linux distribution. Ultimately , the main difference is WSL 2 is slightly slower when it comes to copying files between Windows and Linux, but faster nearly everywhere else. Although both versions run SLiM fine^\*^, I'll be opting for WSL 2.
 
 
 :::{.smallnote data-latex=""}
-^\*^One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever reason you use WSL 2, remember to turn off real-time protection during your SLiM runs and then *remember to turn it back on when the run is finished*.
+^\*^One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever reason you use WSL 2, remember to turn off real-time protection during your SLiM runs and then _remember to turn it back on when the run is finished_.
 :::
 
 
 
 To install WSL, you'll need to be on Windows 10 version 1903 (build 18362) or newer. To check your version number, run winver.exe. This will tell you the version and build number (build number being in brackets).
 
-Instructions for installing WSL 2 can be found on the Microsoft website [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). You'll want to install Ubuntu 20.04 LTS.
+Instructions for installing WSL 2 can be found on the [Microsoft website here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). You'll want to install Ubuntu 20.04 LTS, which can be found on the Microsoft Store (for free).
 
-This will install your Linux distribution to the C:/ drive by defualt. If you have limited space on C:/ you can move it to an alternative drive, using [this](https://github.com/pxlrbt/move-wsl) tool. I recommend installing git bash on Windows and running it that way. A side effect of this is the default user is replaced by root (basically admin for linux) for some reason, but this is easy enough to fix. 
-Open up /etc/wsl.conf with gedit and add the following to the end of the file:
+This will install your Linux distribution to the C:/ drive by defualt. If you have limited space on C:/ you can move it to an alternative drive, using [this tool](https://github.com/pxlrbt/move-wsl). I recommend installing [git bash on Windows](https://gitforwindows.org/) and running it that way. 
+A side effect of moving your Linux installation is the default user is replaced by root (basically admin for Linux) for some reason, but this is easy enough to fix. 
+In your Ubuntu terminal, open up /etc/wsl.conf with nano and add the following to the end of the file:
 ``` {bash rootfix0, eval = FALSE}
-
-gedit /etc/wsl.conf
+# Open wsl.conf with the nano text editor, using administrator permissions
+sudo nano /etc/wsl.conf
 
 # Add the following lines to the bottom of wsl.conf
 
 [user]
 default=YOUR_USERNAME
 ```
-If wsl.conf doesn't exist, create the file manually. After you've added that line, close Ubuntu, then in PowerShell run: 
+If wsl.conf doesn't exist, create the file manually with `sudo touch /etc/wsl.conf`. After you've added that line, close Ubuntu, then in PowerShell run: 
 
 ```{powershell wslterminate, eval = FALSE}
 wsl -terminate Ubuntu
@@ -108,12 +120,14 @@ sudo apt install ubuntu-desktop gnome
 :::{.center data-latex=""}
 **Box 2.3.1**
 :::
-You can copy and paste commands from the Terminal using Ctrl+Shift+C and Ctrl+Shift+V.
+While we'll be installing Gnome for this installation, there are a number of other desktop environments you may want to have a look at. Below are a list of some, with their pros and cons.
+
+
 ::::
 
 The first two commands will update your base installation and packages; the third will install GNOME (a Linux desktop environment) and relevant dependencies. 
 
-While those files are downloading, you'll need to grab a X11 program for Windows. X11 is how Linux draws graphics, so we need that so that when you run GNOME, Linux has somewhere to draw those graphics. I recommend [VcXsrv](https://sourceforge.net/projects/vcxsrv/), which is easily configurable.
+While those files are downloading, you'll need to grab a X11 program for Windows. X11 is how Linux draws graphics, so we need that so that when you run GNOME, Linux has a window to draw your desktop. I recommend [VcXsrv](https://sourceforge.net/projects/vcxsrv/), which is easily configurable.
 
 After downloading and installing VcXsrv and GNOME, there's a little workaround to get it working on WSL.
 In the Ubuntu terminal enter the following:
@@ -161,6 +175,8 @@ gnome-session
 In a few seconds your VcXsrv window should be populated! 
 ![](images/chapter2/gnomedesktop.PNG "My GNOME desktop")
 
+Each time you start Ubuntu and your X11 server, remember to run `gnome-session` to enable your desktop. An alternative to this is to create a startup script that automatically runs `gnome-session` whenever you start Ubuntu.
+
 Now you might notice that your desktop doesn't look exactly like my example above. GNOME is quite customisable, and a plethora of user extensions to personalise your desktop. I won't cover that here, but I would recommend checking out the [GNOME extensions website](https://extensions.gnome.org/), and searching around for some GNOME themes. One extension I do recommend installing is nautilus admin, which will allow you to right click in any folder to open a terminal there - a great convenience!
 
 ```{bash nautilusadmin, eval = FALSE}
@@ -170,6 +186,11 @@ sudo apt install nautilus-admin
 
 sudo apt install nautilus-extension-gnome-terminal
 ```
+
+
+## 2.4 Using the terminal
+
+You can copy and paste commands from the Terminal using `Ctrl+Shift+C` and `Ctrl+Shift+V`.
 
 
 ## 2.4 Building SLiM
