@@ -1,0 +1,14 @@
+delete_merged_file: true
+new_session: yes
+
+rmd_files: [
+	"index.Rmd",
+	
+	"Introduction.rmd",
+	"PartI_Installation.Rmd",
+	"PartII_Terminal.Rmd",
+	"PartIII_.PolygenicAdaptationinSLiM.Rmd"
+
+]
+
+before_chapter_script "_common.R"

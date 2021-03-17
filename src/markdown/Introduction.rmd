@@ -28,19 +28,18 @@ In this book, I'll cover:
     Installing WSL & Ubuntu 20.04 LTS
     Linux Desktops - pros and cons
     Installing Gnome for Ubuntu
+- Installing SLiM (with some fixes for errors I have come across),
+    Build tools necessary
+    CMake and make (extra box with info on compilation)
+    Installing SLiM - with install script
+#    Troubleshooting - black screen, .bashrc fix (All included in the Install script)
+    Additional useful software - R, RStudio, FileZilla, Visual Studio Code
 - Using the terminal, basic shortcuts (with hyperlinked video tutorials),
     cd, pwd, mkdir, and creating a custom mkcdir command
     installing and updating software (apt get) - cowsay fortune
     shortcuts (tab, arrow keys, !, etc.)
     Linux filesystem, file descriptors, input/output
     sed, grep, | and < and > 
-- Installing SLiM (with some fixes for errors I have come across),
-    Build tools necessary
-    CMake and make (extra box with info on compilation)
-    Installing SLiM - with install script
-    Installing SLiM - building from source
-    Troubleshooting - black screen, .bashrc fix
-    Additional useful software - R, RStudio, FileZilla, Visual Studio Code, Ranger
 - Polygenic adaptation crash course - featuring videos, animations, shiny apps
     What is polygenic adaptation?
     Quantitative vs population genetics (introduction - subsections go into more detail)
