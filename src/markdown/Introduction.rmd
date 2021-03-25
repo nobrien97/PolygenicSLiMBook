@@ -42,8 +42,15 @@ In this book, I'll cover:
     sed, grep, | and < and > 
 - Polygenic adaptation crash course - featuring videos, animations, shiny apps
     What is polygenic adaptation?
-    Quantitative vs population genetics (introduction - subsections go into more detail)
-    Neutral theory of molecular evolution and how it fits into quantitative traits
+        How is it studied? Population genetics vs quantitative genetics
+    Quantitative genetics models
+        Infinitesimal model
+        Geometrical model
+    Population Genetics theories
+        Neutral theory of molecular evolution
+        Nearly-neutral theory
+    Combining population and quantitative genetics models
+        Extreme value theory
     Background selection
     Directional selection vs stabilising selection + balancing selection
     Hard vs soft sweeps
@@ -59,6 +66,8 @@ In this book, I'll cover:
     Template 4: Stabilising selection model of two traits with the above parameters, and a level of pleiotropy between them, and configurable fitness impacts for each
 - Running SLiM in parallel on your computer,
     Appending output from multiple simultaneous runs
+    Keeping track of models in a combined output file
+    Seed generator program
     Running SLiM in parallel via bash script - Template Bash script
     Running SLiM in parallel via R (future, doParallel, foreach) - Template R script
     Running SLiM in parallel via Python (joblib) - Template Python script

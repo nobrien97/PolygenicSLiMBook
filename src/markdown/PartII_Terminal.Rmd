@@ -17,9 +17,11 @@ One major difference between Windows/Mac and Linux operating systems is that it'
 ## 3.2 Navigating folders
 
 When you open a terminal emulator in Gnome, you'll be met with a screen that looks something like this:
-![](images/chapter2/terminalex.jpg)
+![](images/chapter2/terminalex.png)
 
-Notice the start of the line: this tells you whereabouts in the filesystem you are. By default, when you open a terminal you'll start at the root directory: the first folder that contains all other folders and files within it. To check your current working directory, type `pwd` (print working directory). Lets go to our home directory. To do that type `cd ~/`. Then, type `ls` to display a list of what's contained within your home directory. To go to our Desktop folder, type `cd ./Desktop`. `./` tells Linux that you are asking for a directory that exists within your current directory. To go back to your home directory (Desktop's parent directory), type `cd ../`.
+Notice the start of the line: this tells you whereabouts in the filesystem you are. By default, when you open a terminal you'll start at the root directory: the first folder that contains all other folders and files within it. To check your current working directory, type `pwd` (print working directory). Lets go to our Desktop directory. To do that type `cd ~/Desktop`. The `~` character tells linux that the directory you are looking for is a branch off of home. Since opening a new terminal defaults you to the home directory, an alternative to do the same thing is `./Desktop`. `./` tells linux that the directory is a branch off of the current directory (the one shown with `pwd`). Now let's list what's on our Desktop using the `ls` command. To go back to your home directory (Desktop's parent directory), type `cd ../`.
+
+![](images/chapter2/terminalcd.png)
 
 Now lets say we want to create a directory. We can use the `mkdir` command for that. Go back to your desktop and enter: 
 `mkdir Cool_Folder`. 
