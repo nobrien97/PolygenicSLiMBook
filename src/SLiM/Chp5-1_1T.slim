@@ -5,8 +5,6 @@
 */
 
 
-
-
 // set up a simple neutral simulation
 initialize() {
 	if (!exists("slimgui")) {
@@ -23,19 +21,21 @@ initialize() {
 	// Values from literature are cited
 	// The realistic range of w^2 is 3-50, so 18 to 5000 for 2w^2, or 0.05556 to 0.0002 for 1/2w^2
 	setCfgParam("mu", 8.045e-6); // Mutation rate averaged across five species from Table 1 Aston et al. 2017 
-	setCfgParam("Ne", 100 ); // Population size
-	setCfgParam("del_mean", -0.8); // Mean used for the gamma distribution that deleterious mutations are pulled from
-	setCfgParam("del_shape", 0.2); // Shape parameter for gamma distribution used for deleterious mutations
-	setCfgParam("rwide", 0.5);//1.241e-4); // Whole genome recombination rate
+	setCfgParam("Ne", 1000 ); // Population size
+	setCfgParam("del_mean", -1); // Mean used for the gamma distribution that deleterious mutations are pulled from
+	setCfgParam("del_shape", 3); // Shape parameter for gamma distribution used for deleterious mutations
+	setCfgParam("mutWeights", c(3, 2, 1)); // Relative proportions of Neutral/Deleterious/QTL mutations occurring at each site.
+	setCfgParam("rwide", 1.241e-4); // Whole genome recombination rate (per locus)
 	setCfgParam("nloci", 66); // Number of QTL positions along the chromosome - where QTL mutations can appear, sampled from sample(): Fixed at 100
 	setCfgParam("genomelength", 99); // Loci across the genome - some are deleterious, others QTL, others neutral
 	setCfgParam("locimu", 0.0); // Mean used for QTL mutation effect distribution pulls
 	setCfgParam("locisigma", 1.0); // Variance used for QTL effect pulls - the additive effect size distribution
 	setCfgParam("locidist", "n"); // Distribution used for locus distribution. "n" = normal, "g" = gamma
 	setCfgParam("width", 0.05556); // Width of the fitness curve: smaller = narrower curve, greater selection pressure: need to be careful with values, they need to be relative to the mean phenotype after burn-in, and the initial distance from the optimum. This should be precalculated as 1/2w^2, as in Lande 1976. Only valid for stabilising selection models
-	setCfgParam("opt", 100); // How far away optimum phenotype should be from mean phenotype post-burnin: Kingsolver et al. 2001 suggests .01 to 10 phenotypic units
-	setCfgParam("selType", "s"); // Which type of selection to use: "s" = stabilising, "p" = positive/directional, "d" = genetic drift	
-	setCfgParam("burnTime", 10000); // Number of generations of neutral burn-in before the test period
+	setCfgParam("opt", 15); // How far away optimum phenotype should be from mean phenotype post-burnin: Kingsolver et al. 2001 suggests .01 to 10 phenotypic units
+	setCfgParam("selType", "s"); // Which type of selection to use: "s" = stabilising, "p" = positive/directional, "d" = genetic drift
+	setCfgParam("printH", F); // Print values of heterozygosity over time during burn-in: used to decide how long burn-in needs to be
+	setCfgParam("burnTime", 25000); // Number of generations of neutral burn-in before the test period
 	setCfgParam("testTime", 10000); // Number of generations of test time: where selection is applied (or additional generations of drift, if selType = "d")
 	setCfgParam("samplerate", c(500, 25000)); // Sample rate in generations for phenotypic output (first value) and allelic output (second value)
 	
@@ -44,13 +44,10 @@ initialize() {
 	setCfgParam("outname", 'out_slim1T_means.csv'); // Output filename/path for the trait means/variance
 	setCfgParam("outopt", 'out_slim1T_opt.csv'); // Output filename/path for the trait optimum values for each run
 	setCfgParam("outnamemuts", 'out_slim1T_muts.csv'); //Output filename/path for the mutation information
-	setCfgParam("outdict", 'out_slim1T_dict.csv'); // Output filename/path for dictionary of genetic constraints
 	
-	setCfgParam("modelindex", 1); // Identifier for the combination of predictors used in latin hypercube: this is the row number in the lscombos.csv file
+	setCfgParam("modelindex", 1); // Identifier for the combination of predictors used in Latin Hypercube: this is the row number in the lscombos.csv file
 	
 	initializeMutationRate(mu);
-	
-	
 	
 	initializeMutationType("m1", 0.5, "f", 0.0); // Neutral, non-trait-affecting mutations: also a place-holder for all mutation types before we set them
 	
@@ -60,7 +57,6 @@ initialize() {
 	
 	//m3 mutation type: QTL mutation
 	initializeMutationType("m3", 0.5, locidist, locimu, locisigma);
-	// m3.convertToSubstitution = F;
 	m3.color = "green";
 	
 	
@@ -69,14 +65,17 @@ initialize() {
 	
 	// uniform chromosome of length 100 kb with uniform recombination
 	initializeGenomicElement(g1, 0, genomelength-1);
-	initializeRecombinationRate(1e-8);
+	initializeRecombinationRate(rwide);
+	
+	
+	
 }
 
 
 // Function definitions
 
 function (void) setCfgParam(s$ name, ifls value) {
-	// Automate defining constants for SLiMgui and slim command line
+	// Automate defining constants for SLiMgui and slim command line - if we haven't defined it in the command line, set it here
 
 	if (!exists(name)) {
 		defineConstant(name, value);
@@ -105,6 +104,7 @@ function (void) calcFitnessStab(o<Individual> inds) {
 	// We choose the fitness function based on the cfgParam selType, which activates/deactivates script blocks
 	phenotypes = inds.getValue("phenotype"); 
 	dists = phenotypes - sim.getValue("optimum");
+	// https://www.desmos.com/calculator/yelcak6wfo
 	inds.fitnessScaling = 0.01 + exp(-(dists^2) * width); // Fitness function comes from Lande 1976: width is 1/2w^2
 }
 
@@ -135,6 +135,20 @@ function (void) calcFitnessDir(o<Individual> inds) {
 	posfile = paste(modelindex, asString(seed), nloci, pos_QTL, sep = ","); // Output information on where the QTLs are, and the recombination structure of the genome
 	
 	writeFile(outpositions, posfile, append = T);
+	
+	
+	
+	// Define constants for plotting heterozygosity (diagnostics)
+	if (printH == T) {
+		sim.setValue("h2_history", NULL);
+		defineConstant("pngPath", writeTempFile("plot_", ".png", ""));
+		defineConstant("uname", system("uname")); // Get the operating system name; "Darwin" for MacOS, "Linux" for, well, Linux. Important for plotting method.
+		if (exists("slimgui"))
+			slimgui.openDocument(pngPath);
+		}	
+	
+
+	
 	
 	// Activate burn-in time
 	
@@ -170,10 +184,10 @@ fitness(m3) {
 mutation(m1) {
 
 	if (any(mut.position == sim.getValue("pos_QTL"))) {
-		choice = m3;
+		choice = sample(sim.mutationTypes, 1, weights = mutWeights);
 	}
 	else {
-		choice = sample(sim.mutationTypes[0:1], 1);
+		choice = sample(sim.mutationTypes[0:1], 1, weights = mutWeights[0:1]);
 	}
 	mut.setMutationType(choice);
 	mut.setSelectionCoeff(mut.mutationType.drawSelectionCoefficient());	
@@ -205,6 +219,28 @@ s1 2 late() {
 		OptFile = paste(asString(seed), modelindex, optimum, sep = ",");
 		writeFile(outopt, OptFile);
 	}	
+	
+	// Plotting heterozygosity: check operating system so we use the right R functions to draw the graph
+	if (printH == T)  {
+		sim.setValue("h2_history", c(sim.getValue("h2_history"), meanH));
+		catn("Heterozygosity = " + meanH);
+		y = sim.getValue("h2_history");
+		bounds = c(asFloat(min(y)) - (0.1*asFloat(min(y))), asFloat(max(y)) + (0.1*asFloat(max(y))));
+
+		rstr = paste('{',
+					'x <- (1:' + size(y) + ') * ' + samplerate[0],
+					'y <- c(' + paste(y, sep = ", ") + ')',
+					'png(width = 4, height = 4, units = "in", res = 72, file = "' + pngPath + '")',
+					'plot(x=x, y=y, xlim = c(0, ' + burnTime + '), ylim = c(' + paste(bounds, sep = ", ") + '), type = "l",',
+						'xlab = "Generation", ylab = "Heterozygosity")',
+					'box()',
+					'dev.off()',
+					'}', sep = "\n");
+			scriptPath = writeTempFile("plot_", ".R", rstr);
+			system("/usr/bin/Rscript", args = scriptPath);	
+			deleteFile(scriptPath);
+
+		}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////	
