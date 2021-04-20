@@ -4,10 +4,12 @@ new_session: yes
 rmd_files: [
 	"index.Rmd",
 	
-	"Introduction.rmd",
-	"PartI_Installation.Rmd",
-	"PartII_Terminal.Rmd",
-	"PartIII_.PolygenicAdaptationinSLiM.Rmd"
+	"1_introduction.rmd",
+	"2_installation.Rmd",
+	"3_terminal.Rmd",
+	"4_polygenicAdaptation.Rmd",
+	"5_polygenicSlim.Rmd",
+	"6_slimInParallel.Rmd"
 
 ]
 

@@ -31,7 +31,7 @@ initialize() {
 	setCfgParam("locimu", 0.0); // Mean used for QTL mutation effect distribution pulls
 	setCfgParam("locisigma", 1.0); // Variance used for QTL effect pulls - the additive effect size distribution
 	setCfgParam("locidist", "n"); // Distribution used for locus distribution. "n" = normal, "g" = gamma
-	setCfgParam("width", 0.05556); // Width of the fitness curve: smaller = narrower curve, greater selection pressure: need to be careful with values, they need to be relative to the mean phenotype after burn-in, and the initial distance from the optimum. This should be precalculated as 1/2w^2, as in Lande 1976. Only valid for stabilising selection models
+	setCfgParam("width", 0.005); // Width of the fitness curve: smaller = wider curve, lower selection pressure: need to be careful with values, they need to be relative to the mean phenotype after burn-in, and the initial distance from the optimum. This should be precalculated as 1/2w^2, as in Lande 1976. Only valid for stabilising selection models
 	setCfgParam("opt", 15); // How far away optimum phenotype should be from mean phenotype post-burnin: Kingsolver et al. 2001 suggests .01 to 10 phenotypic units
 	setCfgParam("selType", "s"); // Which type of selection to use: "s" = stabilising, "p" = positive/directional, "d" = genetic drift
 	setCfgParam("printH", F); // Print values of heterozygosity over time during burn-in: used to decide how long burn-in needs to be
@@ -142,7 +142,6 @@ function (void) calcFitnessDir(o<Individual> inds) {
 	if (printH == T) {
 		sim.setValue("h2_history", NULL);
 		defineConstant("pngPath", writeTempFile("plot_", ".png", ""));
-		defineConstant("uname", system("uname")); // Get the operating system name; "Darwin" for MacOS, "Linux" for, well, Linux. Important for plotting method.
 		if (exists("slimgui"))
 			slimgui.openDocument(pngPath);
 		}	
@@ -225,7 +224,7 @@ s1 2 late() {
 		sim.setValue("h2_history", c(sim.getValue("h2_history"), meanH));
 		catn("Heterozygosity = " + meanH);
 		y = sim.getValue("h2_history");
-		bounds = c(asFloat(min(y)) - (0.1*asFloat(min(y))), asFloat(max(y)) + (0.1*asFloat(max(y))));
+		bounds = c(min(asFloat(y)) - (0.1*min(asFloat(y))), max(asFloat(y)) + (0.1*max(asFloat(y))));
 
 		rstr = paste('{',
 					'x <- (1:' + size(y) + ') * ' + samplerate[0],
