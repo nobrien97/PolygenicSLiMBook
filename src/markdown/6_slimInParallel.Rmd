@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 6.1 Overview
 
-Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. Whatever language you have that has a function to invoke system operating system commands (like ```system()``` in R) can probably be used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, which will help negate some of the time needed to run many replicates.
+Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. Whatever language you have that has a function to invoke system operating system commands (like ```system()``` in R) can probably be used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, which will help negate some of the time needed to run many replicates. SLiM handles parallelism very well because it is written to only every use a single core: this means you can run separate SLiM experiments on each core your computer has available at the same time.
 
 In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. I even provide a C++ implementation (TODO) which is overkill and not necessary at all, but it was fun to program (Remains to be seen)! 
 
@@ -53,20 +53,31 @@ When it comes to random numbers, it comes as little surprise that humans are bad
 
 But how do you generate a seed? 
 With another random number generator. Which must have come from some deterministic process. 
-So no matter how many generators you have generating seeds for your random output, you can always go back to a deterministic value that seeded it all. It isn't ever truly random, just pseudo-random. Of course, certain trickery has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava lamps (a la !(CloudFlare)[https://www.youtube.com/watch?v=1cUUfMeOijg])? Probably not. As long as you are blind to the original seed that created your random numbers, it might as well be random: the chance that you are going to be able to find that original seed quite often exceeds the number of atoms in the observable universe (SOURCE). ```/dev/random```, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer hardware drivers, which is close to 'true' randomness. But is 'true' randomness a thing at all? Is the universe deterministic? What is the universe's seed? If you put the universe's seed into a Minecraft world generator, would it have many diamonds? 
+So no matter how many generators you have generating seeds for your random output, you can always go back to a deterministic value that seeded it all. It isn't ever truly random, just pseudo-random. Of course, certain trickery has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava lamps (a la !(CloudFlare)[https://www.youtube.com/watch?v=1cUUfMeOijg])? Probably not. As long as you are blind to the original seed that created your random numbers, it might as well be random: the chance that you are going to be able to find that original seed quite often exceeds the number of atoms in the observable universe (SOURCE). ```/dev/random```, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer hardware drivers, which is supposedly close to 'true' randomness. !(But is 'true' randomness a thing at all)[https://en.wikipedia.org/wiki/Determinism]? Is the universe deterministic? What is the universe's seed? If you put the universe's seed into a Minecraft world generator, would that world have many diamonds? 
 Food for thought.
-The point is that you should be careful with generating random numbers and make sure you know that the ultimate source of randomness is as close to 'true' random as possible, but if it isn't, as long as it is secure and probabilistically close to impossible to crack, it is probably a good enough source of randomness.
+The point is that you should be careful with generating random numbers and make sure you know that the ultimate source of randomness is as close to 'true' random as possible, but if it isn't, as long as it is secure and probabilistically close to impossible to crack, it is probably a good enough source of randomness for whatever you are trying to do.
 ::::
 
+OK, so we can run SLiM via the command line for a single seed or variable combination. Now we could run that command multiple times, changing the seed or parameters manually every time we run it, but that's inefficient and makes it difficult to use all your available resources on your computer (notably, cores for running separate SLiM instances in parallel). This is where sublaunching scripts can come in handy. These enable us to use a pre-written script to vary all the parameters we would like automatically, and run many SLiM experiments at once as possible.
 
+As a quick aside, these template scripts I'm providing require a ```seeds.csv``` file to be in the format of a single column with a header called 'Seed'. My SeedGenerator program which I have provided (LINK), (along with an install script) will generate these for you. To use SeedGenerator, there are a variety of options, listed with the -h or --help flag:
+
+```{bash seedgen}
+# Shows the help file with instructions on each of the options
+./Tools/SeedGenerator/seedgenerator --help
+```
+
+We'll start with Bash, which is perhaps the simplest.
 
 
 ## 6.3 Running SLiM via Bash
 
 For most uses, the simplest way to run SLiM at the command line is through bash, the standard command line scripting language of Linux based systems. Note that the SLiM Online Workshop - '_Running SLiM from the command line_' tutorial goes over many of what I'll be presenting below.
+The Bash syntax is pretty similar to the standard way of running SLiM on the command line, and in fact you'll be using almost identical commands.
 
+```{bash slim_sub, eval = F}
 
-
+```
 
 
 ## 6.4 Running SLiM via R
