@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
 
             case 'h':
                 doHelp(argv[0]);
-                return 1;
+                return 0;
 
             case 'v':
                 debug = true;
