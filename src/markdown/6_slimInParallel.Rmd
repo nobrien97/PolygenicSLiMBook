@@ -109,3 +109,31 @@ While it is also possible to read in files and split columns into different vari
 ## 6.4 Running SLiM via R
 
 This is how I normally sublaunch SLiM. R has a variety of packages that make it easy to parallelise across cores, and because of R's rich feature set and the breadth of user-made libraries, the options are endless when it comes to feeding parameters to SLiM, loading output, or integrating with SLiM.
+
+``` {r slim_sub_r1, eval = F}
+
+# Parallelisation libraries 
+
+library(foreach)
+library(doParallel)
+library(future)
+
+
+seeds <- read.csv("~/Desktop/seeds.csv", header = T)
+
+
+cl <- makeCluster(future::availableCores())
+registerDoParallel(cl)
+
+#Run SLiM
+
+foreach(i=seeds$Seed) %dopar% {
+	# Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
+	# then run SLiM with system(),
+    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s ~/Desktop/example_script.slim", as.character(i), intern=T))
+  }
+stopCluster(cl)
+
+```
+
+This script first loads a series of libraries that allow R to run a for loop across multiple cores. Each iteration of the for loop is assigned to a free core when it becomes available. We then load in ```seeds.csv``` as a dataframe, and set up a local 'cluster', which basically lets R know how many cores are available on your system that it can use. The seeds are then fed into our for loop (```foreach```, which is implemented specifically to be parallel). For each seed, we run the for loop, with the ```%dopar%``` operator saying that we should do those iterations across as many cores as are available. The ```system()``` 
