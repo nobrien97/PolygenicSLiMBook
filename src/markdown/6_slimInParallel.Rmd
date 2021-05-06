@@ -136,4 +136,43 @@ stopCluster(cl)
 
 ```
 
-This script first loads a series of libraries that allow R to run a for loop across multiple cores. Each iteration of the for loop is assigned to a free core when it becomes available. We then load in ```seeds.csv``` as a dataframe, and set up a local 'cluster', which basically lets R know how many cores are available on your system that it can use. The seeds are then fed into our for loop (```foreach```, which is implemented specifically to be parallel). For each seed, we run the for loop, with the ```%dopar%``` operator saying that we should do those iterations across as many cores as are available. The ```system()``` 
+This script first loads a series of libraries that allow R to run a for loop across multiple cores. Each iteration of the for loop is assigned to a free core when it becomes available. We then load in ```seeds.csv``` as a dataframe, and set up a local 'cluster', which basically lets R know how many cores are available on your system that it can use. The seeds are then fed into our for loop (```foreach```, which is implemented specifically to be parallel). For each seed, we run the for loop, with the ```%dopar%``` operator saying that we should do those iterations across as many cores as are available. The ```system()``` command tells the operating system to run a command, given as a string. ```sprintf()``` creates a string from its inputs, with support for variables to be added to the string on the fly. This is done with the ```%``` symbol followed by the type that is being fed to ```sprintf()```. For example, ```%s```  provides a placeholder for a string variable. These variables are listed at the end of the line _in the order that they are mentioned in the ```sprintf()``` command. For example, here ```%s```, being the first variable mentioned in the string, is replaced by the first variable mentioned after the string ends with the closing \". In this case, we feed SLiM a seed with the ```-s``` command, replacing ```%s``` with ```as.character(i)```, which is the seed given by the for loop. 
+As well as ```%s```, there is also ```i``` and ```f``` for integer and floating point (or double, since R only supports doubles) numbers. 
+So why do we feed SLiM a string as a seed instead of an integer? It's to ensure it gets read properly. R only supports signed 32-bit integers, which are a fair bit smaller than SLiM's 64-bit integers. Since the idea of randomly choosing seeds is to uniformly sample across the entire range of possible values to avoid any kind of correlations, we sample across the range of 64 bit values. However, R can't handle numbers so big as integers, so it automatically coerces them to doubles. Doubles are stored in computers very differently to integers, and having R treat this number as an integer (or as a float) and then feed it to SLiM that way results in unexpected behaviour. I've found it's safest to just treat the seed as a string so no coercion happens - SLiM automatically will treat that string as an integer when it is loaded anyway. 
+
+Now, the R script is a little more complex at base-level than a Bash script, but I find it much easier to expand upon. Say for example we have two parameters as before. We could use nested ```foreach``` loops just like we did in Bash, but it's easier to exploit R's dataframe support to have a dataframe of possible parameter combinations, and then use each iteration to choose the right combination. This way, we simply need one level of nesting regardless of how many parameters we have: one ```foreach``` loop for seeds, and a nested one for parameter combinations.
+``` {r slim_sub_r1, eval = F}
+
+# Create a list of parameters
+p <- list()
+p$param1 <- c(0.1, 0.2, 0.3)
+p$param2 <- c('"Low"', '"Medium"', '"High"') #'" is necessary for SLiM to read them as strings
+
+# Save the list as a data frame with all possible combinations
+df.p <- expand.grid(p)
+
+# Now we can use those data frame rows as inputs for our script
+
+# Parallelisation libraries 
+
+library(foreach)
+library(doParallel)
+library(future)
+
+
+seeds <- read.csv("~/Desktop/seeds.csv", header = T)
+
+
+cl <- makeCluster(future::availableCores())
+registerDoParallel(cl)
+
+#Run SLiM
+foreach(i=1:nrow(df.p)) %:%
+  foreach(j=seeds$Seed) %dopar% {
+    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim", as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
+  }
+stopCluster(cl)
+
+```
+
+Here we do the exact thing as before: creating a local cluster and running a ```foreach``` loop. However, in this case we nest a second ```foreach``` loop so we can include both seeds and the parameter combinations. Each ```i``` in this loop is a different row in the ```df.p``` dataframe of parameter combinations. Each ```j``` is a different seed. Notice we only ues ```%dopar%``` once, and use that on the innermost ```foreach``` loop. This means for each parameter combination (```i```), we will parallelise across seeds (```j```). This can be extended to as many parameter values as you want, as we simply fill each parameter using the ```sprintf()``` variable-filling functionality as before, this time referencing ```df.p``` and choosing the appropriate column (parameter value). 
