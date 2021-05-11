@@ -44,7 +44,7 @@ public:
     // Basic function to save the file once it has been constructed
   void file_save(const vector<string> &file, const std::string &filename)
   {
-    std::ofstream outfile(filename + ".pbs");
+    std::ofstream outfile(filename);
 
     for (int i = 0; i < file.size(); ++i)
     {
@@ -155,19 +155,22 @@ public:
         params.push_back(substr);
       }
 
-      for (string param : params) {
-        // TODO: Figure out how parameters are stored (list of combinations? With col names = slim param names)
-        // Paste them into slim_out line
-      }
-/*
+      RScriptLines.push_back("foreach(i=1:nrow(combos)) %:%\n"
+                             " foreach(j=seeds$Seed) %dopar% {\n"
+                             "    slim_out <- system(sprintf(/home/$USER/SLiM/slim -s %s "
+     );      
 
-    foreach(i=seeds$Seed) %dopar% {
-	# Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
-	# then run SLiM with system(),
-    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d locisigma=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/GeneticConstraints/NewShapeIncreasedSamples/slim/polygen_maint.slim", as.character(i), lsigma, ARR_INDEX, intern=T))
-  }
-stopCluster(cl)
-*/
+    /* Add SLiM parameter list into a single command line string: 
+    treating all variables as strings for feeding into sprintf, should be fine */
+      string slimParamList;
+
+      for (string param : params) {
+        slimParamList += "-d " + param + "=%s ";
+      }
+      // Attach the parameter list to the end
+      *(RScriptLines.end()-1) += slimParamList + "\n";
+      RScriptLines.push_back("  }"
+                             "stopCluster(cl)");
 
     }
   }

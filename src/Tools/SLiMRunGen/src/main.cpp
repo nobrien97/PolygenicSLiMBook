@@ -148,11 +148,16 @@ int main(int argc, char* argv[]) {
     }
 
     else if ( fileinit._r_only == true ) {
-
+        RGenerator RScript(fileinit);
+        RScript.FileGenerate();
+        return 0;
     }
 
     else {
-
+        PBSGenerator PBS(fileinit);
+        RGenerator RScript(fileinit);
+        PBS.FileGenerate();
+        RScript.FileGenerate();
     }
 
 
