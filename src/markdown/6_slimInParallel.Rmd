@@ -152,6 +152,8 @@ p$param2 <- c('"Low"', '"Medium"', '"High"') #'" is necessary for SLiM to read t
 # Save the list as a data frame with all possible combinations
 df.p <- expand.grid(p)
 
+# You can also save df.p as a csv file and import it later, as with seeds: write.csv(df.p, row.names = F)
+
 # Now we can use those data frame rows as inputs for our script
 
 # Parallelisation libraries 
@@ -180,3 +182,47 @@ Here we do the exact thing as before: creating a local cluster and running a ```
 
 ## 6.5 Running SLiM in Python
 
+Running SLiM in Python is similarly straightforward, and due to its plethora of libraries, quite powerful also.
+Here's an example
+
+```{python slim_sub_py1, eval = F}
+from os import system
+from multiprocessing import Pool
+from pandas import read_csv
+
+# Open the seeds file
+
+seeds = read_csv(r'../Inputs/seeds.csv')
+
+# Open a new 'pool' - like makeCluster() in R
+
+cluster = Pool()
+
+# Do an operation on the pool - this is like foreach() in R
+
+def slim_call(seed):
+    system('slim -s {} ~/Desktop/example_script.slim'.format(seed)) 
+
+cluster.map(slim_call, seeds['Seed'].tolist())
+
+cluster.close()
+cluster.join()
+```
+
+In this script, we iterate over seeds only, using the built-in ```os``` and ```multiprocessing``` libraries, and the popular ```pandas``` library.
+To install pandas, run ```python -m pip install pandas``` in a Terminal and restart Python if you have it open.
+
+We first use the ```pandas``` function ```read_csv()``` to load our seeds into a dataframe. From there we create a new pool - this is analogous
+to creating a new cluster with ```makeCluster()``` in R. The default setting as shown creates a pool with all available cores, however using 
+```Pool(x)``` where x is the number of cores you would like to use. 
+We define a function to call slim via the ```os.system()``` command, and use our Pool's own function ```map``` to map a list of imputs to our SLiM
+function. This will run the function for all values in that vector, and on as many cores available to the Pool.
+Using ```cluster.close()``` followed by ```cluster.join()``` is good practice, just like closing the cluster in R with ```stopCluster()```
+
+
+Now lets expand this to our list of combinations like in R:
+
+```{python, slim_sub_py2, eval = F}
+from os import system
+
+```
