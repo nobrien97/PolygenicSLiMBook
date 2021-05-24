@@ -34,32 +34,46 @@ using std::string;
 
 void doHelp(char* appname) {
     std::fprintf(stdout,
-    "Uniformly Distributed Seed Generator\n"
+    "SLiM HPC Script Generator\n"
     "\n"
-    "This program generates a .csv of uniformly distributed 32-bit integers for use as RNG seeds.\n"
+    "This program generates .PBS and .R files to run SLiM in parallel on UQ's Tinaroo HPC.\n"
     "Usage: %s [OPTION]...\n"
     "Example: %s -h\n"
     "\n"
     "-h             Print this help manual.\n"
     "\n"
-    "-n N           Generate N random samples. Defaults to 10.\n"
+    "-N NAME        Provide a job name for your HPC job.\n"
     "\n"
     "-v             Turn on verbose mode.\n"    
     "\n"
-    "-t NAME        Choose a header name. Defaults to 'Seed'. Enter nothing to have no header.\n"
-    "               Example: -t=Number OR -tNumber\n"
+    "-J '1-N'       Sets the job to a job array using 1-N nodes\n"
+    "               Example: -J='1-3' OR -J'1-3'\n"
     "\n"
-    "-d FILEPATH    Specify a filepath and name for the generated seeds to be saved. Defaults to ./seeds.csv.\n"
-    "               Example: -d ~/Desktop/seeds.csv\n"
+    "-d FILEPATH    Specify a filepath and name for the generated scripts. Defaults to ./slim_job.\n"
+    "               Example: -d ~/Desktop/slim_job.csv\n"
+    "\n"
+    "-w HH:MM:SS    Specify a walltime for your job in hours, minutes seconds.\n"
+    "               -w '10:00:00'\n"
+    "\n"
+    "-c N           Specify the number of cores to use per node.\n"
+    "\n"
+    "-m N           Specify the amount of memory to use per node.\n"
+    "               Example: -m '50G\n"
+    "\n"
+    "-p LIST        Provide a list of SLiM parameters to vary, delimited by commas.\n"
+    "               Example: -p \"nloci,Ne,param1,param2\"\n"
+    "\n"
+    "-n             Specify if you would like to generate a Nimrod script.\n"
+    "\n"
+    "-R             Specify if you would like to only generate a .R file.\n"
+    "\n"
+    "-P             Specify if you would like to only generate a .PBS file.\n"
     "\n",
     appname,
     appname
     );
 
 }
-
-
-
 
 int main(int argc, char* argv[]) {
 

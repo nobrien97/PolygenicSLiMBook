@@ -25,7 +25,7 @@ public:
   bool _pbs_only = false;
 
  // PBS Variables
-  string _filename = "slim_script";
+  string _filename = "slim_job";
   string _bashreq = "#!/bin/bash -l\n#PBS -q workq\n#PBS -A qris-uq\n";
   string _jobname = "#PBS -N slim_job";
   string _jobarray;
@@ -168,11 +168,13 @@ public:
         slimParamList += "-d " + param + "=%s ";
       }
       // Attach the parameter list to the end
-      *(RScriptLines.end()-1) += slimParamList + "\n";
+      *(RScriptLines.end()-1) += slimParamList + '\n';
       RScriptLines.push_back("  }"
                              "stopCluster(cl)");
-
+      file_save(RScriptLines, _filename + ".R");
     }
+  
+  
   }
 
 
