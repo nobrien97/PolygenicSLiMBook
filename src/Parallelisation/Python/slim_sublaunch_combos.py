@@ -24,13 +24,13 @@ cluster = Pool()
 
 # Do an operation on the pool - this is like foreach() in R
 
-def slim_call(seed, par1, par2):
-    system('slim -s {se} -d param1={p1} -d param2={p2} ~/Desktop/example_script.slim'.format(se=seed, p1=par1, p2=par2)) 
+def slim_call(parameters):
+    for seed in seeds:
+        system('slim -s {se} -d param1={p1} -d param2={p2} ~/Desktop/example_script.slim'.format(se=seed, p1=parameters['param1'], p2=parameters['param2'])) 
 
 seeds['Seed'].to_list()
 
 if __name__ == "__main__":
-    cluster.starmap(slim_call, )
+    cluster.starmap(slim_call, combos)
     cluster.close()
     cluster.join()
-
