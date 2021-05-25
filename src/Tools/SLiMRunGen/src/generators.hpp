@@ -6,42 +6,42 @@
 #include "getopt.h"
 
 using std::string;
+#pragma once
 
 // Base class to generate files
 class FileGenerator
 {
 public:
     // Constructor
-    FileGenerator();
+    FileGenerator() = default;
 
     // Virtual for R and PBS classes
-    virtual void FileGenerate() = 0;
+    virtual void FileGenerate();
 
     // General Variables
-    bool verbose;
+    bool _verbose = false;
+    bool _nimrod = false;
+    bool _r_only = false;
+    bool _pbs_only = false;
 
     // PBS Variables
-    bool nimrod;
-    bool r_only;
-    bool pbs_only;
-    string filename;
-    string bashreq;
-    string jobname;
-    string jobarray;
-    string walltime;
-    int cores;
-    int mem;
+    string _filename = "slim_job";
+    string _bashreq = "#!/bin/bash -l\n#PBS -q workq\n#PBS -A qris-uq\n";
+    string _jobname = "#PBS -N slim_job";
+    string _jobarray;
+    string _walltime = "3:00:00";
+    int _cores = 24;
+    int _mem = 120;
 
     // R Variables
-    bool LHC;
-    string LHC_dir;
-    string seeds_dir;
-    string parameters;
+    bool _LHC = false;
+    string _LHC_dir = "lscombos.csv";
+    string _seeds_dir = "seeds.csv";
+    string _parameters;
 
 protected:
     // Basic function to save the file once it has been constructed
     void file_save(const std::vector<std::string> &file, const std::string filename);
-
 };
 
 class PBSGenerator : public FileGenerator
@@ -50,7 +50,7 @@ public:
     PBSGenerator();
     PBSGenerator(const FileGenerator &FG);
 
-    void FileGenerate();
+    void FileGenerate() override;
 
 protected:
     void PBS_SetVars(const FileGenerator &FG);
@@ -62,8 +62,7 @@ public:
     RGenerator();
     RGenerator(const FileGenerator &FG);
 
-    void FileGenerate();
-
+    void FileGenerate() override;
 
 protected:
     void R_SetVars(const FileGenerator &FG);
