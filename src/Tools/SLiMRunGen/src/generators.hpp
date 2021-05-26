@@ -44,6 +44,8 @@ public:
     bool _LHC = false;
     string _LHC_dir = "lscombos.csv";
     string _seeds_dir = "seeds.csv";
+    string _combos_dir = "combos.csv";
+    string _slim_path = "~/Desktop/slimrun.slim";
     string _parameters;
 
 protected:

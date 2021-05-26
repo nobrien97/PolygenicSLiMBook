@@ -127,7 +127,8 @@ void PBSGenerator::FileGenerate()
                                        "cl <- makeCluster(future::availableCores())\n",
                                        "registerDoParallel(cl)"};
 
-        RScriptLines.push_back("seeds <- read.csv(" + _seeds_dir + "), header = T)");
+        RScriptLines.push_back("seeds <- read.csv(\"" + _seeds_dir + "\", header = T)");
+        RScriptLines.push_back("combos <- read.csv(\"" + _combos_dir + "\", header = T)");
         std::stringstream ss(_parameters);
         vector<string> params;
 
@@ -151,11 +152,16 @@ void PBSGenerator::FileGenerate()
         {
           slimParamList += "-d " + param + "=%s ";
         }
-        string quote = "\"";
-        slimParamList = slimParamList.substr(0, slimParamList.size()-1) + "\"";
+        slimParamList = slimParamList + _slim_path + "\"";
+        string rParamList;
 
-        // Attach the parameter list to the end
-        *(RScriptLines.end() - 1) += slimParamList + ", intern=T))";
+        for (int i = 0; i < params.size(); ++i)
+        {
+          rParamList += "combos[i,]$" + params[i] + ", ";
+        }
+
+        // Attach the parameter list to the end, as well as the slim directory
+        *(RScriptLines.end() - 1) += slimParamList + ", " + "as.character(j), " + rParamList + "intern=T))";
         RScriptLines.push_back("  }\n"
                                "stopCluster(cl)");
         file_save(RScriptLines, _filename + ".R");
@@ -170,6 +176,8 @@ void PBSGenerator::FileGenerate()
       this->_parameters = FG._parameters;
       this->_verbose = FG._verbose;
       this->_nimrod = FG._nimrod;
+      this->_slim_path = FG._slim_path;
       this->_r_only = FG._r_only;
       this->_pbs_only = FG._pbs_only;
+      this->_combos_dir = FG._combos_dir;
     }
