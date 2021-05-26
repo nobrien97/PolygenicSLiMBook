@@ -28,13 +28,14 @@ using std::string;
         { "help",           no_argument,        0,  'h' },
         { "verbose",        no_argument,        0,  'v' },
         { "top",            optional_argument,  0,  't' },
+        { "slim-pars",      required_argument,  0,  's' },
         {0,0,0,0}
     };
 
 
 void doHelp(char* appname) {
     std::fprintf(stdout,
-    "SLiM HPC Script Generator\n"
+    "SLiM Runner: A tool for generating HPC files for a SLiM job.\n"
     "\n"
     "This program generates .PBS and .R files to run SLiM in parallel on UQ's Tinaroo HPC.\n"
     "Usage: %s [OPTION]...\n"
@@ -60,8 +61,8 @@ void doHelp(char* appname) {
     "-m N           Specify the amount of memory to use per node.\n"
     "               Example: -m '50G\n"
     "\n"
-    "-p LIST        Provide a list of SLiM parameters to vary, delimited by commas.\n"
-    "               Example: -p \"nloci,Ne,param1,param2\"\n"
+    "-s LIST        Provide a list of SLiM parameters to vary, delimited by commas.\n"
+    "               Example: -s \"nloci,Ne,param1,param2\"\n"
     "\n"
     "-n             Specify if you would like to generate a Nimrod script.\n"
     "\n"
@@ -88,9 +89,9 @@ int main(int argc, char* argv[]) {
         { "nimrod",         no_argument,        0,  'n' },
         { "cores",          required_argument,  0,  'c' },
         { "memory",         required_argument,  0,  'm' },
-        { "parameters",     required_argument,  0,  'p' },
+        { "parameters",     required_argument,  0,  's' },
         { "R-Only",         no_argument,        0,  'R' },
-        { "PBS-only",       no_argument,        0,  'P' },
+        { "PBS-Only",       no_argument,        0,  'P' },
         {0,0,0,0}
     };
 
@@ -102,11 +103,11 @@ int main(int argc, char* argv[]) {
     while (options != -1) {
 
 
-        options = getopt_long(argc, argv, "N:d:hvJ:w:nc:m:p:RP", voptions, &optionindex);
+        options = getopt_long(argc, argv, "N:d:hvJ:w:nc:m:s:RP", voptions, &optionindex);
 
         switch (options) {
             case 'N':
-                fileinit._jobname = optarg; // job name in PBS script, -N
+                fileinit._jobname = fileinit.NameWrap(optarg); // job name in PBS script, -N
                 continue;
 
             case 'd':
@@ -138,17 +139,20 @@ int main(int argc, char* argv[]) {
                 continue;
 
             case 'm':
-                fileinit._mem = std::stoi(optarg); // how much memory to use
+                fileinit._mem = fileinit.MemG(optarg); // how much memory to use
                 continue;
 
-            case 'p':
+            case 's':
                 fileinit._parameters = optarg; // list of parameters, delimited by commas and encapsulated in ""
+                continue;
 
             case 'R':
                 fileinit._r_only = true; // 
-
+                continue;
+                
             case 'P':
                 fileinit._pbs_only = true;
+                continue;
 
             case -1:
                 break;

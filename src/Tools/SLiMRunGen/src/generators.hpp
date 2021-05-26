@@ -18,6 +18,13 @@ public:
     // Virtual for R and PBS classes
     virtual void FileGenerate();
 
+    // Fix name by attaching PBS string
+    string NameWrap(const char *input);
+
+    // Append G to memory value to appease the PBS system
+    string MemG(const char *input);
+
+
     // General Variables
     bool _verbose = false;
     bool _nimrod = false;
@@ -26,12 +33,12 @@ public:
 
     // PBS Variables
     string _filename = "slim_job";
-    string _bashreq = "#!/bin/bash -l\n#PBS -q workq\n#PBS -A qris-uq\n";
-    string _jobname = "#PBS -N slim_job";
+    string _bashreq = "#!/bin/bash -l\n#PBS -q workq\n#PBS -A qris-uq";
+    string _jobname = "slim_job";
     string _jobarray;
     string _walltime = "3:00:00";
     int _cores = 24;
-    int _mem = 120;
+    string _mem = "120G";
 
     // R Variables
     bool _LHC = false;
