@@ -18,6 +18,6 @@ cluster = Pool()
 if __name__ == "__main__":
     cluster.map(slim_call, seeds['Seed'].tolist())
 
-    cluster.close()
-    cluster.join()
+cluster.close()
+cluster.join()
 
