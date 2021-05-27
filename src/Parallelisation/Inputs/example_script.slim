@@ -1,0 +1,38 @@
+// set up a simple neutral simulation
+initialize() {
+	if (!exists("slimgui")) {
+		setCfgParam("seed", getSeed());
+	}
+	else {
+		setSeed(asInteger(round(runif(1, 1, 2^62 - 1))));
+		setCfgParam("seed", getSeed());
+		catn("Actual seed: " + asInteger(seed));
+	}
+	setCfgParam("Ne", 10);
+	setCfgParam("param1", 0.1);
+	setCfgParam("param2", "Low");
+	initializeMutationRate(1e-7);
+	
+	// m1 mutation type: neutral
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	
+	// g1 genomic element type: uses m1 for all mutations
+	initializeGenomicElementType("g1", m1, 1.0);
+	
+	// uniform chromosome of length 100 kb with uniform recombination
+	initializeGenomicElement(g1, 0, 99999);
+	initializeRecombinationRate(1e-8);
+}
+
+function (void) setCfgParam(s$ key, ifls value) {
+	if (!exists(key))
+		defineConstant(key, value);
+}
+
+// create a population of 500 individuals
+1 {
+	sim.addSubpop("p1", Ne);
+}
+
+// output samples of 10 genomes periodically, all fixed mutations at end
+1000 late() { catn("Simulation done!\nSeed = " + asString(getSeed()) + "\nParam1 = " + param1 + "\nParam2 = " + param2); }
