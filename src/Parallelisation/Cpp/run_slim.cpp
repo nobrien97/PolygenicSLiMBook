@@ -1,79 +1,58 @@
+#include "includes/csv.h" // https://github.com/awdeorio/csvstream
 #include "stdlib.h"
 #include <iostream>
 #include <utility>
 #include <vector>
-#include <fstream>
 #include <string>
-#include <sstream>
-#include <stdexcept>
-#include <thread>
+#include "omp.h"
+#include <map>
 
-// read_csv outputs to a vector of pairs: each pair has a name (parameter name) and a vector of entries
-typedef std::vector<std::pair<std::string, std::vector<std::string>>> dframe;
+using std::vector; using std::string;
 
-// read_csv function from: https://www.gormanalysis.com/blog/reading-and-writing-csv-files-with-cpp/
+#define THREAD_NUM 4 //omp_get_thread_num(); // Max CPUs on machine
 
-dframe read_csv(std::string filename, bool header) {
-    dframe file;
-    std::ifstream fileStream(filename);
 
-    if (!fileStream.is_open()) throw std::runtime_error("Failed to open file.");
-
-    std::string line, colname;
-    std::string val;
-
-    // Read column names
-    if (fileStream.good()) {
-        std::getline(fileStream, line);
-        std::stringstream lineStream(line);
-        int nameIdx = 0;
-
-        // Get the header: if there is none, create one using parameter names X0, X1, etc.
-        while(std::getline(lineStream, colname, ',')) {
-            if (header == true)
-                file.push_back({colname, std::vector<std::string> {}});
-            else {
-                file.push_back({"X"+std::to_string(nameIdx), std::vector<std::string> {}});
-                nameIdx++;
-            }
-        }      
-    }
-
-    // For each column, get the values within
-    while(std::getline(fileStream, line)) {
-        std::stringstream lineStream(line);
-
-        int colIdx = 0;
-
-        while(fileStream >> val) {
-            file.at(colIdx).second.push_back(val);
-
-            if (lineStream.peek() == ',') 
-                lineStream.ignore();
-            
-            colIdx++;
-        }
-    }
-    fileStream.close();
-    return file;
-}
-
-void runSLiM(dframe combo, dframe seeds) {
-    std::string seed = seeds[0].second.at(0);
-    std::string param1 = combo[0].second.at(0);
-    std::string param2 = combo[1].second.at(0);
-    std::string callLine = "/home/$USER/SLiM/slim -s " + seed + " -d param1=" + param1 + " -d param2=" + param2 + " ~/Desktop/example_script.slim";
+// Escaped " and ' are so the command line doesn't freak out with quotations in the middle of the line for string input
+void runSLiM(std::pair<float, string> combo, string seed) {
+    float param1 = combo.first;
+    string param2 = combo.second;
+    string callLine = "slim -s " + seed + " -d param1=" + std::to_string(param1) + " -d \"param2=\'" + param2 + "\'\" ~/Desktop/example_script.slim";
     std::system(callLine.c_str());
-
 }
 
 
 
 int main() {
     // Read the seeds and combos
-    dframe seeds = read_csv("./seeds.csv", true);
-    dframe combos = read_csv("./combos.csv", true);
-    std::thread thread_obj(runSLiM, combos, seeds);
-    thread_obj.join();
+    io::CSVReader<1> seeds("./seeds.csv");
+    seeds.read_header(io::ignore_extra_column, "Seed");
+    vector<string> vSeeds;
+    int64_t curSeed;
+
+    while (seeds.read_row(curSeed)) {
+        vSeeds.emplace_back(std::to_string(curSeed));
+    }
+    io::CSVReader<2> combos("./combos.csv");
+    combos.read_header(io::ignore_extra_column, "param1", "param2");
+    vector<std::pair<float, string>> vCombos;
+    float curP1;
+    string curP2;
+    while (combos.read_row(curP1, curP2)) {
+        vCombos.emplace_back(curP1, curP2);
+        }
+    
+    
+    // Start of parallel processing code
+    omp_set_num_threads(THREAD_NUM);
+    #pragma omp parallel for collapse(2)
+    { 
+        for (int i=0; i < vSeeds.size(); ++i) {
+            for (int j=0; j < vCombos.size(); ++j) {
+                runSLiM(vCombos[j], vSeeds[i]);
+            }
+        }
+    }
+    
+
     return 0;
 }
