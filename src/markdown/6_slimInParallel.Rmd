@@ -12,21 +12,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 6.1 Overview
 
-Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually 
-run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. 
+Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. 
 Whatever language you have that has a function to invoke system operating system commands (like ```system()``` in R) can probably be 
 used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, 
 which will help negate some of the time needed to run many replicates. SLiM handles parallelism very well because it is written 
 to only every use a single core: this means you can run separate SLiM experiments on each core your computer has available at the same time.
 
 In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. 
-I even provide a C++ implementation which is overkill and not necessary at all, but it was fun^[fn1] to program! 
+I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn1] to program! 
 
 Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the 
 [SLiM-Extras repository](https://github.com/MesserLab/SLiM-Extras) under 'sublaunching'. Source code for all of the examples shown 
 in this document is available in the ```/src/Parallelisation``` folder.
 
-[^fn1]: https://xkcd.com/612/
 
 ## 6.2 SLiM at the Command Line
 
@@ -194,7 +192,7 @@ Here we do the exact thing as before: creating a local cluster and running a ```
 Running SLiM in Python is similarly straightforward, and due to its plethora of libraries, quite powerful also.
 Here's an example
 
-```{python slim_sub_py1, eval = F}
+```{python slim_sub_py1, eval = F, python.reticulate = F}
 from os import system
 from multiprocessing import Pool
 from pandas import read_csv
@@ -215,8 +213,8 @@ cluster = Pool()
 if __name__ == "__main__":
     cluster.map(slim_call, seeds['Seed'].tolist())
 
-    cluster.close()
-    cluster.join()
+cluster.close()
+cluster.join()
 
 ```
 
@@ -233,7 +231,7 @@ Using ```cluster.close()``` followed by ```cluster.join()``` is good practice, j
 
 Now lets expand this to our list of combinations like in R:
 
-```{python, slim_sub_py2, eval = F}
+```{python, slim_sub_py2, eval = F, python.reticulate = F}
 from os import system
 from multiprocessing import Pool
 from itertools import product
@@ -360,3 +358,12 @@ a nested for loop structure and automatically dish out seed-parameter combinatio
 This code isn't particularly nice to look at, nor is it going to work as-is for more than two parameters (```std::pair``` will need 
 to be another ```std::vector```), however it could be expanded upon to be more customisable (e.g. accepting user input for
 filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way.
+
+
+
+
+
+
+
+# Footnotes
+[^fn1]: https://xkcd.com/612/
