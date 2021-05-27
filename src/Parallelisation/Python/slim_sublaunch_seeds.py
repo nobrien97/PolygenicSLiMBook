@@ -6,17 +6,18 @@ from pandas import read_csv
 
 seeds = read_csv(r'../Inputs/seeds.csv')
 
-# Open a new 'pool' - like makeCluster() in R
-
-cluster = Pool()
-
-# Do an operation on the pool - this is like foreach() in R
 
 def slim_call(seed):
     system('slim -s {} ~/Desktop/example_script.slim'.format(seed)) 
 
-cluster.map(slim_call, seeds['Seed'].tolist())
+# Open a new 'pool' - like makeCluster() in R
 
-cluster.close()
-cluster.join()
+cluster = Pool()
+
+# Do an operation on the pool - this is like mclapply() in R
+if __name__ == "__main__":
+    cluster.map(slim_call, seeds['Seed'].tolist())
+
+    cluster.close()
+    cluster.join()
 
