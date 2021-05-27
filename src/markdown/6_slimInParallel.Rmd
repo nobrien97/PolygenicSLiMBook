@@ -18,6 +18,7 @@ In this section, I'll go over how to run SLiM at the command line in a number of
 
 Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the [SLiM-Extras repository](https://github.com/MesserLab/SLiM-Extras) under 'sublaunching'
 
+Source code for all of the examples shown in this document is available in the /src/Parallelisation folder.
 
 ## 6.2 SLiM at the Command Line
 
@@ -194,19 +195,21 @@ from pandas import read_csv
 
 seeds = read_csv(r'../Inputs/seeds.csv')
 
-# Open a new 'pool' - like makeCluster() in R
-
-cluster = Pool()
-
-# Do an operation on the pool - this is like foreach() in R
 
 def slim_call(seed):
     system('slim -s {} ~/Desktop/example_script.slim'.format(seed)) 
 
-cluster.map(slim_call, seeds['Seed'].tolist())
+# Open a new 'pool' - like makeCluster() in R
 
-cluster.close()
-cluster.join()
+cluster = Pool()
+
+# Do an operation on the pool - this is like mclapply() in R
+if __name__ == "__main__":
+    cluster.map(slim_call, seeds['Seed'].tolist())
+
+    cluster.close()
+    cluster.join()
+
 ```
 
 In this script, we iterate over seeds only, using the built-in ```os``` and ```multiprocessing``` libraries, and the popular ```pandas``` library.
@@ -233,34 +236,51 @@ from joblib import Parallel, delayed
 
 seeds = read_csv(r'../Inputs/seeds.csv')['Seed'].to_list()
 
-# Create a list of parameters and generate unique combinations
-param1 = [0.1, 0.2, 0.3]
-param2 = ['Low', 'Medium', 'High']
-p = {'param1' : [0.1, 0.2, 0.3], 'param2' : ['Low', 'Medium', 'High']}
+# Create a list of parameters and generate unique combinations, then form a list of tuples
+# You can also use the pandas.write_csv() function to store this output and read it later like
+# we have been doing with seeds
+
+p = {'param1' : [0.1, 0.2, 0.3], 'param2' : ['"Low"', '"Medium"', '"High"']}
 keys, values = zip(*p.items())
 # https://stackoverflow.com/a/61335465/13586824
 combos = [dict(zip(keys, v)) for v in product(*values)]
 combos = DataFrame.from_dict(combos)
+combos = list(combos.itertuples(index=False, name=None))
 
+
+# Do an operation on the pool - this is like foreach() in R
+# \" is an escaped string, which we need for the command line to be able to feed SLiM string parameters properly
+
+def slim_call(param1, param2):
+    for seed in seeds:
+        system('slim -s {se} -d param1={p1} -d \"param2=\'{p2}\'\" ~/Desktop/example_script.slim'.format(se=seed, p1=param1, p2=param2)) 
 
 # Open a new 'pool' - like makeCluster() in R
 
 cluster = Pool()
 
-# Do an operation on the pool - this is like foreach() in R
-
-def slim_call(parameters):
-    for seed in seeds:
-        system('slim -s {se} -d param1={p1} -d param2={p2} ~/Desktop/example_script.slim'.format(se=seed, p1=parameters['param1'], p2=parameters['param2'])) 
-
-seeds['Seed'].to_list()
-
-cluster.starmap(slim_call, combos)
+if __name__ == "__main__":
+    cluster.starmap(slim_call, combos)
 cluster.close()
 cluster.join()
 
 ```
 
-Here, we encapsulate our SLiM call in a function which includes a for loop over seeds. We then use the ```Pool.starmap()``` function to run in parallel these SLiM runs across combinations. Indeed, this ordering could also be reversed so that the for loop contains the combinations and ```starmap()``` iterates over seeds. This might be a good idea if the number of combinations is less than the number of seeds, to leverage as much parallel power as possible and reduce wasted time.
+This is a little bit more painful than in R. We construct a list of tuples of every combination of our parameters. We do this by first
+constructing a dictionary of the possible values for the parameters. We then use ```zip()``` to construct an iterator of tuples: basically
+a pairing of param1 to param2. Then we get the product of each key's values with the other key's values for all possible combinations in a 
+list of dictionaries. From this list of dictionaries, we construct a ```pandas``` DataFrame, and then convert that to a list of tuples.
 
+Here, we encapsulate our SLiM call in a function which includes a for loop over seeds. We then use the ```Pool.starmap()``` function to run in 
+parallel these SLiM runs across combinations. Indeed, this ordering could also be reversed so that the for loop contains the combinations 
+and ```starmap()``` iterates over seeds. This might be a good idea if the number of combinations is less than the number of seeds, to leverage 
+as much parallel power as possible and reduce wasted time.
+
+
+# 6.6 Running SLiM via a C++ Program
+
+Before we go on, I should mention that this part is pretty much always overkill. There really isn't much of an overhead from running SLiM in 
+parallel via interpreted languages, so there is little reason to use any C-based language for running SLiM. It's clunky and kind of a pain.
+However, it is an interesting exercise, and in the cases where you need to eke out every iota of performance during a particularly slow 
+simulation, it might be worthwhile.
 
