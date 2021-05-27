@@ -12,13 +12,21 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 6.1 Overview
 
-Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. Whatever language you have that has a function to invoke system operating system commands (like ```system()``` in R) can probably be used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, which will help negate some of the time needed to run many replicates. SLiM handles parallelism very well because it is written to only every use a single core: this means you can run separate SLiM experiments on each core your computer has available at the same time.
+Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually 
+run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. 
+Whatever language you have that has a function to invoke system operating system commands (like ```system()``` in R) can probably be 
+used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, 
+which will help negate some of the time needed to run many replicates. SLiM handles parallelism very well because it is written 
+to only every use a single core: this means you can run separate SLiM experiments on each core your computer has available at the same time.
 
-In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. I even provide a C++ implementation (TODO) which is overkill and not necessary at all, but it was fun to program (Remains to be seen)! 
+In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. 
+I even provide a C++ implementation which is overkill and not necessary at all, but it was fun^[fn1] to program! 
 
-Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the [SLiM-Extras repository](https://github.com/MesserLab/SLiM-Extras) under 'sublaunching'
+Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the 
+[SLiM-Extras repository](https://github.com/MesserLab/SLiM-Extras) under 'sublaunching'. Source code for all of the examples shown 
+in this document is available in the ```/src/Parallelisation``` folder.
 
-Source code for all of the examples shown in this document is available in the /src/Parallelisation folder.
+[^fn1]: https://xkcd.com/612/
 
 ## 6.2 SLiM at the Command Line
 
@@ -284,3 +292,71 @@ parallel via interpreted languages, so there is little reason to use any C-based
 However, it is an interesting exercise, and in the cases where you need to eke out every iota of performance during a particularly slow 
 simulation, it might be worthwhile.
 
+This program uses an open source header library to read csv files into vectors. That can be found in the /includes/ folder, and also at the 
+[original GitHub repository](https://github.com/ben-strasser/fast-cpp-csv-parser). The program uses OpenMP to parallelise a for loop across
+multiple cores.
+
+```{cpp slim_sub_cpp, eval = F}
+#include "includes/csv.h" // https://github.com/awdeorio/csvstream
+#include "stdlib.h"
+#include <iostream>
+#include <utility>
+#include <vector>
+#include <string>
+#include "omp.h"
+#include <map>
+
+using std::vector; using std::string;
+
+#define THREAD_NUM 4 //omp_get_thread_num(); // Max CPUs on machine
+
+
+// Escaped " and ' are so the command line doesn't freak out with quotations in the middle of the line for string input
+// Feed in a single row of the combos.csv and a single seed at a time: the parallelised for loop will do this
+void runSLiM(std::pair<float, string> combo, string seed) {
+    float param1 = combo.first;     // Access the pair's first value, which is param1
+    string param2 = combo.second;
+    string callLine = "slim -s " + seed + " -d param1=" + std::to_string(param1) + " -d \"param2=\'" + param2 + "\'\" ~/Desktop/example_script.slim";
+    std::system(callLine.c_str());
+}
+
+int main() {
+    // Read the seeds and combos
+    io::CSVReader<1> seeds("./seeds.csv");
+    seeds.read_header(io::ignore_extra_column, "Seed");
+    vector<string> vSeeds;
+    int64_t curSeed;
+    // For each row in the file, fill variables with that row's values
+    while (seeds.read_row(curSeed)) {
+        vSeeds.emplace_back(std::to_string(curSeed)); // Stick it into a vector of all seeds
+    }
+    io::CSVReader<2> combos("./combos.csv");
+    combos.read_header(io::ignore_extra_column, "param1", "param2");
+    vector<std::pair<float, string>> vCombos;
+    float curP1;
+    string curP2;
+    while (combos.read_row(curP1, curP2)) {
+        vCombos.emplace_back(curP1, curP2); // Same as above, but we are constructing a vector of pairs, where the pair is param1 and param2
+        }
+    
+    
+    // Start of parallel processing code
+    omp_set_num_threads(THREAD_NUM); // How many cores to use?
+    #pragma omp parallel for collapse(2) // 2 for loops, so collapse those loops into one parallelisable structure
+    { 
+        for (int i=0; i < vSeeds.size(); ++i) {
+            for (int j=0; j < vCombos.size(); ++j) {
+                runSLiM(vCombos[j], vSeeds[i]); // run SLiM with a given seed and parameter combination
+            }
+        }
+    }
+
+    return 0;
+}
+```
+
+Most of this code is just sorting out csv files into structures that we can perform for loops on. We use openMP to parallelise 
+a nested for loop structure and automatically dish out seed-parameter combinations to the runSLiM() function out to available cores.
+This code isn't particularly nice to look at, nor is it going to work as-is for more than two parameters (```std::pair``` will need 
+to be another ```std::vector```), however it could be expanded upon to be more customisable (e.g. accepting user input for
+filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way.
