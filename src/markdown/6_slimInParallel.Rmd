@@ -359,11 +359,35 @@ This code isn't particularly nice to look at, nor is it going to work as-is for 
 to be another ```std::vector```), however it could be expanded upon to be more customisable (e.g. accepting user input for
 filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way.
 
+# Writing SLiM code with parallelism in mind
 
+When it comes to writing your SLiM code, there are a few factors to keep in mind. Perhaps the most important is how you will deal with 
+output. Will your models all write into the same output file or separate files? Each option has its pros and cons, so I'll give descriptions
+of both.
 
+## Single file output
+
+If you want to write your output into a single file, you will need to ensure that all ```writeFile()``` calls in your script have the 
+```append``` flag set to ```T```. This way, when writing to the file, SLiM will write a new line character followed by what you are writing
+rather than overwriting the file. Be warned that this method isn't completely safe and can introduce you to race conditions: if two simulations
+try to write at the same time, which of the two will write? Will one line of results be lost, will they both be glued together and become a pain
+to format, or will everything go as planned? This may or may not be a problem. For example, if you are tracking evolution over long periods of time,
+a single missed data point isn't going to cause you any problems realistically. However, if your data is very detailed and written multiple times
+during a generation, then the chances for files to be written at the same time increases. The lesson really is if you write this way, write as little
+as you can to minimise the risk of race conditions becoming a problem. I have written output this way through my Honours, and had no issues with overwriting 
+or missing output. This was with 1152 concurrent simulations, with data being written 200 times per run. However, I have encountered one error since then,
+where a single row was appended with no newline character to another, likely due to a similar race condition. 
+
+In summary, the chances of problems are low, but never zero[^fn2].
+
+## Multiple file output
+
+If you want to write to multiple files, then you will need to write your output into generated folders or file names based on your seed and parameter
+combinations. For this, I recommend defining a 'model index' parameter in SLiM, which is unique for each parameter combination. For example, in R:
 
 
 
 
 # Footnotes
 [^fn1]: https://xkcd.com/612/
+[^fn2]: Much like the chances of your cat eating you in your sleep.

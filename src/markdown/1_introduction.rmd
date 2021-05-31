@@ -60,9 +60,8 @@ In this book, I'll cover:
 - Modelling polygenic adaptation in SLiM, 
     What can SLiM offer for studying polygenic adaptation?
     The SLiM online workshop
-    Template 1: Neutral evolution of a single polygenic trait with variable recombination, selection strength, polygenicity, mutability, population size, background selection, and effect size distributions
-    Template 2: Stabilising selection model of the above
-    Template 3: Directional selection model of the above
+    Templates: evolution of a single polygenic trait with variable recombination, selection strength, polygenicity, 
+    mutability, population size, background selection, and effect size distributions with drift, stabilising, and directional selection options 
     Template 4: Stabilising selection model of two traits with the above parameters, and a level of pleiotropy between them, and configurable fitness impacts for each
 - Running SLiM in parallel on your computer,
     Appending output from multiple simultaneous runs
