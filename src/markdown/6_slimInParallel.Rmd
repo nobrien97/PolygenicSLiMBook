@@ -34,17 +34,21 @@ To use SLiM from the command line, you simply call the ```slim``` command, follo
 slim ~/Desktop/example_script.slim
 ```
 
-This would run the script 'example_script.slim' with it's set parameters. Say you want to do some replicates. To do this you might want to change the random seed, which adjusts state of the random number generator that determines when, where, and how mutations, recombination, and mating between certain individuals might happen. You can do this using the ```-s``` flag:
+This would run the script 'example_script.slim' with it's set parameters. Say you want to do some replicates. 
+To do this you might want to change the random seed, which adjusts state of the random number generator that determines when, 
+where, and how mutations, recombination, and mating between certain individuals might happen. You can do this using the ```-s``` flag:
 
 ```{bash cmdslim2, eval = F}
 slim -s 123 ~/Desktop/example_script.slim
 ```
 
-This would run the above script with the seed ```123```. Note that you shouldn't choose numbers like this, but instead use a random number generator to generate random numbers for you. 
+This would run the above script with the seed ```123```. Note that you shouldn't choose numbers like this, 
+but instead use a random number generator to generate random numbers for you. 
 
 
 
-Similarly, you can adjust parameters in your model with the ```-d``` flag, of which you can have as many as you want. For example, say you want to change the population size which is defined in your script as a parameter called ```Ne```. You could run:
+Similarly, you can adjust parameters in your model with the ```-d``` flag, of which you can have as many as you want. 
+For example, say you want to change the population size which is defined in your script as a parameter called ```Ne```. You could run:
 
 ```{bash cmdslim3, eval = F}
 slim -s 123 -d Ne=1000 ~/Desktop/example_script.slim
@@ -56,19 +60,45 @@ Here, we've set Ne to be 1000, so ```slim``` will run the script with 1000 indiv
 ::: {.center data-latex=""}
 **Box 6.2.1**
 :::
-When it comes to random numbers, it comes as little surprise that humans are bad at generating them. We have biases towards certain numbers by conscious (or unconscious!) recognition of those numbers. But it turns out that computers have just as hard a time as we do! Computers are designed to be deterministic, so generating random numbers can be quite difficult. To do it, various algorithms have been written to generate numbers from some distribution, but fed with a random 'seed' to spit out that number. This seed is typically a signed 32-bit integer (of the range -2147483648 to 2147483648), but realistically any size or type can be used (and 64-bit integers are becoming increasingly common as the range of possible values is massive). 
+When it comes to random numbers, it comes as little surprise that humans are bad at generating them. 
+We have biases towards certain numbers by conscious (or unconscious!) recognition of those numbers. 
+But it turns out that computers have just as hard a time as we do! Computers are designed to be deterministic, 
+so generating random numbers can be quite difficult. To do it, various algorithms have been written to generate 
+numbers from some distribution, fed with a random 'seed' to spit out that number. This seed is typically a signed 
+32-bit integer (of the range -2,147,483,648 to 2,147,483,648), but realistically any size or type can be used 
+(and 64-bit integers are becoming increasingly common as the range of possible values is massive). 
 
 But how do you generate a seed? 
 With another random number generator. Which must have come from some deterministic process. 
-So no matter how many generators you have generating seeds for your random output, you can always go back to a deterministic value that seeded it all. It isn't ever truly random, just pseudo-random. Of course, certain trickery has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava lamps (a la [CloudFlare](https://www.youtube.com/watch?v=1cUUfMeOijg))? Probably not. As long as you are blind to the original seed that created your random numbers, it might as well be random: the chance that you are going to be able to find that original seed quite often exceeds the number of atoms in the observable universe (SOURCE). ```/dev/random```, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer hardware drivers, which is supposedly close to 'true' randomness. [But is 'true' randomness a thing at all](https://en.wikipedia.org/wiki/Determinism)? Is the universe deterministic? What is the universe's seed? If you put the universe's seed into a Minecraft world generator, would that world have many diamonds? 
+So no matter how many generators you have generating seeds for your random output, you can always go back to a 
+deterministic value that seeded it all. It isn't ever truly random, just pseudo-random. Of course, certain trickery 
+has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting 
+or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is 
+theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava 
+lamps (a la [CloudFlare](https://www.youtube.com/watch?v=1cUUfMeOijg))? Probably not. As long as you are blind to 
+the original seed that created your random numbers, it might as well be random: the chance that you are going to be 
+able to find that original seed is astronomically small ($\frac{1}{2^{63}-1}$ for a signed 64-bit seed). 
+```/dev/random```, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer 
+hardware drivers, which is supposedly close to 'true' randomness. [But is 'true' randomness a thing at all](https://en.wikipedia.org/wiki/Determinism)? 
+Is the universe deterministic? What is the universe's seed? If you put the universe's seed into a Minecraft 
+world generator, would that world have many diamonds? 
 Food for thought.
 
-The point is that you should be careful with generating random numbers and make sure you know that the ultimate source of randomness is as close to 'true' random as possible, but if it isn't, as long as it is secure and probabilistically close to impossible to crack, it is probably a good enough source of randomness for whatever you are trying to do.
+The point is that you should be careful with generating random numbers and make sure you know that the 
+ultimate source of randomness is as close to 'true' random as possible, but if it isn't, as long as it is secure and 
+probabilistically close to impossible to crack, it is probably a good enough source of randomness for whatever you are trying to do.
 ::::
 
-OK, so we can run SLiM via the command line for a single seed or variable combination. Now we could run that command multiple times, changing the seed or parameters manually every time we run it, but that's inefficient and makes it difficult to use all your available resources on your computer (notably, cores for running separate SLiM instances in parallel). This is where sublaunching scripts can come in handy. These enable us to use a pre-written script to vary all the parameters we would like automatically, and run many SLiM experiments at once as possible.
+OK, so we can run SLiM via the command line for a single seed or variable combination. Now we could run that command multiple times, 
+changing the seed or parameters manually every time we run it, but that's inefficient and makes it difficult to use all your available 
+resources on your computer (notably, cores for running separate SLiM instances in parallel). This is where sublaunching 
+scripts can come in handy. These enable us to use a pre-written script to vary all the parameters we would like automatically, 
+and run many SLiM experiments at once as possible.
 
-As a quick aside, these template scripts I'm providing require a ```seeds.csv``` file to be in the format of a single column with a header called 'Seed'. My SeedGenerator program which I have provided (Under "Tools" in the [main GitHub branch](https://github.com/nobrien97/PolygenicSLiMBook)), (along with an install script) will generate these for you. To use SeedGenerator, simply run ```seedgen_install.sh```, and then ```./seedgenerator```. There are a variety of options, listed with the -h or --help flag:
+As a quick aside, these template scripts I'm providing require a ```seeds.csv``` file to be in the format of a single column 
+with a header called 'Seed'. My SeedGenerator program which I have provided (Under "Tools" in the [main GitHub branch](https://github.com/nobrien97/PolygenicSLiMBook)), 
+(along with an install script) will generate these for you. To use SeedGenerator, simply run ```seedgen_install.sh```, 
+and then ```./seedgenerator```. There are a variety of options, listed with the -h or --help flag:
 
 ```{bash seedgen}
 # Shows the help file with instructions on each of the options
@@ -80,7 +110,8 @@ Now onto sublaunching SLiM. We'll start with Bash, which is perhaps the simplest
 
 ## 6.3 Running SLiM via Bash
 
-The simplest way to run SLiM at the command line is through Bash, the standard command line scripting language of Linux based systems. Note that the SLiM Online Workshop - '_Running SLiM from the command line_' tutorial goes over much of what I'll be presenting below.
+The simplest way to run SLiM at the command line is through Bash, the standard command line scripting language of Linux based systems. 
+Note that the SLiM Online Workshop - '_Running SLiM from the command line_' tutorial goes over much of what I'll be presenting below.
 The Bash syntax is pretty similar to the standard way of running SLiM on the command line, and in fact you'll be using almost identical commands.
 
 ```{bash slim_sub_bash1, eval = F}
@@ -91,10 +122,13 @@ for seed in seeds.csv; do
 done
 ```
 
-Here, we do a simple for loop over the seeds in a file called seeds.csv (generated by Tools/SeedGenerator/seedgenerator). For this to work in bash, make sure you have the header disabled (```./seedgenerator -t```)
-The ```&``` character tells Bash to run the slim process as a background task, meaning it is put on an available core. This results in SLiM processes running parallelised across multiple cores!
+Here, we do a simple for loop over the seeds in a file called seeds.csv (generated by Tools/SeedGenerator/seedgenerator). 
+For this to work in bash, make sure you have the header disabled (```./seedgenerator -t```)
+The ```&``` character tells Bash to run the slim process as a background task, meaning it is put on an available core. 
+This results in SLiM processes running parallelised across multiple cores!
 
-Bash can also be used to parallelise over many parameters, but it quickly becomes difficult to read. For example, here is an example script with two parameters and a seed variable:
+Bash can also be used to parallelise over many parameters, but it quickly becomes difficult to read. For example, 
+here is an example script with two parameters and a seed variable:
 
 ```{bash slim_sub_bash2, eval=F}
 for param1 in 0.1 0.2 0.3
@@ -112,13 +146,16 @@ for param1 in 0.1 0.2 0.3
 
 ```
 
-While it is also possible to read in files and split columns into different variables, it's much easier to do this in R or Python. So for more complex scripts, I would highly suggest using either of those to sublaunch your SLiM jobs. I will provide examples of both below.
+While it is also possible to read in files and split columns into different variables, it's much easier to do this in R or Python. 
+So for more complex scripts, I would highly suggest using either of those to sublaunch your SLiM jobs. I will provide examples of both below.
 
 ## 6.4 Running SLiM via R
 
-This is how I normally sublaunch SLiM. R has a variety of packages that make it easy to parallelise across cores, and because of R's rich feature set and the breadth of user-made libraries, the options are endless when it comes to feeding parameters to SLiM, loading output, or integrating with SLiM.
+This is how I normally sublaunch SLiM. R has a variety of packages that make it easy to parallelise across cores, 
+and because of R's rich feature set and the breadth of user-made libraries, the options are endless when it comes to 
+feeding parameters to SLiM, loading output, or integrating with SLiM.
 
-``` {r slim_sub_r1, eval = F}
+```{R slim_sub_r1, eval = F}
 
 # Parallelisation libraries 
 
@@ -138,18 +175,40 @@ registerDoParallel(cl)
 foreach(i=seeds$Seed) %dopar% {
 	# Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
 	# then run SLiM with system(),
-    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s ~/Desktop/example_script.slim", as.character(i), intern=T))
+    	slim_out <- system(sprintf("/path/to/slim -s %s ~/Desktop/example_script.slim", 
+                                  as.character(i), intern=T))
   }
 stopCluster(cl)
 
 ```
 
-This script first loads a series of libraries that allow R to run a for loop across multiple cores. Each iteration of the for loop is assigned to a free core when it becomes available. We then load in ```seeds.csv``` as a dataframe, and set up a local 'cluster', which basically lets R know how many cores are available on your system that it can use. The seeds are then fed into our for loop (```foreach```, which is implemented specifically to be parallel). For each seed, we run the for loop, with the ```%dopar%``` operator saying that we should do those iterations across as many cores as are available. The ```system()``` command tells the operating system to run a command, given as a string. ```sprintf()``` creates a string from its inputs, with support for variables to be added to the string on the fly. This is done with the ```%``` symbol followed by the type that is being fed to ```sprintf()```. For example, ```%s```  provides a placeholder for a string variable. These variables are listed at the end of the line _in the order that they are mentioned in the ```sprintf()``` command. For example, here ```%s```, being the first variable mentioned in the string, is replaced by the first variable mentioned after the string ends with the closing \". In this case, we feed SLiM a seed with the ```-s``` command, replacing ```%s``` with ```as.character(i)```, which is the seed given by the for loop. 
-As well as ```%s```, there is also ```i``` and ```f``` for integer and floating point (or double, since R only supports doubles) numbers. 
-So why do we feed SLiM a string as a seed instead of an integer? It's to ensure it gets read properly. R only supports signed 32-bit integers, which are a fair bit smaller than SLiM's 64-bit integers. Since the idea of randomly choosing seeds is to uniformly sample across the entire range of possible values to avoid any kind of correlations, we sample across the range of 64 bit values. However, R can't handle numbers so big as integers, so it automatically coerces them to doubles. Doubles are stored in computers very differently to integers, and having R treat this number as an integer (or as a float) and then feed it to SLiM that way results in unexpected behaviour. I've found it's safest to just treat the seed as a string so no coercion happens - SLiM automatically will treat that string as an integer when it is loaded anyway. 
+This script first loads a series of libraries that allow R to run a for loop across multiple cores. 
+Each iteration of the for loop is assigned to a free core when it becomes available. We then load in ```seeds.csv``` as a dataframe, 
+and set up a local 'cluster', which basically lets R know how many cores are available on your system that it can use. 
+The seeds are then fed into our for loop (```foreach```, which is implemented specifically to be parallel). For each seed, we run the for loop, 
+with the ```%dopar%``` operator saying that we should do those iterations across as many cores as are available. 
+The ```system()``` command tells the operating system to run a command, given as a string. ```sprintf()``` creates a string 
+from its inputs, with support for variables to be added to the string on the fly. This is done with the ```%``` symbol 
+followed by the type that is being fed to ```sprintf()```. For example, ```%s```  provides a placeholder for a string variable. 
+These variables are listed at the end of the line _in the order that they are mentioned in the ```sprintf()``` command. 
+For example, here ```%s```, being the first variable mentioned in the string, is replaced by the first variable mentioned after the 
+string ends with the closing \". In this case, we feed SLiM a seed with the ```-s``` command, replacing ```%s``` with ```as.character(i)```, 
+which is the seed given by the for loop. As well as ```%s```, there is also ```i``` and ```f``` for integer and floating point 
+(or double, since R only supports doubles) numbers. 
+So why do we feed SLiM a string as a seed instead of an integer? It's to ensure it gets read properly. R only supports signed 32-bit integers, 
+which are a fair bit smaller than SLiM's 64-bit integers. Since the idea of randomly choosing seeds is to uniformly sample 
+across the entire range of possible values to avoid any kind of correlations, we sample across the range of 64 bit values. 
+However, R can't handle numbers so big as integers, so it automatically coerces them to doubles. 
+Doubles are stored in computers very differently to integers, and having R treat this number as an integer (or as a float) and then feed it to 
+SLiM that way results in unexpected behaviour. I've found it's safest to just treat the seed as a string so no coercion happens -
+SLiM automatically will treat that string as an integer when it is loaded anyway. 
 
-Now, the R script is a little more complex at base-level than a Bash script, but I find it much easier to expand upon. Say for example we have two parameters as before. We could use nested ```foreach``` loops just like we did in Bash, but it's easier to exploit R's dataframe support to have a dataframe of possible parameter combinations, and then use each iteration to choose the right combination. This way, we simply need one level of nesting regardless of how many parameters we have: one ```foreach``` loop for seeds, and a nested one for parameter combinations.
-``` {r slim_sub_r2, eval = F}
+Now, the R script is a little more complex at base-level than a Bash script, but I find it much easier to expand upon. 
+Say for example we have two parameters as before. We could use nested ```foreach``` loops just like we did in Bash, but 
+it's easier to exploit R's dataframe support to have a dataframe of possible parameter combinations, and then use each 
+iteration to choose the right combination. This way, we simply need one level of nesting regardless of how many parameters 
+we have: one ```foreach``` loop for seeds, and a nested one for parameter combinations.
+```{R slim_sub_r2, eval = F}
 
 # Create a list of parameters
 p <- list()
@@ -179,13 +238,19 @@ registerDoParallel(cl)
 #Run SLiM
 foreach(i=1:nrow(df.p)) %:%
   foreach(j=seeds$Seed) %dopar% {
-    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim", as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
+    	slim_out <- system(sprintf("/path/to/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim", 
+                                  as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
   }
 stopCluster(cl)
 
 ```
 
-Here we do the exact thing as before: creating a local cluster and running a ```foreach``` loop. However, in this case we nest a second ```foreach``` loop so we can include both seeds and the parameter combinations. Each ```i``` in this loop is a different row in the ```df.p``` dataframe of parameter combinations. Each ```j``` is a different seed. Notice we only ues ```%dopar%``` once, and use that on the innermost ```foreach``` loop. This means for each parameter combination (```i```), we will parallelise across seeds (```j```). This can be extended to as many parameter values as you want, as we simply fill each parameter using the ```sprintf()``` variable-filling functionality as before, this time referencing ```df.p``` and choosing the appropriate column (parameter value).
+Here we do the exact thing as before: creating a local cluster and running a ```foreach``` loop. However, in this case we 
+nest a second ```foreach``` loop so we can include both seeds and the parameter combinations. Each ```i``` in this loop is a 
+different row in the ```df.p``` dataframe of parameter combinations. Each ```j``` is a different seed. Notice we only ues ```%dopar%``` 
+once, and use that on the innermost ```foreach``` loop. This means for each parameter combination (```i```), we will parallelise 
+across seeds (```j```). This can be extended to as many parameter values as you want, as we simply fill each parameter using 
+the ```sprintf()``` variable-filling functionality as before, this time referencing ```df.p``` and choosing the appropriate column (parameter value).
 
 ## 6.5 Running SLiM in Python
 
@@ -259,7 +324,7 @@ combos = list(combos.itertuples(index=False, name=None))
 
 def slim_call(param1, param2):
     for seed in seeds:
-        system('slim -s {se} -d param1={p1} -d \"param2=\'{p2}\'\" ~/Desktop/example_script.slim'.format(se=seed, p1=param1, p2=param2)) 
+        system('/path/to/slim -s {se} -d param1={p1} -d \"param2=\'{p2}\'\" ~/Desktop/example_script.slim'.format(se=seed, p1=param1, p2=param2)) 
 
 # Open a new 'pool' - like makeCluster() in R
 
@@ -314,7 +379,7 @@ using std::vector; using std::string;
 void runSLiM(std::pair<float, string> combo, string seed) {
     float param1 = combo.first;     // Access the pair's first value, which is param1
     string param2 = combo.second;
-    string callLine = "slim -s " + seed + " -d param1=" + std::to_string(param1) + " -d \"param2=\'" + param2 + "\'\" ~/Desktop/example_script.slim";
+    string callLine = "/path/to/slim -s " + seed + " -d param1=" + std::to_string(param1) + " -d \"param2=\'" + param2 + "\'\" ~/Desktop/example_script.slim";
     std::system(callLine.c_str());
 }
 
@@ -359,13 +424,13 @@ This code isn't particularly nice to look at, nor is it going to work as-is for 
 to be another ```std::vector```), however it could be expanded upon to be more customisable (e.g. accepting user input for
 filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way.
 
-# Writing SLiM code with parallelism in mind
+# 6.7 Writing SLiM code with parallelism in mind
 
 When it comes to writing your SLiM code, there are a few factors to keep in mind. Perhaps the most important is how you will deal with 
 output. Will your models all write into the same output file or separate files? Each option has its pros and cons, so I'll give descriptions
 of both.
 
-## Single file output
+### Single file output
 
 If you want to write your output into a single file, you will need to ensure that all ```writeFile()``` calls in your script have the 
 ```append``` flag set to ```T```. This way, when writing to the file, SLiM will write a new line character followed by what you are writing
@@ -380,14 +445,68 @@ where a single row was appended with no newline character to another, likely due
 
 In summary, the chances of problems are low, but never zero[^fn2].
 
-## Multiple file output
+### Multiple file output
 
 If you want to write to multiple files, then you will need to write your output into generated folders or file names based on your seed and parameter
-combinations. For this, I recommend defining a 'model index' parameter in SLiM, which is unique for each parameter combination. For example, in R:
+combinations. For this, I recommend defining a 'model index' parameter in SLiM, which is unique for each parameter combination. In fact, this parameter 
+will be useful regardless of your output protocol, as we will see later. This can simply be set asthe row number in your parameter combination table. 
+For example, in R:
+
+```{R modelindex, eval = F}
+#Run SLiM
+foreach(i=1:nrow(df.p)) %:%
+  foreach(j=seeds$Seed) %dopar% {
+    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d modelindex=%i  ~/Desktop/example_script.slim", as.character(j), df.p[i,]$param1, i, intern=T))
+  }
+```
+
+Here we set the SLiM constant ```modelindex``` equal to ```i```, which is the row number of the parameter combination dataframe in our for loop.
+
+Now to name the output files, we need to combine the seed and modelindex in our SLiM script and specify a filename, like so:
+
+``` {cpp outputname, eval = F}
+initialize() {
+	if (!exists("slimgui")) {
+		setCfgParam("seed", getSeed()); // Set the seed as a constant if we've run from the command line
+	}
+	else {
+		setSeed(asInteger(round(runif(1, 1, 2^62 - 1))));
+		setCfgParam("seed", getSeed());
+		catn("Actual seed: " + asInteger(seed)); // Reset the seed to a more controlled value if we've run from SLiMgui
+	}
+
+	setCfgParam("modelindex", 1); // Identifier for the combination of predictors used in latin hypercube: this is the row number in the lscombos.csv file
+	
+	
+	setCfgParam("outputFilepath", './out_' + modelindex + '_' + seed + '_slim.csv'); // Output filename/path
+
+```
+
+The output filename of this simulation will be ```out_<modelindex>_<seed>_slim.csv```. Since each simulation is writing to a different file,
+there is no chance of the output being overwritten[^fn3]. At the end of your simulations, you can join all these files into one using the 
+```cat``` bash command:
+
+```{bash cat_join, eval = F}
+cat ./* > slim_out.csv
+```
+This will grab all files in the selected folder ```./``` and concatenate them together. Note that if newlines aren't at the bottom
+of each file, then this won't work. However, SLiM should automatically do this, and if not you can use the script:
+```{bash cat_join2, eval = F}
+for file in /path/*.csv
+do
+    echo "" >> "$file"
+done
+```
+Which will apend a newline character to the end of each file[^fn4].
 
 
+The main problem with this method is writing to many different files creates overhead that will slow your simulation down, and has the potential
+to overload the filesystem. This can cause problems for other users if you are on a HPC. My recommendation is for large simulations you should use
+one single large file that you constantly append to, whereas smaller runs are probably fine to do using multiple files.
 
 
 # Footnotes
 [^fn1]: https://xkcd.com/612/
 [^fn2]: Much like the chances of your cat eating you in your sleep.
+[^fn3]: There is still a small chance of ```stdout``` losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don't do that.
+[^fn4]: https://stackoverflow.com/a/31053205/13586824

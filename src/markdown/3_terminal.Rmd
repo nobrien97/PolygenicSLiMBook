@@ -1,5 +1,5 @@
 ---
-title: "Part II: Terminal Shortcuts and Basics"
+title: "Terminal Shortcuts and Basics"
 author: "Nick O'Brien"
 date: "11/03/2021"
 output: html_document

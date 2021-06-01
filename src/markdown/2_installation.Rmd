@@ -1,5 +1,5 @@
 ---
-title: "Part I: Installing a Linux environment & SLiM on the WSL"
+title: "Installing a Linux environment & SLiM on the WSL"
 author: "Nick O'Brien"
 date: "2/15/2021"
 output: html_document

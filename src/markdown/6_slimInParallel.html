@@ -193,8 +193,8 @@ pre code {
 <div class="center">
 <p><strong>Box 6.2.1</strong></p>
 </div>
-<p>When it comes to random numbers, it comes as little surprise that humans are bad at generating them. We have biases towards certain numbers by conscious (or unconscious!) recognition of those numbers. But it turns out that computers have just as hard a time as we do! Computers are designed to be deterministic, so generating random numbers can be quite difficult. To do it, various algorithms have been written to generate numbers from some distribution, but fed with a random ‘seed’ to spit out that number. This seed is typically a signed 32-bit integer (of the range -2147483648 to 2147483648), but realistically any size or type can be used (and 64-bit integers are becoming increasingly common as the range of possible values is massive).</p>
-<p>But how do you generate a seed? With another random number generator. Which must have come from some deterministic process. So no matter how many generators you have generating seeds for your random output, you can always go back to a deterministic value that seeded it all. It isn’t ever truly random, just pseudo-random. Of course, certain trickery has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava lamps (a la <a href="https://www.youtube.com/watch?v=1cUUfMeOijg">CloudFlare</a>)? Probably not. As long as you are blind to the original seed that created your random numbers, it might as well be random: the chance that you are going to be able to find that original seed quite often exceeds the number of atoms in the observable universe (SOURCE). <code>/dev/random</code>, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer hardware drivers, which is supposedly close to ‘true’ randomness. <a href="https://en.wikipedia.org/wiki/Determinism">But is ‘true’ randomness a thing at all</a>? Is the universe deterministic? What is the universe’s seed? If you put the universe’s seed into a Minecraft world generator, would that world have many diamonds? Food for thought.</p>
+<p>When it comes to random numbers, it comes as little surprise that humans are bad at generating them. We have biases towards certain numbers by conscious (or unconscious!) recognition of those numbers. But it turns out that computers have just as hard a time as we do! Computers are designed to be deterministic, so generating random numbers can be quite difficult. To do it, various algorithms have been written to generate numbers from some distribution, fed with a random ‘seed’ to spit out that number. This seed is typically a signed 32-bit integer (of the range -2,147,483,648 to 2,147,483,648), but realistically any size or type can be used (and 64-bit integers are becoming increasingly common as the range of possible values is massive).</p>
+<p>But how do you generate a seed? With another random number generator. Which must have come from some deterministic process. So no matter how many generators you have generating seeds for your random output, you can always go back to a deterministic value that seeded it all. It isn’t ever truly random, just pseudo-random. Of course, certain trickery has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava lamps (a la <a href="https://www.youtube.com/watch?v=1cUUfMeOijg">CloudFlare</a>)? Probably not. As long as you are blind to the original seed that created your random numbers, it might as well be random: the chance that you are going to be able to find that original seed is astronomically small (<span class="math inline">\(\frac{1}{2^{63}-1}\)</span> for a signed 64-bit seed). <code>/dev/random</code>, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer hardware drivers, which is supposedly close to ‘true’ randomness. <a href="https://en.wikipedia.org/wiki/Determinism">But is ‘true’ randomness a thing at all</a>? Is the universe deterministic? What is the universe’s seed? If you put the universe’s seed into a Minecraft world generator, would that world have many diamonds? Food for thought.</p>
 <p>The point is that you should be careful with generating random numbers and make sure you know that the ultimate source of randomness is as close to ‘true’ random as possible, but if it isn’t, as long as it is secure and probabilistically close to impossible to crack, it is probably a good enough source of randomness for whatever you are trying to do.</p>
 </div>
 <p>OK, so we can run SLiM via the command line for a single seed or variable combination. Now we could run that command multiple times, changing the seed or parameters manually every time we run it, but that’s inefficient and makes it difficult to use all your available resources on your computer (notably, cores for running separate SLiM instances in parallel). This is where sublaunching scripts can come in handy. These enable us to use a pre-written script to vary all the parameters we would like automatically, and run many SLiM experiments at once as possible.</p>
@@ -266,7 +266,8 @@ registerDoParallel(cl)
 foreach(i=seeds$Seed) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
-        slim_out &lt;- system(sprintf(&quot;/home/$USER/SLiM/slim -s %s ~/Desktop/example_script.slim&quot;, as.character(i), intern=T))
+        slim_out &lt;- system(sprintf(&quot;/path/to/slim -s %s ~/Desktop/example_script.slim&quot;, 
+                                  as.character(i), intern=T))
   }
 stopCluster(cl)</code></pre>
 <p>This script first loads a series of libraries that allow R to run a for loop across multiple cores. Each iteration of the for loop is assigned to a free core when it becomes available. We then load in <code>seeds.csv</code> as a dataframe, and set up a local ‘cluster’, which basically lets R know how many cores are available on your system that it can use. The seeds are then fed into our for loop (<code>foreach</code>, which is implemented specifically to be parallel). For each seed, we run the for loop, with the <code>%dopar%</code> operator saying that we should do those iterations across as many cores as are available. The <code>system()</code> command tells the operating system to run a command, given as a string. <code>sprintf()</code> creates a string from its inputs, with support for variables to be added to the string on the fly. This is done with the <code>%</code> symbol followed by the type that is being fed to <code>sprintf()</code>. For example, <code>%s</code> provides a placeholder for a string variable. These variables are listed at the end of the line _in the order that they are mentioned in the <code>sprintf()</code> command. For example, here <code>%s</code>, being the first variable mentioned in the string, is replaced by the first variable mentioned after the string ends with the closing &quot;. In this case, we feed SLiM a seed with the <code>-s</code> command, replacing <code>%s</code> with <code>as.character(i)</code>, which is the seed given by the for loop. As well as <code>%s</code>, there is also <code>i</code> and <code>f</code> for integer and floating point (or double, since R only supports doubles) numbers. So why do we feed SLiM a string as a seed instead of an integer? It’s to ensure it gets read properly. R only supports signed 32-bit integers, which are a fair bit smaller than SLiM’s 64-bit integers. Since the idea of randomly choosing seeds is to uniformly sample across the entire range of possible values to avoid any kind of correlations, we sample across the range of 64 bit values. However, R can’t handle numbers so big as integers, so it automatically coerces them to doubles. Doubles are stored in computers very differently to integers, and having R treat this number as an integer (or as a float) and then feed it to SLiM that way results in unexpected behaviour. I’ve found it’s safest to just treat the seed as a string so no coercion happens - SLiM automatically will treat that string as an integer when it is loaded anyway.</p>
@@ -299,7 +300,8 @@ registerDoParallel(cl)
 #Run SLiM
 foreach(i=1:nrow(df.p)) %:%
   foreach(j=seeds$Seed) %dopar% {
-        slim_out &lt;- system(sprintf(&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim&quot;, as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
+        slim_out &lt;- system(sprintf(&quot;/path/to/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim&quot;, 
+                                  as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
   }
 stopCluster(cl)</code></pre>
 <p>Here we do the exact thing as before: creating a local cluster and running a <code>foreach</code> loop. However, in this case we nest a second <code>foreach</code> loop so we can include both seeds and the parameter combinations. Each <code>i</code> in this loop is a different row in the <code>df.p</code> dataframe of parameter combinations. Each <code>j</code> is a different seed. Notice we only ues <code>%dopar%</code> once, and use that on the innermost <code>foreach</code> loop. This means for each parameter combination (<code>i</code>), we will parallelise across seeds (<code>j</code>). This can be extended to as many parameter values as you want, as we simply fill each parameter using the <code>sprintf()</code> variable-filling functionality as before, this time referencing <code>df.p</code> and choosing the appropriate column (parameter value).</p>
@@ -360,7 +362,7 @@ combos = list(combos.itertuples(index=False, name=None))
 
 def slim_call(param1, param2):
     for seed in seeds:
-        system(&#39;slim -s {se} -d param1={p1} -d \&quot;param2=\&#39;{p2}\&#39;\&quot; ~/Desktop/example_script.slim&#39;.format(se=seed, p1=param1, p2=param2)) 
+        system(&#39;/path/to/slim -s {se} -d param1={p1} -d \&quot;param2=\&#39;{p2}\&#39;\&quot; ~/Desktop/example_script.slim&#39;.format(se=seed, p1=param1, p2=param2)) 
 
 # Open a new &#39;pool&#39; - like makeCluster() in R
 
@@ -397,7 +399,7 @@ using std::vector; using std::string;
 void runSLiM(std::pair&lt;float, string&gt; combo, string seed) {
     float param1 = combo.first;     // Access the pair&#39;s first value, which is param1
     string param2 = combo.second;
-    string callLine = &quot;slim -s &quot; + seed + &quot; -d param1=&quot; + std::to_string(param1) + &quot; -d \&quot;param2=\&#39;&quot; + param2 + &quot;\&#39;\&quot; ~/Desktop/example_script.slim&quot;;
+    string callLine = &quot;/path/to/slim -s &quot; + seed + &quot; -d param1=&quot; + std::to_string(param1) + &quot; -d \&quot;param2=\&#39;&quot; + param2 + &quot;\&#39;\&quot; ~/Desktop/example_script.slim&quot;;
     std::system(callLine.c_str());
 }
 
@@ -436,6 +438,47 @@ int main() {
 }</code></pre>
 <p>Most of this code is just sorting out csv files into structures that we can perform for loops on. We use openMP to parallelise a nested for loop structure and automatically dish out seed-parameter combinations to the runSLiM() function out to available cores. This code isn’t particularly nice to look at, nor is it going to work as-is for more than two parameters (<code>std::pair</code> will need to be another <code>std::vector</code>), however it could be expanded upon to be more customisable (e.g. accepting user input for filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way.</p>
 </div>
+<div id="writing-slim-code-with-parallelism-in-mind" class="section level1">
+<h1>6.7 Writing SLiM code with parallelism in mind</h1>
+<p>When it comes to writing your SLiM code, there are a few factors to keep in mind. Perhaps the most important is how you will deal with output. Will your models all write into the same output file or separate files? Each option has its pros and cons, so I’ll give descriptions of both.</p>
+<div id="single-file-output" class="section level3">
+<h3>Single file output</h3>
+<p>If you want to write your output into a single file, you will need to ensure that all <code>writeFile()</code> calls in your script have the <code>append</code> flag set to <code>T</code>. This way, when writing to the file, SLiM will write a new line character followed by what you are writing rather than overwriting the file. Be warned that this method isn’t completely safe and can introduce you to race conditions: if two simulations try to write at the same time, which of the two will write? Will one line of results be lost, will they both be glued together and become a pain to format, or will everything go as planned? This may or may not be a problem. For example, if you are tracking evolution over long periods of time, a single missed data point isn’t going to cause you any problems realistically. However, if your data is very detailed and written multiple times during a generation, then the chances for files to be written at the same time increases. The lesson really is if you write this way, write as little as you can to minimise the risk of race conditions becoming a problem. I have written output this way through my Honours, and had no issues with overwriting or missing output. This was with 1152 concurrent simulations, with data being written 200 times per run. However, I have encountered one error since then, where a single row was appended with no newline character to another, likely due to a similar race condition.</p>
+<p>In summary, the chances of problems are low, but never zero<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+</div>
+<div id="multiple-file-output" class="section level3">
+<h3>Multiple file output</h3>
+<p>If you want to write to multiple files, then you will need to write your output into generated folders or file names based on your seed and parameter combinations. For this, I recommend defining a ‘model index’ parameter in SLiM, which is unique for each parameter combination. In fact, this parameter will be useful regardless of your output protocol, as we will see later. This can simply be set asthe row number in your parameter combination table. For example, in R:</p>
+<pre class="r"><code>#Run SLiM
+foreach(i=1:nrow(df.p)) %:%
+  foreach(j=seeds$Seed) %dopar% {
+        slim_out &lt;- system(sprintf(&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d modelindex=%i  ~/Desktop/example_script.slim&quot;, as.character(j), df.p[i,]$param1, i, intern=T))
+  }</code></pre>
+<p>Here we set the SLiM constant <code>modelindex</code> equal to <code>i</code>, which is the row number of the parameter combination dataframe in our for loop.</p>
+<p>Now to name the output files, we need to combine the seed and modelindex in our SLiM script and specify a filename, like so:</p>
+<pre class="cpp"><code>initialize() {
+    if (!exists(&quot;slimgui&quot;)) {
+        setCfgParam(&quot;seed&quot;, getSeed()); // Set the seed as a constant if we&#39;ve run from the command line
+    }
+    else {
+        setSeed(asInteger(round(runif(1, 1, 2^62 - 1))));
+        setCfgParam(&quot;seed&quot;, getSeed());
+        catn(&quot;Actual seed: &quot; + asInteger(seed)); // Reset the seed to a more controlled value if we&#39;ve run from SLiMgui
+    }
+
+    setCfgParam(&quot;modelindex&quot;, 1); // Identifier for the combination of predictors used in latin hypercube: this is the row number in the lscombos.csv file
+    
+    
+    setCfgParam(&quot;outputFilepath&quot;, &#39;./out_&#39; + modelindex + &#39;_&#39; + seed + &#39;_slim.csv&#39;); // Output filename/path
+</code></pre>
+<p>The output filename of this simulation will be <code>out_&lt;modelindex&gt;_&lt;seed&gt;_slim.csv</code>. Since each simulation is writing to a different file, there is no chance of the output being overwritten<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. At the end of your simulations, you can join all these files into one using the <code>cat</code> bash command:</p>
+<pre class="bash"><code>cat ./\* &gt; slim_out.csv</code></pre>
+<p>The main problem with this method is writing to many different files creates overhead that will slow your simulation down, and has the potential to overload the filesystem. This can cause problems for other users if you are on a HPC. My recommendation is for large simulations you should use one single large file that you constantly append to, whereas smaller runs are probably fine to do using multiple files.</p>
+</div>
+<div id="section" class="section level3">
+<h3></h3>
+</div>
+</div>
 <div id="footnotes" class="section level1">
 <h1>Footnotes</h1>
 </div>
@@ -443,6 +486,8 @@ int main() {
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://xkcd.com/612/" class="uri">https://xkcd.com/612/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Much like the chances of your cat eating you in your sleep.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>There is still a small chance of <code>stdout</code> losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don’t do that.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
