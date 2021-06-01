@@ -1,0 +1,16 @@
+---
+title: "Running SLiM on a HPC Cluster"
+author: "Nick O'Brien"
+date: "01/06/2021"
+output: html_document
+css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 7.1 Overview
+
+From running SLiM in parallel on a local machine it becomes simpler to extend our knowledge to running 
+SLiM in parallel on a HPC.
