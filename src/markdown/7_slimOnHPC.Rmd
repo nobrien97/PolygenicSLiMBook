@@ -12,5 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 7.1 Overview
 
-From running SLiM in parallel on a local machine it becomes simpler to extend our knowledge to running 
-SLiM in parallel on a HPC.
+When running SLiM simulations, it is often
+Using the same methods as the previous chapter, we can extend our parallelism to much larger systems.
+
