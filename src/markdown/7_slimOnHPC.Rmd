@@ -97,7 +97,7 @@ Here is an example of how you might run just one SLiM run from a PBS script alon
 
 cd $TMPDIR
 
-~/SLiM/build/slim ~/SLiM/Tests/Example/SLiM/slim_example.slim
+~/SLiM/slim ~/SLiM/Scripts/Tests/Example/SLiM/slim_example.slim
 
 cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
 
@@ -115,8 +115,83 @@ are working on. After each job finishes, this storage is wiped, so it is tempora
 writing files directly to shared drives can be taxing on the system and disrupt other users. We then invoke a call to slim,
 running a script, and then we copy the output file to more permanent storage.
 
-# A single node SLiM job
+Now you could put any bash code in here - including our parallel SLiM in bash example from the previous chapter (6.3). However,
+I'd rather use R, so let's do that:
 
-# Job array SLiM jobs
+```{bash PBS_eg2, eval = F}
+#!/bin/bash -l
+#PBS -q workq
+#PBS -A qris-uq
+#PBS -N slim_eg
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=120G
 
-# Embedded Nimrod SLiM jobs
+cd $TMPDIR
+
+module load R/3.5.0
+
+R --file=/home/$USER/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R
+
+cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
+
+```
+
+Here, we do the same as before, except we load a version of R, run it with a certain file, and use that R script to handle running SLiM.
+Let's have a look at how that script looks:
+
+```{R PBS_Reg1, eval = F}
+##############################################################################################################
+#  Run SLiM in parallel
+##############################################################################################################
+
+#  Parallel script modified from SLiM-Extras example R script, info at
+#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.
+
+# Environment variables
+
+USER <- Sys.getenv('USER')
+
+# Parallelisation libraries 
+
+library(foreach)
+library(doParallel)
+library(future)
+
+
+seeds <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/seeds.csv"), header = T)
+combos <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/combos.csv"), header = T)
+
+# Set which runs to do according to node
+
+cl <- makeCluster(future::availableCores())
+registerDoParallel(cl)
+
+#Run SLiM
+foreach(i=1:nrow(combos)) %:%
+  foreach(j=seeds$Seed) %dopar% {
+	# Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
+	# then run SLiM with system(),
+    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim", 
+        as.character(j), combos[i,]$param1, combos[i,]$param2, i, intern=T))
+  }
+stopCluster(cl)
+```
+
+This should be pretty familiar to those who read Chapter 6.4. This time, we're using 24 cores instead of between 4 and 8 though, 
+which will make things a tad faster.
+But we're still only using one node. We can access multiple nodes in a job and use many more cores at once. Which is exciting!
+Be excited!
+
+## 7.4 Multi-node jobs
+
+There are two types of multi-node jobs on Tinaroo, and some form of both should exist on most HPCs. The first, job arrays,
+is like simultaneously running a whole bunch of these PBS scripts separately and having each work on a subset of your inputs.
+For example, your first script would handle the first 10 seeds, the next would do the next 10 seeds, etc.
+Ordinarily, this would be a pain because you would need a lot of scripts to manage all of that. Fortunately, the PBS system handles
+these well. The next system is the Embedded Nimrod system, which uses a different approach: it assigns individual cores to do jobs 
+as they become freed, irrespective of the node they belong to. This is much more powerful for large jobs, where the amount of wasted 
+time between one SLiM run ending and the next beginning can accumulate. 
+
+### 7.4.1 Job array SLiM jobs
+
+### 7.4.2 Embedded Nimrod SLiM jobs
