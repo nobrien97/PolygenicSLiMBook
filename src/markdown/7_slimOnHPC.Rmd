@@ -28,15 +28,17 @@ To connect to Tinaroo, after having [gained access](https://rcc.uq.edu.au/tinaro
 username: 
 `ssh <username>@tinaroo.rcc.uq.edu.au`.
 You'll be asked to confirm you trust the connection and to enter your password, and then will be put through to one
-of Tinaroo's login nodes. On this node (effectively a computer: HPCs are made of many nodes/PCs networked together), you
-are able to navigate your home directory, make files and folders, write scripts, and queue jobs. The first thing to do
+of Tinaroo's login nodes. This is a terminal just like anywhere else, and you will find yourself in your user's home
+directory, which will be empty. On the login node (effectively a computer: HPCs are made of many nodes/PCs networked together), 
+you are able to navigate directories, make files and folders, write scripts, and queue jobs. The first thing to do
 is install SLiM and the necessary R packages to run SLiM in parallel.
 To do this, we'll start an interactive job. This will connect us to a compute node, designed to run computations, and allow
 us to build SLiM without disturbing other users on the login node:
 `qsub -I -X -A <account-string-given-to-you> -l select=1:ncpus=24:mem=120GB -l walltime=4:00:00`
 
 `qsub` is the command that queues a job to the HPC system. Tinaroo uses PBS, a job scheduler that ensures that everyone using
-the system is able to fairly access appropriate resources for an appropriate amount of time. Here we are selecting one node, with 
+the system is able to fairly access appropriate resources for an appropriate amount of time. Other scehdulers also exist elsewhere,
+so scripts on your HPC system may look slightly different to the examples given. Here we are selecting one node, with 
 24 cores and 120GB of RAM for a total of 4 hours. Tinaroo's nodes contain 2 12 core processors (for 24 cores total), and 128GB of RAM,
 with 8GB reserved for system memory. Hence, we are asking for all of the available resources of a single node for 4 hours.
 The `-I` flag indicates the job is interactive, and the `-X` enables X-Forwarding, so if you would like to use RStudio, 
@@ -44,7 +46,23 @@ the RStudio window will appear for you on your home machine.
 
 You'll be put into a queue for a brief period (maybe not-so-brief, depending on load), and then you will be connected to a compute node.
 Now we can get to work. You'll want to make a new directory for your SLiM installation (`mkdir ~/SLiM`), and download and build SLiM.
-You can do this as before in Chapter II, or you can build SLiM manually as per the instructions in the SLiM manual.
+You will have to build SLiM manually as per the instructions in the SLiM manual, as the installation script will not work without 
+super-user/root permissions, which you won't have connecting to a remote HPC. This is fairly straightforward, and well explained 
+in the manual. Note that you will not need to install SLiMgui. Some basic instructions are below.
+
+```{bash build_slim, eval = F}
+mkdir ~/SLiM
+cd ~/SLiM
+curl -O http://benhaller.com/slim/SLiM.zip
+unzip SLiM.zip
+mkdir build
+cd build
+cmake ../SLiM
+make
+
+slim -testEidos
+slim -testSLiM
+```
 
 
 Having built SLiM, you'll now want to install the parallel libraries you are using to run SLiM in parallel. Tinaroo has multiple R
@@ -79,12 +97,23 @@ Here is an example of how you might run just one SLiM run from a PBS script alon
 
 cd $TMPDIR
 
-~/SLiM/build/slim 
+~/SLiM/build/slim ~/SLiM/Tests/Example/SLiM/slim_example.slim
 
 cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
 
 ```
 
+As you can see, the script is split into two sections: the instructions for the scheduler, and the script/job itself.
+`-q` defines the queue you want your job put into. On Tinaroo, workq is the default, however this will be different on 
+other systems. Generally, keeping it as the default is fine, but information on when to change your queue can be found 
+in your HPC's [documentation](www2.rcc.uq.edu.au/hpc/guides/), which may or may not have access restricted to university
+networks. 
+`-N` gives your job a name for easier identification when running many jobs at once. The other flags have been explained
+with the interactive job. 
+The first instruction of our job is to change our working directory to `$TMPDIR`, which is the local storage on the node you
+are working on. After each job finishes, this storage is wiped, so it is temporary and unique to every job. We do this because
+writing files directly to shared drives can be taxing on the system and disrupt other users. We then invoke a call to slim,
+running a script, and then we copy the output file to more permanent storage.
 
 # A single node SLiM job
 
