@@ -10,7 +10,7 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 7.1 Overview
+## 7.1 Overview
 
 When running SLiM simulations, it is often necessary to run many more than you have CPU cores available
 on your PC or laptop. As such, even with all cores going at once, you'll still be looking at a long time 
@@ -22,4 +22,72 @@ will have access to a similar system, and although there may be some differences
 the concepts remain the same.
 
 
+## 7.2 Connecting to Tinaroo and Set-up
 
+To connect to Tinaroo, after having [gained access](https://rcc.uq.edu.au/tinaroo), use the ssh command with your
+username: 
+`ssh <username>@tinaroo.rcc.uq.edu.au`.
+You'll be asked to confirm you trust the connection and to enter your password, and then will be put through to one
+of Tinaroo's login nodes. On this node (effectively a computer: HPCs are made of many nodes/PCs networked together), you
+are able to navigate your home directory, make files and folders, write scripts, and queue jobs. The first thing to do
+is install SLiM and the necessary R packages to run SLiM in parallel.
+To do this, we'll start an interactive job. This will connect us to a compute node, designed to run computations, and allow
+us to build SLiM without disturbing other users on the login node:
+`qsub -I -X -A <account-string-given-to-you> -l select=1:ncpus=24:mem=120GB -l walltime=4:00:00`
+
+`qsub` is the command that queues a job to the HPC system. Tinaroo uses PBS, a job scheduler that ensures that everyone using
+the system is able to fairly access appropriate resources for an appropriate amount of time. Here we are selecting one node, with 
+24 cores and 120GB of RAM for a total of 4 hours. Tinaroo's nodes contain 2 12 core processors (for 24 cores total), and 128GB of RAM,
+with 8GB reserved for system memory. Hence, we are asking for all of the available resources of a single node for 4 hours.
+The `-I` flag indicates the job is interactive, and the `-X` enables X-Forwarding, so if you would like to use RStudio, 
+the RStudio window will appear for you on your home machine.
+
+You'll be put into a queue for a brief period (maybe not-so-brief, depending on load), and then you will be connected to a compute node.
+Now we can get to work. You'll want to make a new directory for your SLiM installation (`mkdir ~/SLiM`), and download and build SLiM.
+You can do this as before in Chapter II, or you can build SLiM manually as per the instructions in the SLiM manual.
+
+
+Having built SLiM, you'll now want to install the parallel libraries you are using to run SLiM in parallel. Tinaroo has multiple R
+versions available, and it is up to you to load the one you would like. To see the list enter `module spider R`.
+Load the appropriate R version with `module load R/version.number`. Then, when you enter the R command, you will load a command line
+R interface for you to use. If this doesn't happen, and you load into a 'Singularity' container, type R again and it will launch.
+From here, install all the packages you need for your R scripts. For example:
+```{R install_dependencies, eval = F}
+install.packages("future",
+                 "doParallel",
+                 "foreach")
+
+```
+
+Having done this, you are ready to write some scripts. You can do this on either the compute node, or the login node, or on your local
+computer and transfer them across with `sftp` or FileZilla. 
+
+# 7.3 PBS Scripts
+
+A PBS script contains the instructions that the job scheduler will use to determine what we want our job to do. It is simply a 
+bash script with some 'directives' at the start to instruct the scheduler on how many resources we want to use. The interactive job
+line is in itself a PBS script, with some directives.
+Here is an example of how you might run just one SLiM run from a PBS script alone.
+
+```{bash PBS_eg1, eval = F}
+#!/bin/bash -l
+#PBS -q workq
+#PBS -A your-account-string
+#PBS -N slim_eg
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=120G
+
+cd $TMPDIR
+
+~/SLiM/build/slim 
+
+cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
+
+```
+
+
+# A single node SLiM job
+
+# Job array SLiM jobs
+
+# Embedded Nimrod SLiM jobs
