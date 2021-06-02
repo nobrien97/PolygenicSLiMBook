@@ -12,33 +12,47 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 3.1 Overview
 
-One major difference between Windows/Mac and Linux operating systems is that it's necessary to learn how to use a command prompt (called the terminal) to use the operating system. You've already done a bit of that when you were installing Ubuntu and Gnome, but now I'll show you some of the most useful commands for navigating directories via the terminal, installing and updating your software, manipulating text files, and what programs you'll likely use for various tasks.
+One major difference between Windows/Mac and Linux operating systems is that it's necessary to learn how to use a command prompt 
+(called the terminal) to use the operating system. You've already done a bit of that when you were installing Ubuntu and Gnome, 
+but now I'll show you some of the most useful commands for navigating directories via the terminal, installing and updating your software, 
+manipulating text files, and what programs you'll likely use for various tasks.
 
 ## 3.2 Navigating folders
 
 When you open a terminal emulator in Gnome, you'll be met with a screen that looks something like this:
 ![](images/chapter2/terminalex.png)
 
-Notice the start of the line: this tells you whereabouts in the filesystem you are. By default, when you open a terminal you'll start at the root directory: the first folder that contains all other folders and files within it. To check your current working directory, type `pwd` (print working directory). Lets go to our Desktop directory. To do that type `cd ~/Desktop`. The `~` character tells linux that the directory you are looking for is a branch off of home. Since opening a new terminal defaults you to the home directory, an alternative to do the same thing is `./Desktop`. `./` tells linux that the directory is a branch off of the current directory (the one shown with `pwd`). Now let's list what's on our Desktop using the `ls` command. To go back to your home directory (Desktop's parent directory), type `cd ../`.
+Notice the start of the line: this tells you whereabouts in the filesystem you are. By default, when you open a terminal you'll 
+start at the root directory: the first folder that contains all other folders and files within it. To check your current working 
+directory, type `pwd` (print working directory). Lets go to our Desktop directory. To do that type `cd ~/Desktop`. The `~` character 
+tells linux that the directory you are looking for is a branch off of home. Since opening a new terminal defaults you to the home directory, 
+an alternative to do the same thing is `./Desktop`. `./` tells linux that the directory is a branch off of the current directory 
+(the one shown with `pwd`). Now let's list what's on our Desktop using the `ls` command. To go back to your home directory (Desktop's parent directory), 
+type `cd ../`.
 
 ![](images/chapter2/terminalcd.png)
 
 Now lets say we want to create a directory. We can use the `mkdir` command for that. Go back to your desktop and enter: 
 `mkdir Cool_Folder`. 
-On your Gnome desktop, you should see that folder appear. If we want to create folders within folders, we can use the recursive flag with `mkdir`, as follows:
+On your Gnome desktop, you should see that folder appear. If we want to create folders within folders, we can use the 
+recursive flag with `mkdir`, as follows:
 `mkdir -r Cool_Folder/Cooler_Folder`
 
-Now say we want to make a folder, and then enter it immediately after. We can do this a number of ways. You could simply call `cd` as a second command, but you can also use `&&` to chain together commands, like so:
+Now say we want to make a folder, and then enter it immediately after. We can do this a number of ways. 
+You could simply call `cd` as a second command, but you can also use `&&` to chain together commands, like so:
 `mkdir -r Cool_Folder/Cooler_folder && cd ./Cool_Folder/Cooler_folder`
 
-If you ever want to learn about the flags that are available for a certain command, you can enter `man command_name` to view the manual, or `command-name --help` to view a usually shorter list of available options.
+If you ever want to learn about the flags that are available for a certain command, you can enter `man command_name` 
+to view the manual, or `command-name --help` to view a usually shorter list of available options.
 
 
 :::: {.extrabox data-latex=""}
 ::: {.center data-latex=""}
 **Box 3.2.1**
 :::
-Say you want to make a directory and then enter it immediately rather than having to chain together commands or enter them one at a time. You can do that by creating a custom command and putting it inside your /home/.bashrc file (courtesy of Ouki on [Stack Overflow](https://unix.stackexchange.com/questions/125385/combined-mkdir-and-cd)):
+Say you want to make a directory and then enter it immediately rather than having to chain together commands or 
+enter them one at a time. You can do that by creating a custom command and putting it inside your /home/.bashrc file 
+(courtesy of Ouki on [Stack Overflow](https://unix.stackexchange.com/questions/125385/combined-mkdir-and-cd)):
 ```{bash mkcdir, eval = F}
 mkcdir ()
 {
@@ -51,22 +65,31 @@ mkcdir ()
 
 ## 3.3 Installing and updating software
 
-With Ubuntu, you don't need to worry about Windows updates taking your computer hostage whenever it feels like it. However, it is on you to keep your software updated (or not, if you need a particular version of some software!).
+With Ubuntu, you don't need to worry about Windows updates taking your computer hostage whenever it feels like it. 
+However, it is on you to keep your software updated (or not, if you need a particular version of some software!).
 To update all the packages you have installed, run the following:
 ```{bash update, eval = FALSE}
 sudo apt-get update
 sudo apt-get upgrade
 ```
 
-`sudo` is like 'Run as Administrator' in Windows, and allows programs to gain root access (access to non-user directories like where most of your software is installed). `apt-get update` updates the list of Ubuntu-supported packages you are able to install directly via Ubuntu. `apt-get upgrade` downloads those latest versions of the Ubuntu-supported packages you have installed and updates them for you. 
-Before installing new software using `apt-get`, it's always a good idea to run `apt-get update` to make sure you're downloading the latest version.
+`sudo` is like 'Run as Administrator' in Windows, and allows programs to gain root access (access to non-user 
+directories like where most of your software is installed). `apt-get update` updates the list of Ubuntu-supported 
+packages you are able to install directly via Ubuntu. `apt-get upgrade` downloads those latest versions of the 
+Ubuntu-supported packages you have installed and updates them for you. 
+Before installing new software using `apt-get`, it's always a good idea to run `apt-get update` to make 
+sure you're downloading the latest version.
 
 Now lets say we want to download a new program - like fortune, a little program that shows a quote on the screen.
 ```{bash fortune, eval = FALSE}
 sudo apt-get update
 sudo apt-get install fortune-mod
 ```
-If you don't know the full name of a package (or how to spell it), you can press tab to autocomplete your line, or double-press tab to give a list of all the possible packages available matching what you've typed so far. This works for anything in terminal, and is extremely useful, especially when cd'ing to a directory: rather than typing out the whole directory, you can usually hit tab a few times, type a few letters and hit tab some more to get to where you want. Much faster!
+If you don't know the full name of a package (or how to spell it), you can press tab to autocomplete your line, 
+or double-press tab to give a list of all the possible packages available matching what you've typed so far. 
+This works for anything in terminal, and is extremely useful, especially when cd'ing to a directory: rather than 
+typing out the whole directory, you can usually hit tab a few times, type a few letters and hit tab some more to 
+get to where you want. Much faster!
 
 `apt-get install` also works with multiple packages at once. For example,
 ```{bash fortune2, eval = FALSE}
@@ -111,7 +134,10 @@ Similarly, rather than typing out entire directories every time, you can use som
 | ..        | Parent directory | ../build                            |
 | /         | Root directory | /bin                                  |
 
-And here are a number of some really helpful commands that you'll likely be using often. I'll only be showing you the base cases here: often there are a number of options you can enable to do different things (e.g. recursively make directories with mkdir -r), but to see the available options all you need to do is look for the command's manual page with `man <command>`
+And here are a number of some really helpful commands that you'll likely be using often. I'll only be showing 
+you the base cases here: often there are a number of options you can enable to do different things 
+(e.g. recursively make directories with mkdir -r), but to see the available options all you need to do is 
+look for the command's manual page with `man <command>`
 
 | Command  | Description                                                              | Example                             |
 | -------- | ------------------------------------------------------------------------ | ----------------------------------- |
@@ -138,9 +164,18 @@ And here are a number of some really helpful commands that you'll likely be usin
 
 ## 3.4 Input and output
 
-Linux programs are written in such a way that programs take their inputs and spit out their outputs in a standardised way. This means that you can use the same command or tool to affect many different programs' outputs or inputs with the same syntax. This is done through input and output 'channels'. The main ones are standard input (stdin), standard output (stdout), and standard error (stderr). You might also see these referred to as file descriptors. Programmers can write code to send their output to stdout (and error messages to stderr) to avoid having to implement their own system. If they require addition functionality, they can create their own channels as well. For more on input/output and file descriptors, see [this video](https://youtu.be/2xlk4bSPG38?t=2544).
+Linux programs are written in such a way that programs take their inputs and spit out their outputs in a standardised way. 
+This means that you can use the same command or tool to affect many different programs' outputs or inputs with the same 
+syntax. This is done through input and output 'channels'. The main ones are standard input (stdin), 
+standard output (stdout), and standard error (stderr). You might also see these referred to as file descriptors. 
+Programmers can write code to send their output to stdout (and error messages to stderr) to avoid having to implement 
+their own system. If they require addition functionality, they can create their own channels as well. For more on 
+input/output and file descriptors, see [this video](https://youtu.be/2xlk4bSPG38?t=2544).
 
-By default, stdin takes the input of what the user types in the terminal, and stdout (and stderr) prints everything to the terminal. This behaviour can be changed by using pipes and redirection, making these input/output streams very powerful indeed. One consequence of this is we can chain together commands, feeding their output into another command. Take this example:
+By default, stdin takes the input of what the user types in the terminal, and stdout (and stderr) prints everything 
+to the terminal. This behaviour can be changed by using pipes and redirection, making these input/output streams 
+very powerful indeed. One consequence of this is we can chain together commands, feeding their output into another 
+command. Take this example:
 
 ```{bash output_eg, eval = FALSE}
 fortune | cowsay
@@ -156,6 +191,8 @@ Take this example:
 echo Hi > ~/Desktop/Hi.txt
 ```
 
-Redirection is in particular very important in general, and will be used pretty extensively to copy files to the proper place, append files with new lines of results from SLiM, and interface with supercomputers (all coming later!). For that reason, I strongly suggest watching this [10 minute video](https://www.youtube.com/watch?v=mV_8GbzwZMM) on all the common redirection and piping methods available so when you see it in future (or need to use their functionality!) you know what you're looking at.
-
-
+Redirection is in particular very important in general, and will be used pretty extensively to copy files to 
+the proper place, append files with new lines of results from SLiM, and interface with supercomputers (all coming later!). 
+For that reason, I strongly suggest watching this [10 minute video](https://www.youtube.com/watch?v=mV_8GbzwZMM) on 
+all the common redirection and piping methods available so when you see it in future (or need to use their functionality!) 
+you know what you're looking at.

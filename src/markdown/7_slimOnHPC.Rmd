@@ -12,6 +12,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 7.1 Overview
 
-When running SLiM simulations, it is often
-Using the same methods as the previous chapter, we can extend our parallelism to much larger systems.
+When running SLiM simulations, it is often necessary to run many more than you have CPU cores available
+on your PC or laptop. As such, even with all cores going at once, you'll still be looking at a long time 
+to wait to get any data back. Luckily, high-performance computing (HPC) clusters exist which allow you
+to use hundreds or thousands of cores concurrently. Using the same methods as the previous chapter, 
+we can extend our parallelism to much larger systems. In this chapter, I'll be providing some examples of
+how to use the University of Queensland's [Tinaroo](https://rcc.uq.edu.au/tinaroo) system. Most universities
+will have access to a similar system, and although there may be some differences in the syntax of some scripts,
+the concepts remain the same.
+
+
 

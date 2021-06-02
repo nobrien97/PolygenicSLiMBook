@@ -12,11 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 6.1 Overview
 
-Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering - how can we actually run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. 
-Whatever language you have that has a function to invoke system operating system commands (like ```system()``` in R) can probably be 
-used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, 
-which will help negate some of the time needed to run many replicates. SLiM handles parallelism very well because it is written 
-to only every use a single core: this means you can run separate SLiM experiments on each core your computer has available at the same time.
+Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering: how do we make this useful?
+To answer a question, we need multiple simulations with different variable inputs (e.g. different recombination rates), and replicates of each.
+The problem here is that the more simulations you need to do, the longer the time required if you were to run them sequentially.
+Luckily, SLiM is designed with parallelism in mind. That is, you can have many SLiM simulations going at once, each running on a separate CPU core. 
+This can all be done in whatever programming language you like, as long as it has a function to invoke system operating system commands 
+(like ```system()``` in R), and ssupport for multicore processing.
 
 In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. 
 I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn1] to program! 
