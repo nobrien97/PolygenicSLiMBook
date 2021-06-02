@@ -161,7 +161,6 @@ library(future)
 seeds <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/seeds.csv"), header = T)
 combos <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/combos.csv"), header = T)
 
-# Set which runs to do according to node
 
 cl <- makeCluster(future::availableCores())
 registerDoParallel(cl)
@@ -177,10 +176,10 @@ foreach(i=1:nrow(combos)) %:%
 stopCluster(cl)
 ```
 
-This should be pretty familiar to those who read Chapter 6.4. This time, we're using 24 cores instead of between 4 and 8 though, 
-which will make things a tad faster.
-But we're still only using one node. We can access multiple nodes in a job and use many more cores at once. Which is exciting!
-Be excited!
+This should be pretty familiar to those who read Chapter 6.4. The only real difference is we get an environment variable from
+the HPC, `$USER`, which we use to access some HPC directories. This time, we're using 24 cores instead of between 4 and 8 though, 
+which will make things a tad faster. But we're still only using one node. We can access multiple nodes in a job and use many more 
+cores at once. Which is exciting! Be excited!
 
 ## 7.4 Multi-node jobs
 
@@ -193,5 +192,81 @@ as they become freed, irrespective of the node they belong to. This is much more
 time between one SLiM run ending and the next beginning can accumulate. 
 
 ### 7.4.1 Job array SLiM jobs
+
+Job array jobs are very simple to set-up. A single line has to be added to the PBS Script:
+
+```{bash JA_eg1, eval = F}
+#!/bin/bash -l
+#PBS -q workq
+#PBS -A qris-uq
+#PBS -N slim_eg
+#PBS -J 1-4
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=120G
+
+cd $TMPDIR
+
+module load R/3.5.0
+
+R --file=/home/$USER/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R
+
+cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
+
+```
+
+`#PBS -J 1-4` Is the key line here, where `-J` signifies a job array, and `1-4` is a vector of identifiers for each sub-job in the
+array. These identifiers provide a new environment variable, `$PBS_ARRAY_INDEX`, which can be used to identify which node is in charge
+of the current script. This can be loaded into R:
+
+```{R JA_Reg1, eval = F}
+##############################################################################################################
+#  Run SLiM in parallel
+##############################################################################################################
+
+#  Parallel script modified from SLiM-Extras example R script, info at
+#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.
+
+# Environment variables
+
+USER <- Sys.getenv('USER')
+ARRAY_INDEX <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
+
+# Parallelisation libraries 
+
+library(foreach)
+library(doParallel)
+library(future)
+
+
+seeds <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/seeds.csv"), header = T)
+combos <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/combos.csv"), header = T)
+
+# Set which runs to do according to node
+
+switch (ARR_INDEX,
+  { combos <- combos[1:5,] },
+  { combos <- combos[6:9,] },
+  { combos <- combos[10:13,] },
+  { combos <- combos[14:18,] }
+)
+
+
+cl <- makeCluster(future::availableCores())
+registerDoParallel(cl)
+
+#Run SLiM
+foreach(i=1:nrow(combos)) %:%
+  foreach(j=seeds$Seed) %dopar% {
+	# Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
+	# then run SLiM with system(),
+    	slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim", 
+        as.character(j), combos[i,]$param1, combos[i,]$param2, i, intern=T))
+  }
+stopCluster(cl)
+```
+
+The R script loads in the array index, and uses that value in a switch statement to choose a certain number of rows.
+This way, the load of parameter combinations is spread across the nodes. 
+
 
 ### 7.4.2 Embedded Nimrod SLiM jobs
