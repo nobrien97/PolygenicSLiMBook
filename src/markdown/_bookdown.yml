@@ -9,7 +9,8 @@ rmd_files: [
 	"3_terminal.Rmd",
 	"4_polygenicAdaptation.Rmd",
 	"5_polygenicSlim.Rmd",
-	"6_slimInParallel.Rmd"
+	"6_slimInParallel.Rmd",
+	"7_slimOnHPC"
 
 ]
 

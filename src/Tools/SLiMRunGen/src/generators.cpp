@@ -95,6 +95,11 @@ void PBSGenerator::FileGenerate()
 
     file_save(scriptLines, _filename + ".pbs");
   }
+  else {
+    
+
+
+  }
 }
     void PBSGenerator::PBS_SetVars(const FileGenerator &FG)
     {
