@@ -132,7 +132,8 @@ This command has a lot of flags that vary its output, so I'd suggest reading thr
 After a job has finished, it will leave behind two files, one for standard output, and one for standard error. If your job crashes,
 usually found out by if it finishes instantly, or far sooner than expected, then you should have a look at these files to see
 what went wrong. This are saved in the same directory that you ran the `qsub` command from. In our example, we `cd`'d to ..../example/PBS,
-so our output will be there. The files will be named the same as your PBS script, with .eXXXXX and .oXXXXX, where XXXXX is your job's id 
+so our output will be there. The files will be named the same as your `#PBS -N` flag in your .pbs script, with file extensions .eXXXXX and .oXXXXX, 
+where XXXXX is your job's id 
 number.
 
 Now you could put any bash code in here - including our parallel SLiM in bash example from the previous chapter (6.3). However,
@@ -200,8 +201,7 @@ This should be pretty familiar to those who read Chapter 6.4. The only real diff
 the HPC, `$USER`, which we use to access some HPC directories. This time, we're using 24 cores instead of between 4 and 8 though, 
 which will make things a tad faster. 
 
-But we're still only using one node. We can access multiple nodes in a job and use many more 
-cores at once. Which is exciting! Be excited!
+But we're still only using one node. We can access multiple nodes in a job and use many more cores at once. Which is exciting! Be excited!
 
 ## 7.4 Multi-node jobs
 
