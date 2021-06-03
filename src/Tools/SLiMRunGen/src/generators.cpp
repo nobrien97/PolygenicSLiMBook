@@ -114,12 +114,42 @@ void PBSGenerator::FileGenerate()
                               "\t\t\t\texit 2\n"
                               "fi");
 
-  scriptLines.emplace_back("if [ -z \"${NIMROD_VAR_SEED}\" ]; then\n"
+    scriptLines.emplace_back("if [ -z \"${NIMROD_VAR_SEED}\" ]; then\n"
                               "\t\t\t\techo \"\$NIMROD_VAR_SEED isn't set, cannot continue...\"\n"
                               "\t\t\t\texit 2\n"
                               "fi");
 
-  
+  // Now we can actually write the script!
+
+  scriptLines.emplace_back("cd ${TMPDIR}");
+  scriptLines.emplace_back("RUNNAME=\"" + _filename + "\"");
+  scriptLines.emplace_back("OUTFILE=\"${PBS_O_WORKDIR}/Outputs/TEST_${NIMROD_VAR_LS}_${NIMROD_VAR_SEED}.txt\"\necho \"${OUTFILE}\"");
+
+  scriptLines.emplace_back("if [ -f ${OUTFILE} ]; then\n"
+                              "\techo \"Output file ${OUTFILE} already exists. Skipping this index value ${NIMROD_VAR_LS} ${NIMROD_VAR_SEED}\"\n"
+                              "\texit 0\n"
+                              "fi");  
+
+
+  scriptLines.emplace_back("RSCRIPTNAME=\"${PBS_O_WORKDIR}/R/${RUNNAME}.R\"");
+
+  scriptLines.emplace_back("module purge\nmodule load R/3.5.0-gnu");
+
+  scriptLines.emplace_back("Rscript $RSCRIPTNAME ${NIMROD_VAR_SEED} ${NIMROD_VAR_LS}");
+
+  vector<string> outputStrings = {"out_stabsel_means.csv",
+                                    "out_stabsel_muts.csv",
+                                    "out_stabsel_burnin.csv",
+                                    "out_stabsel_opt.csv",
+                                    "out_stabsel_dict.csv",
+                                    "out_stabsel_pos.csv"};
+
+    for (const string &str : outputStrings)
+    {
+      scriptLines.emplace_back("cat /$TMPDIR/" + str + " >> /30days/$USER/" + str);
+    }
+
+
   }
 }
     void PBSGenerator::PBS_SetVars(const FileGenerator &FG)
