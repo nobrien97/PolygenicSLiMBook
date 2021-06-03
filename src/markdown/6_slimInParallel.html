@@ -175,7 +175,7 @@ pre code {
 
 <div id="overview" class="section level2">
 <h2>6.1 Overview</h2>
-<p>Now that we have an understanding of SLiM and a couple of models that might be useful, you’re probably wondering - how can we actually run this in a manageable timeframe, and get a decent number of replicates? The answer is, however you want really. Whatever language you have that has a function to invoke system operating system commands (like <code>system()</code> in R) can probably be used to run SLiM remotely. In turn, you can get these calls to run sequentially or in parallel across cores on your machine, which will help negate some of the time needed to run many replicates. SLiM handles parallelism very well because it is written to only every use a single core: this means you can run separate SLiM experiments on each core your computer has available at the same time.</p>
+<p>Now that we have an understanding of SLiM and a couple of models that might be useful, you’re probably wondering: how do we make this useful? To answer a question, we need multiple simulations with different variable inputs (e.g. different recombination rates), and replicates of each. The problem here is that the more simulations you need to do, the longer the time required if you were to run them sequentially. Luckily, SLiM is designed with parallelism in mind. That is, you can have many SLiM simulations going at once, each running on a separate CPU core. This can all be done in whatever programming language you like, as long as it has a function to invoke system operating system commands (like <code>system()</code> in R), and ssupport for multicore processing.</p>
 <p>In this section, I’ll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. I even provide a C++ implementation which is overkill and not necessary at all, but it was fun<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> to program!</p>
 <p>Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the <a href="https://github.com/MesserLab/SLiM-Extras">SLiM-Extras repository</a> under ‘sublaunching’. Source code for all of the examples shown in this document is available in the <code>/src/Parallelisation</code> folder.</p>
 </div>
@@ -472,11 +472,14 @@ foreach(i=1:nrow(df.p)) %:%
     setCfgParam(&quot;outputFilepath&quot;, &#39;./out_&#39; + modelindex + &#39;_&#39; + seed + &#39;_slim.csv&#39;); // Output filename/path
 </code></pre>
 <p>The output filename of this simulation will be <code>out_&lt;modelindex&gt;_&lt;seed&gt;_slim.csv</code>. Since each simulation is writing to a different file, there is no chance of the output being overwritten<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. At the end of your simulations, you can join all these files into one using the <code>cat</code> bash command:</p>
-<pre class="bash"><code>cat ./\* &gt; slim_out.csv</code></pre>
+<pre class="bash"><code>cat ./* &gt; slim_out.csv</code></pre>
+<p>This will grab all files in the selected folder <code>./</code> and concatenate them together. Note that if newlines aren’t at the bottom of each file, then this won’t work. However, SLiM should automatically do this, and if not you can use the script:</p>
+<pre class="bash"><code>for file in /path/*.csv
+do
+    echo &quot;&quot; &gt;&gt; &quot;$file&quot;
+done</code></pre>
+<p>Which will apend a newline character to the end of each file<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</p>
 <p>The main problem with this method is writing to many different files creates overhead that will slow your simulation down, and has the potential to overload the filesystem. This can cause problems for other users if you are on a HPC. My recommendation is for large simulations you should use one single large file that you constantly append to, whereas smaller runs are probably fine to do using multiple files.</p>
-</div>
-<div id="section" class="section level3">
-<h3></h3>
 </div>
 </div>
 <div id="footnotes" class="section level1">
@@ -488,6 +491,7 @@ foreach(i=1:nrow(df.p)) %:%
 <li id="fn1"><p><a href="https://xkcd.com/612/" class="uri">https://xkcd.com/612/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 <li id="fn2"><p>Much like the chances of your cat eating you in your sleep.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 <li id="fn3"><p>There is still a small chance of <code>stdout</code> losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don’t do that.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://stackoverflow.com/a/31053205/13586824" class="uri">https://stackoverflow.com/a/31053205/13586824</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 

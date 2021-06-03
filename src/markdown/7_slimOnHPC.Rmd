@@ -26,7 +26,9 @@ the concepts remain the same.
 
 To connect to Tinaroo, after having [gained access](https://rcc.uq.edu.au/tinaroo), use the ssh command with your
 username: 
+
 `ssh <username>@tinaroo.rcc.uq.edu.au`.
+
 You'll be asked to confirm you trust the connection and to enter your password, and then will be put through to one
 of Tinaroo's login nodes. This is a terminal just like anywhere else, and you will find yourself in your user's home
 directory, which will be empty. On the login node (effectively a computer: HPCs are made of many nodes/PCs networked together), 
@@ -34,6 +36,7 @@ you are able to navigate directories, make files and folders, write scripts, and
 is install SLiM and the necessary R packages to run SLiM in parallel.
 To do this, we'll start an interactive job. This will connect us to a compute node, designed to run computations, and allow
 us to build SLiM without disturbing other users on the login node:
+
 `qsub -I -X -A <account-string-given-to-you> -l select=1:ncpus=24:mem=120GB -l walltime=4:00:00`
 
 `qsub` is the command that queues a job to the HPC system. Tinaroo uses PBS, a job scheduler that ensures that everyone using
@@ -78,7 +81,7 @@ install.packages("future",
 ```
 
 Having done this, you are ready to write some scripts. You can do this on either the compute node, or the login node, or on your local
-computer and transfer them across with `sftp` or FileZilla. 
+computer and transfer them across with `sftp` or FileZilla, which we'll get to later. 
 
 # 7.3 PBS Scripts
 
@@ -123,7 +126,7 @@ qsub example_job.pbs
 
 You'll get a message like telling you your job id number, and the PBS manager handling it.
 If you enter `qstat` you'll get a list of all your queued and running jobs:
-![]("./images/chapter7/qstat.png")
+![](images/chapter7/qstat.png)
 
 This screen tells you the status of your job (R for running, Q for queued, X for finished), as well as its name, queue,
 resource requirements, etc.
@@ -198,9 +201,26 @@ stopCluster(cl)
 ```
 
 This should be pretty familiar to those who read Chapter 6.4. The only real difference is we get an environment variable from
-the HPC, `$USER`, which we use to access some HPC directories. This time, we're using 24 cores instead of between 4 and 8 though, 
-which will make things a tad faster. 
+the HPC, `$USER`, which we use to access some HPC directories. You may notice however, that we haven't copied across the .csv files from which
+our seeds and combos are taken! To do this, open up FileZilla:
 
+![](images/chapter7/filezilla.png)
+
+At the top left, you'll see a quickconnect bar. Enter the following under each option:
+
+- Host: sftp://tinaroo.rcc.uq.edu.au
+- Username: Your username
+- Password: Your password
+- Port: 22
+
+When you click quickconnect, you'll be greeted by another security message ('do you trust to connect to this server'), and then you'll 
+be put through to Tinaroo. The left block is your home computer, the right block is Tinaroo's filesystem. You can navigate on the left
+to your files (for example, where you have your combos.csv and seeds.csv files stored) and then on the right, navigate to where you want 
+to put your files and drag and drop them into that folder:
+
+![](images/chapter7/filezilla2.png)
+
+Now when you run your job, you'll have 24 cores instead of the $<10$ of your local PC, which will make things a tad faster. 
 But we're still only using one node. We can access multiple nodes in a job and use many more cores at once. Which is exciting! Be excited!
 
 ## 7.4 Multi-node jobs
@@ -209,9 +229,9 @@ There are two types of multi-node jobs on Tinaroo, and some form of both should 
 is like simultaneously running a whole bunch of these PBS scripts separately and having each work on a subset of your inputs.
 For example, your first script would handle the first 10 seeds, the next would do the next 10 seeds, etc.
 Ordinarily, this would be a pain because you would need a lot of scripts to manage all of that. Fortunately, the PBS system handles
-these well. The next system is the Embedded Nimrod system, which uses a different approach: it assigns individual cores to do jobs 
-as they become freed, irrespective of the node they belong to. This is much more powerful for large jobs, where the amount of wasted 
-time between one SLiM run ending and the next beginning can accumulate. 
+this for you, and you only need one extra flag to be set in your PBS script. The next system is the Embedded Nimrod system, 
+which uses a different approach: it assigns individual cores to do jobs as they become freed, irrespective of the node they belong to. 
+This is much more powerful for large jobs, where the amount of wasted time between one SLiM run ending and the next beginning can accumulate. 
 
 ### 7.4.1 Job array SLiM jobs
 
