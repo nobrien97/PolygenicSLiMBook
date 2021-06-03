@@ -1,0 +1,9 @@
+---
+title: "SLiMulations in polygenic space: How to use SLiM for polygenic adaptation."
+author: "Nick O'Brien"
+site: bookdown::bookdown_site
+
+#bibliography: .bib
+#csl: .csl
+#suppress-bibliography: true
+---
