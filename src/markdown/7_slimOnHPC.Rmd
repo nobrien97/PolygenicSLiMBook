@@ -115,6 +115,26 @@ are working on. After each job finishes, this storage is wiped, so it is tempora
 writing files directly to shared drives can be taxing on the system and disrupt other users. We then invoke a call to slim,
 running a script, and then we copy the output file to more permanent storage.
 
+To queue a job, use the `qsub` command:
+```{bash qsub, eval = F}
+cd ~/home/$USER/SLiM/Scripts/Tests/Example/PBS
+qsub example_job.pbs
+```
+
+You'll get a message like telling you your job id number, and the PBS manager handling it.
+If you enter `qstat` you'll get a list of all your queued and running jobs:
+![]("./images/chapter7/qstat.png")
+
+This screen tells you the status of your job (R for running, Q for queued, X for finished), as well as its name, queue,
+resource requirements, etc.
+This command has a lot of flags that vary its output, so I'd suggest reading through them using `man qstat`.
+
+After a job has finished, it will leave behind two files, one for standard output, and one for standard error. If your job crashes,
+usually found out by if it finishes instantly, or far sooner than expected, then you should have a look at these files to see
+what went wrong. This are saved in the same directory that you ran the `qsub` command from. In our example, we `cd`'d to ..../example/PBS,
+so our output will be there. The files will be named the same as your PBS script, with .eXXXXX and .oXXXXX, where XXXXX is your job's id 
+number.
+
 Now you could put any bash code in here - including our parallel SLiM in bash example from the previous chapter (6.3). However,
 I'd rather use R, so let's do that:
 
@@ -179,14 +199,6 @@ stopCluster(cl)
 This should be pretty familiar to those who read Chapter 6.4. The only real difference is we get an environment variable from
 the HPC, `$USER`, which we use to access some HPC directories. This time, we're using 24 cores instead of between 4 and 8 though, 
 which will make things a tad faster. 
-
-To queue a job, use the `qsub` command:
-```{bash qsub, eval = F}
-cd ~/home/$USER/SLiM/Scripts/Tests/Example/PBS
-qsub example_job.pbs
-```
-
-
 
 But we're still only using one node. We can access multiple nodes in a job and use many more 
 cores at once. Which is exciting! Be excited!
