@@ -39,6 +39,8 @@ public:
     string _walltime = "3:00:00";
     int _cores = 24;
     string _mem = "120G";
+    int _nodes = 0;
+    int _comboSize = 100;
 
     // R Variables
     bool _LHC = false;
@@ -63,6 +65,7 @@ public:
 
 protected:
     void PBS_SetVars(const FileGenerator &FG);
+    void NSH_SetVars(const FileGenerator &FG);
 };
 
 class RGenerator : public FileGenerator

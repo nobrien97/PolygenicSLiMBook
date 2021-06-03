@@ -10,6 +10,7 @@
 #include "getopt.h"
 #include "generators.cpp"
 #include "main.hpp"
+#include "string.h"
 
 #define no_arg 0
 #define arg_required 1
@@ -24,11 +25,19 @@ using std::string;
     const struct option longopts[] =
     {
         { "destination",    no_argument,        0,  'd' },
-        { "nsamples",       required_argument,  0,  'n' },
+        { "nimrod",         required_argument,  0,  'n' },
         { "help",           no_argument,        0,  'h' },
         { "verbose",        no_argument,        0,  'v' },
         { "top",            optional_argument,  0,  't' },
-        { "slim-pars",      required_argument,  0,  's' },
+        { "slim-pars",      required_argument,  0,  'p' },
+        { "nodes",          required_argument,  0,  'o' },
+        { "jobname",        required_argument,  0,  'N' },
+        { "jobarray",       required_argument,  0,  'J' },
+        { "walltime",       required_argument,  0,  'w' },
+        { "ncpus",          required_argument,  0,  'c' },
+        { "mem",            required_argument,  0,  'm' },
+        { "R-only",         no_argument,        0,  'R' },
+        { "PBS-only",       no_argument,        0,  'P' },
         {0,0,0,0}
     };
 
@@ -61,10 +70,13 @@ void doHelp(char* appname) {
     "-m N           Specify the amount of memory to use per node.\n"
     "               Example: -m '50G\n"
     "\n"
-    "-s LIST        Provide a list of SLiM parameters to vary, delimited by commas.\n"
-    "               Example: -s \"nloci,Ne,param1,param2\"\n"
+    "-p LIST        Provide a list of SLiM parameters to vary, delimited by commas.\n"
+    "               Example: -p \"nloci,Ne,param1,param2\"\n"
     "\n"
     "-n             Specify if you would like to generate a Nimrod script.\n"
+    "\n"
+    "-o N           Specify the number of nodes to use in your Nimrod script.\n"
+    "               Example: -o 10\n"
     "\n"
     "-R             Specify if you would like to only generate a .R file.\n"
     "\n"
@@ -86,7 +98,8 @@ int main(int argc, char* argv[]) {
         { "help",           no_argument,        0,  'h' },
         { "verbose",        no_argument,        0,  'v' },
         { "walltime",       required_argument,  0,  'w' },
-        { "nimrod",         no_argument,        0,  'n' },
+        { "nimrod",         optional_argument,  0,  'n' },
+        { "nodes",          required_argument,  0,  'o' },
         { "cores",          required_argument,  0,  'c' },
         { "memory",         required_argument,  0,  'm' },
         { "parameters",     required_argument,  0,  's' },
@@ -131,9 +144,11 @@ int main(int argc, char* argv[]) {
                 continue;
 
             case 'n':
+            {
                 fileinit._nimrod = true; // nimrod yes or no
+                fileinit._comboSize = strlen(optarg) ? std::stoi(optarg) : 100; // set combosize to the argument if it is given
                 continue;
-
+            }
             case 'c':
                 fileinit._cores = std::stoi(optarg); // how many cores to use
                 continue;
@@ -144,6 +159,10 @@ int main(int argc, char* argv[]) {
 
             case 's':
                 fileinit._parameters = optarg; // list of parameters, delimited by commas and encapsulated in ""
+                continue;
+
+            case 'o':
+                fileinit._nodes = std::stoi(optarg); // how many nodes to use (Nimrod only)
                 continue;
 
             case 'R':
@@ -158,6 +177,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
+
 
     if ( fileinit._pbs_only == true ) {
         PBSGenerator PBS(fileinit);
