@@ -1,10 +1,4 @@
----
-title: "Terminal Shortcuts and Basics"
-author: "Nick O'Brien"
-date: "11/03/2021"
-output: html_document
-css: styles.css
----
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -204,3 +198,104 @@ the proper place, append files with new lines of results from SLiM, and interfac
 For that reason, I strongly suggest watching this [10 minute video](https://www.youtube.com/watch?v=mV_8GbzwZMM) on 
 all the common redirection and piping methods available so when you see it in future (or need to use their functionality!) 
 you know what you're looking at.
+
+## Git 
+
+Git is a version control software which allows you to maintain a working history of your files. It's most useful with plaintext files, 
+such as code, where you can directly view the differences between an older version of a file and the current version. In large projects it is vital,
+but even in small projects with only a few files, version control is very import for organisation, and being able to keep track of your work
+easily. If you want to test out a change but you are unsure if it will work, Git allows you to do that while always being able to go back
+to your old version if required. You could save a backup file somewhere, but this is clunky, prone to error, and hard to maintain over time.
+Git can be a bit confusing to start out, but because of its ubiquity there is a massive amount of information available. Simply googling
+what you are trying to do will likely get you in the right direction. I would also highly recommend following [GitHub's tutorial to create your
+first repository](https://guides.github.com/activities/hello-world/), and also checking out [Atlassian's git tutorials](https://www.atlassian.com/git/tutorials/setting-up-a-repository).
+
+To save your data online, Git has a feature called 'remotes'. You can have a local git repository/folder to keep track of your files, 
+and then a remote repository that you and/or others can access from the internet. You can update your files locally, and when you want to 
+update the version on the cloud you 'push' them to your remote repository. There a few services which host remotes, but the most used is GitHub.
+
+Git is a command line tool, however it is directly integrated into a variety of software. Both RStudio and VS Code have git support, for instance.
+Because of this, you will rarely have to use the command line to use git.
+Nonetheless, there are a few command line options you should know about in case something isn't working for you with these programs' integration.
+
+```{bash git_eg, eval = F}
+# Make a new Repository
+mkdir ~/MyRepositoryFolder
+cd ~/MyRepositoryFolder
+git init MyRepository 
+git add * # add all files that git init generates to the repository
+git commit -a -m 'Initial commit' # commit all files to the repo with message 'Initial Commit'
+
+# Link a repository to a remote (create a new remote at [GitHub](https://github.com/new))
+git remote add origin https:/github.com/UserName/MyRepository.git
+
+# Clone a repository (easiest way to make a new repo: create on GitHub, then clone that into a local folder)
+git clone MyRepository https:/github.com/UserName/MyRepository.git
+
+# Add edited/new files to your repository
+git add . # '.' to add all edited files in the folder, you can alternatively specify particular files
+git commit # This will open up a text editor asking for your commit message
+git push # This will push your commit to the remote 
+
+# Remove files from the repository
+git rm -rf ./AwfulFile.c
+git commit
+
+```
+
+In VS Code,the sidebar has a 'Source Control' tab that will allow you to link a repository and/or a remote. 
+If you load VS Code from within a repository, i.e. `cd ~/MyRepository; code .`, it will do this automatically,
+assuming you already have a remote linked.
+
+![](/images/chapter2/vscodegit1.png)
+
+This tab will keep track of the changes you've made in the local repo, with options to 'stage changes' (`git add`),
+commit, and push to a remote, although the remote is hidden by default and will require you to right click on the 
+'Source Control' header and tick the 'Source Control Repositories' flag:
+
+![](/images/chapter2/vscodegit2.png)
+
+You might find that some files won't automatically add themselves to the 'Changes' list in VS Code, in which case you'll have
+to click the 'Refresh' button next to 'Source Control'. If this doesn't work, you'll have to do it in command line.
+I find that VS Code is generally good at keep track of existing files, but not very good at keep track of the folder itself:
+that is, removing files and adding files generally won't be picked up by VS Code, so you'll need to directly add them through
+the command line with `git add .`.
+
+### Git Branches and Pull Requests
+
+Sometimes you'll want to change a heap of files at once in your git repository, and going back to the original state
+if it doesn't work would be a massive pain. Alternatively, you might want to have a separate files organised in a separate
+'partition' of your repository. You might also be collaborating with others, in which case you don't want to be constantly
+overwriting each others' work (although Git does automatically merge files with changes on different lines, if you are editing
+the same file on the same line, some decisions need to be made as to which version to keep). This is where branches come in. 
+A branch is a splitting off point from your repository. You can imagine your repository as a phylogeny: over time, the files
+change, and branches are created at various points in time creating new, distinct edits. The idea is you can preserve your
+main repository's files, work on an experimental branch, and then either abandon it if it doesn't work, or merge it into 
+your main branch using a 'pull request'. If you're collaborating, you can create your own branch so as not to disturb other
+collaborators, and when you are done, you can create a pull request to pull your branch into the main one. You can also 
+use branches to organise your repository into categories: for example, R bookdown repositories often have a separate branch
+for hosting the .html website, and another for storing markdown documents, uncompiled code, and data not relevant to the
+bookdown itself.
+
+[![](images/chapter2/branches_eg.svg)](https://www.atlassian.com/git/tutorials/using-branches)
+From https://www.atlassian.com/git/tutorials/using-branches
+
+To create a new local branch and link it to a new remote branch, you can use the following commands:
+```{bash eval=F} 
+git branch NewBranch # Create the new local branch
+git checkout NewBranch # Swap to the new local branch
+git push NewRemoteBranch NewBranch~ # Create a new branch on the remote called NewRemoteBranch
+```
+
+To view all of the branches available on your project, you can run `git branch` with no arguments. 
+
+Most of the time, branches aren't super necessary. They do have their uses, but I wouldn't recommend creating a heap of 
+branches for every experiment you want to do: you can always use `git reset` to reset your repo to a certain commit.
+Similarly, pull requests are only necessary if you're collaborating and need to have code approved. For more information
+on that, I'd recommend checking out [Atlassian](https://www.atlassian.com/git/tutorials/making-a-pull-request).
+
+### Git for SLiM
+
+I find Git very helpful for maintaining SLiM code. Particularly when playing around with input variables and adding new features,
+it can be useful to keep track of what is made. However, the main feature I like is the cloud backup which is always available at 
+GitHub. 
