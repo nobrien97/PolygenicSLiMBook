@@ -111,5 +111,5 @@ Boxes look like this!
 
 The tutorials in here assume you are at least somewhat familiar with quantitative and population genetics.
 
-### References
+## References
 [^fn1]: B. Peng, Kimmel M., simuPOP: a forward-time population genetics simulation environment, Bioinformatics, Volume 21, Issue 18, Pages 3686-3687, https://doi.org/10.1093/bioinformatics/bti584

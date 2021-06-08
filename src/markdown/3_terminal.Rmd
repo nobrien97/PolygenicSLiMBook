@@ -129,6 +129,7 @@ I'll describe a few below:
 | !                | Run the last command again                                            |
 
 Similarly, rather than typing out entire directories every time, you can use some special characters to get some of the way there:
+
 | Character | Location       | Example                               |
 | --------- | -------------- | ---------                             |
 | ~         | Home directory | ~/Desktop                             |
@@ -144,12 +145,12 @@ look for the command's manual page with `man <command>`
 | Command  | Description                                                              | Example                             |
 | -------- | ------------------------------------------------------------------------ | ----------------------------------- |
 | cat      | Concatenante/display a file's contents in terminal                       | cat ~/.bashrc                       |
-| cp       | Copy a file/folder to another folder                                     | cp ~/Hi.txt ~/Desktop               |
-| mv       | Move a file/folder to another folder                                     | mv ~/Hi.xt ~/Desktop                |
-| rm       | Remove a file/folder (delete)                                            | rm ~/Hi.txt                         |
-| alias    | Assign a string of commands another command name                         | alias cowfort="fortune | cowsay"    |
+| cp       | Copy a file/folder to another folder                                     | cp ~/file.txt ~/Desktop             |
+| mv       | Move a file/folder to another folder                                     | mv ~/file.txt ~/Desktop             |
+| rm       | Remove a file/folder (delete)                                            | rm ~/file.txt                       |
+| alias    | Assign a string of commands another command name                         | alias cowfort="fortune \| cowsay"   |
 | curl     | Fetch a file from the internet (not pre-installed; alternative to wget)  | curl https://github.com/nobrien97/PolygenicSLiMBook/blob/main/src/SLiM/box2.1.slim -o box2.1.slim |
-| grep     | Search a file's lines for a particular pattern                           | grep H ~/Hi.txt                     |
+| grep     | Search a file's lines for a particular pattern                           | grep hello ~/file.txt               |
 | sed      | Modify text coming in from stdin. Combine with grep for powerful editing | [See here](https://www.digitalocean.com/community/tutorials/the-basics-of-using-the-sed-stream-editor-to-manipulate-text-in-linux) |
 | top      | Display info on active processes, CPU and memory usage etc.             | top                                  |
 | head     | Display the first few lines of a file                                   | head ~/multilinefile.txt             |
@@ -157,10 +158,10 @@ look for the command's manual page with `man <command>`
 | tar      | Bundle files into an archive (compressed with -j or -z)                 | tar -cg Files.tar.gz ~/FolderOfFiles |
 | ssh      | Connect to a remote server                                              | ssh user@tinaroo1.rcc.uq.edu.au      |
 | shutdown | Shuts the Linux system down in one minute (now for immediate)           | shutdown now                         |
-| less     | Open and read a file (press q to exit)                                  | less ~/Hi.txt                        |
-| vim      | Powerful terminal text editor with steep learning curve                 | vim ~/Hi.txt                         |
-| nano     | Considerably more user friendly text editor                             | nano ~/Hi.txt                        |
-| gedit    | Another text editor, this time exists out of the terminal               | gedit ~/Hi.txt                       |
+| less     | Open and read a file (press q to exit)                                  | less ~/file.txt                      |
+| vim      | Powerful terminal text editor with steep learning curve                 | vim ~/file.txt                       |
+| nano     | Considerably more user friendly text editor                             | nano ~/file.txt                      |
+| gedit    | Another text editor, this time exists out of the terminal               | gedit ~/file.txt                     |
 | history  | Display history of commands in the terminal. Rerun any of them with !CommandNumber | history && !! && !3       |
 ::::
 
@@ -179,18 +180,21 @@ to the terminal. This behaviour can be changed by using pipes and redirection, m
 very powerful indeed. One consequence of this is we can chain together commands, feeding their output into another 
 command. Take this example:
 
-```{bash output_eg, eval = FALSE}
+```{bash output_eg, eval = F}
 fortune | cowsay
 ```
+```{bash echo=F}
+/usr/games/fortune | /usr/games/cowsay
+```
 
-Here, we use the `|`, called the 'pipe', to 'pipe in' fortune's stdout into cowsay's stdin. The result is this:
-![cow saying something smart]()
+Here, we use the `|`, called the 'pipe', to 'pipe in' fortune's stdout into cowsay's stdin. The result is a cow
+with a textbox (`cowsay`) relaying a quote from `fortune`.
 
 You can also save the output of a command to a file using redirection `>`
 Take this example:
 
 ```{bash redirect_eg, eval = FALSE}
-echo Hi > ~/Desktop/Hi.txt
+echo "Hello, world!" > ~/Desktop/file.txt
 ```
 
 Redirection is in particular very important in general, and will be used pretty extensively to copy files to 
@@ -237,7 +241,7 @@ git add . # '.' to add all edited files in the folder, you can alternatively spe
 git commit # This will open up a text editor asking for your commit message
 git push # This will push your commit to the remote 
 
-# Remove files from the repository
+# Remove files from the repository, recursively and forcefully
 git rm -rf ./AwfulFile.c
 git commit
 
@@ -247,13 +251,13 @@ In VS Code,the sidebar has a 'Source Control' tab that will allow you to link a 
 If you load VS Code from within a repository, i.e. `cd ~/MyRepository; code .`, it will do this automatically,
 assuming you already have a remote linked.
 
-![](/images/chapter2/vscodegit1.png)
+![](images/chapter2/vscodegit1.png)
 
 This tab will keep track of the changes you've made in the local repo, with options to 'stage changes' (`git add`),
 commit, and push to a remote, although the remote is hidden by default and will require you to right click on the 
 'Source Control' header and tick the 'Source Control Repositories' flag:
 
-![](/images/chapter2/vscodegit2.png)
+![](images/chapter2/vscodegit2.png)
 
 You might find that some files won't automatically add themselves to the 'Changes' list in VS Code, in which case you'll have
 to click the 'Refresh' button next to 'Source Control'. If this doesn't work, you'll have to do it in command line.

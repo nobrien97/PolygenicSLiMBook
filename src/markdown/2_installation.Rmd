@@ -203,10 +203,12 @@ Now your Ubuntu window should close. Again, go to PowerShell and terminate Ubunt
 ```
 
 Next, open up VcXsrv. You should be greeted with a panel that looks something like this:
+
 ![](images/chapter2/vcxsrv1.PNG "VcXsrv first panel")
 
 Choose "One large window" and click next, and then next again.
 At this dialogue, in additional parameters type -ac
+
 ![](images/chapter2/vcxsrv2.PNG "VcXsrv third panel")
 
 After pressing next, you should be done! You can save your configuration to create a shortcut that will open VcXsrv with your settings. 

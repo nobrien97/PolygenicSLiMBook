@@ -47,10 +47,8 @@ Following burn-in, a certain selection regime takes place for a specified number
 Note that mutation output is quite large (seeing as it stores many lines every time it writes to file), so you will want to adjust the sampling 
 frequency as per your available storage, the size of your simulation (in number of generations, size of the genome, number of mutations/mutation rate etc.).
 
-::::{.extrabox data-latex=""}
-:::{.center data-latex=""}
-**Box 5.2.1**
-:::
+## Parameters
+
 The script template contains a lot of parameters. Some of these will be applicable to you, others won't be. I'll explain each of them 
 here so you can get an idea. In brackets next to the parameter name is the type it expects, and how many arguments it expects (if > 1).
 
@@ -73,7 +71,7 @@ here so you can get an idea. In brackets next to the parameter name is the type 
 | samplerate (int, 2)                               | How often, in generations, to save output                                                                    |
 | out... (string)                                   | Output filenames and paths for various output files                                                          |
 | modelindex (int)                                  | Identifier for Latin Hypercube job arrays                                                                    |
-| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------|
+
 Below are some tips regarding some of the parameters to guide you in designing your experiments:
 
 ### Ne
@@ -94,7 +92,7 @@ type by clicking the hand underneath the generation counter in SLiMgui and hover
 
 ### mutWeights
 In this simulation, not all genome positions are QTLs. Some are sites with nothing to do with the trait whatsoever. 
-Therefore, there are 3 mutation types: neutral (m1), which do nothing except given an idea of how linked variation 
+Therefore, there are 3 mutation types: neutral (m1), which do nothing except give an idea of how linked variation 
 declines with other types; non-trait deleterious (m2), which act as a form of background selection: imagine these as 
 being mutations that don't affect the trait but reduce fitness; and QTLs (m3), which affect the trait. All three of 
 these types can occur at a QTL _site_, but QTL _mutations_ (m3) cannot occur at non-QTL _sites_. Imagine a mutation 
@@ -164,7 +162,6 @@ used as a proxy for all of your variables, saving considerable space when storin
 one column to identify the parameters which led to a result rather than a column for each parameter. This is particularly
 input with regards to mutation output, which grows to potentially 100s of gigabytes in size.
 
-:::
 
 
 

@@ -68,5 +68,5 @@ a pattern which has been validated with theoretical, simulation, and empirical d
 
 
 
-# References
+## References
 [^fn2]: Fisher, R. A. (1930). The genetical theory of natural selection. Clarendon Press. https://doi.org/10.5962/bhl.title.27468
