@@ -3,6 +3,7 @@ title: "Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3."
 author: "Nick O'Brien"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
+css: "styles.css"
 
 output:
     bookdown::gitbook: default

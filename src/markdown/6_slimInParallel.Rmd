@@ -1,10 +1,4 @@
----
-title: "Running SLiM in Parallel"
-author: "Nick O'Brien"
-date: "06/05/2021"
-output: html_document
-css: styles.css
----
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

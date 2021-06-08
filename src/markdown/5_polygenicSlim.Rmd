@@ -1,10 +1,4 @@
----
-title: "Polygenic Adaptation in SLiM"
-author: "Nick O'Brien"
-date: "4/1/2021"
-output: html_document
-css: styles.css
----
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
