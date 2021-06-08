@@ -10,7 +10,9 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 4.1 Overview
+# A Brief Overview of Polygenic Adaptation
+
+## Overview
 
 Before you simulate anything it's important that you have a clear view of what's you are trying to achieve with your model. 
 This makes it considerably easier to find and fix bugs/unintended behaviour within your model, as well as making it easier 
@@ -18,7 +20,7 @@ to write your model in the first place. Below I'll describe the basics of polyge
 population genetics view, and give some examples of what SLiM models can represent with respect to these theories.
 
 
-## 4.2 What is polygenic adaptation?
+## What is polygenic adaptation?
 
 Put simply, polygenic adaptation is the evolution of a trait controlled by multiple genes via selection. Traditional 
 Mendelian genetics (or monogenic models of adaptation) assume that one gene may adapt via the emergence of new, 
@@ -36,9 +38,9 @@ predictions about allele behaviour (fitness, frequency changes etc.). With more 
 be made analytically owing to complexity, so quantitative geneticists proposed a new method of viewing adaptation: 
 rather than genes as the focal point, look at the traits instead.
 
-## 4.3 Fisher's Geometrical model of adaptation
+## Fisher's Geometrical model of adaptation
 
-In 1930, Ronald Fisher published a seminal paper which revolutionised the way biologists thought about adaptation[^fn1]. 
+In 1930, Ronald Fisher published a seminal paper which revolutionised the way biologists thought about adaptation[^fn2]. 
 In this paper, Fisher described his geometric model of adaptation (FGM), where traits evolve by mutations which have a 
 given effect on the trait. If a phenotypic optimum exists, and a population's mean phenotype starts some distance away 
 from that optimum, then mutations that move a population's mean closer to that optimum phenotype are beneficial. 
@@ -73,4 +75,4 @@ a pattern which has been validated with theoretical, simulation, and empirical d
 
 
 # References
-[^fn1]: Fisher, R. A. (1930). The genetical theory of natural selection. Clarendon Press. https://doi.org/10.5962/bhl.title.27468
+[^fn2]: Fisher, R. A. (1930). The genetical theory of natural selection. Clarendon Press. https://doi.org/10.5962/bhl.title.27468

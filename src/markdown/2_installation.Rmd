@@ -10,7 +10,9 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 2.1 Overview
+# Installing a Linux environment & SLiM on the WSL
+
+## Overview
 
 SLiM was built primarily with MacOS in mind, and so no native Windows version exists. However, since MacOS is very 
 similar to many Linux distributions, we can use Windows 10's new Windows subsystem for Linux to run SLiM on Windows 
@@ -66,7 +68,7 @@ The power of having these very specific commands which can act on a lot of diffe
 chain together these commands to efficiently solve a larger problem.
 ::::
 
-## 2.2 Why Linux?
+## Why Linux?
 
 To many people, the term 'Linux user' is analogous to 'computer wizard' or 'weirdo'. Unfortunately for you, future weirdo, 
 Linux is an incredibly helpful tool for scientific applications. I've already mentioned that SLiM doesn't run on Windows natively, 
@@ -85,7 +87,7 @@ wanting to switch between using Windows and Linux software (you can only run one
 use software in the other OS). VMware and VirtualBox are very resource-intensive, which negates the speed advantage you get from 
 running Linux over Windows. WSL, however, is much faster.
 
-## 2.3 The Windows Subsystem for Linux
+## The Windows Subsystem for Linux
 
 Windows 10 introduced a new way to emulate a Linux machine via a Windows operating system. Through illegal^\*^ computer trickery, 
 Microsoft managed to show everyone (through a feature in their own operating system) that a Linux machine running on a Windows 
@@ -98,7 +100,7 @@ Linux distribution (Ubuntu 20.04), and some basics for getting started with Ubun
 
 ^\*^: Probably not actually illegal, but I'm not a lawyer.
 
-## 2.2 Installing WSL
+## Installing WSL
 
 There are two choices for running WSL: WSL 1 or WSL 2. Both are fairly similar in speed, however WSL 2 uses a real Linux kernel 
 and an extremely fast virtual machine (along with a virtual hard drive), whereas WSL 1 used a translation layer (instead of a native kernel) 
@@ -149,7 +151,7 @@ Congratulations! You now have a working version of Ubuntu 20.04 LTS running via 
 
 
 
-## 2.3 Installing a desktop and setting up X11
+## Installing a desktop and setting up X11
 
 At this point you have a Ubuntu terminal which you can use to input commands. This is perfectly usable 
 (even with a desktop you'll be using the terminal quite a bit), but you'll probably want a desktop environment to be more comfortable.
@@ -243,7 +245,7 @@ sudo apt install nautilus-extension-gnome-terminal
 ```
 
 
-## 2.4 Building SLiM
+## Building SLiM
 
 There's a few ways of going about building SLiM. We'll be following the Linux/Unix installation instructions 
 (Chapter 2.2.1) in the [SLiM manual](http://benhaller.com/slim/SLiM_Manual.pdf). First, install the following packages:
@@ -283,7 +285,7 @@ for anyone interested in learning more.
 ::::
 
 
-## 2.5 Installing other useful apps
+## Installing other useful apps
 
 When using SLiM, you'll need some more apps to run SLiM on remote computers and to analyse data.
 I recommend installing FileZilla, which will help copy files across from your computer to a remote supercomputer:

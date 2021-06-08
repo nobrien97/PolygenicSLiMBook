@@ -10,7 +10,9 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 6.1 Overview
+# Running SLiM in Parallel
+
+## Overview
 
 Now that we have an understanding of SLiM and a couple of models that might be useful, you're probably wondering: how do we make this useful?
 To answer a question, we need multiple simulations with different variable inputs (e.g. different recombination rates), and replicates of each.
@@ -20,14 +22,14 @@ This can all be done in whatever programming language you like, as long as it ha
 (like ```system()``` in R), and ssupport for multicore processing.
 
 In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. 
-I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn1] to program! 
+I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn3] to program! 
 
 Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the 
 [SLiM-Extras repository](https://github.com/MesserLab/SLiM-Extras) under 'sublaunching'. Source code for all of the examples shown 
 in this document is available in the ```/src/Parallelisation``` folder.
 
 
-## 6.2 SLiM at the Command Line
+## SLiM at the Command Line
 
 To use SLiM from the command line, you simply call the ```slim``` command, followed by a path to a file. For example:
 
@@ -109,7 +111,7 @@ and then ```./seedgenerator```. There are a variety of options, listed with the 
 Now onto sublaunching SLiM. We'll start with Bash, which is perhaps the simplest.
 
 
-## 6.3 Running SLiM via Bash
+## Running SLiM via Bash
 
 The simplest way to run SLiM at the command line is through Bash, the standard command line scripting language of Linux based systems. 
 Note that the SLiM Online Workshop - '_Running SLiM from the command line_' tutorial goes over much of what I'll be presenting below.
@@ -150,7 +152,7 @@ for param1 in 0.1 0.2 0.3
 While it is also possible to read in files and split columns into different variables, it's much easier to do this in R or Python. 
 So for more complex scripts, I would highly suggest using either of those to sublaunch your SLiM jobs. I will provide examples of both below.
 
-## 6.4 Running SLiM via R
+## Running SLiM via R
 
 This is how I normally sublaunch SLiM. R has a variety of packages that make it easy to parallelise across cores, 
 and because of R's rich feature set and the breadth of user-made libraries, the options are endless when it comes to 
@@ -253,7 +255,7 @@ once, and use that on the innermost ```foreach``` loop. This means for each para
 across seeds (```j```). This can be extended to as many parameter values as you want, as we simply fill each parameter using 
 the ```sprintf()``` variable-filling functionality as before, this time referencing ```df.p``` and choosing the appropriate column (parameter value).
 
-## 6.5 Running SLiM in Python
+## Running SLiM in Python
 
 Running SLiM in Python is similarly straightforward, and due to its plethora of libraries, quite powerful also.
 Here's an example
@@ -349,7 +351,7 @@ and ```starmap()``` iterates over seeds. This might be a good idea if the number
 as much parallel power as possible and reduce wasted time.
 
 
-# 6.6 Running SLiM via a C++ Program
+# Running SLiM via a C++ Program
 
 Before we go on, I should mention that this part is pretty much always overkill. There really isn't much of an overhead from running SLiM in 
 parallel via interpreted languages, so there is little reason to use any C-based language for running SLiM. It's clunky and kind of a pain.
@@ -423,9 +425,9 @@ Most of this code is just sorting out csv files into structures that we can perf
 a nested for loop structure and automatically dish out seed-parameter combinations to the runSLiM() function out to available cores.
 This code isn't particularly nice to look at, nor is it going to work as-is for more than two parameters (```std::pair``` will need 
 to be another ```std::vector```), however it could be expanded upon to be more customisable (e.g. accepting user input for
-filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way.
+filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way (coming soon?).
 
-# 6.7 Writing SLiM code with parallelism in mind
+## Writing SLiM code with parallelism in mind
 
 When it comes to writing your SLiM code, there are a few factors to keep in mind. Perhaps the most important is how you will deal with 
 output. Will your models all write into the same output file or separate files? Each option has its pros and cons, so I'll give descriptions
@@ -444,7 +446,7 @@ as you can to minimise the risk of race conditions becoming a problem. I have wr
 or missing output. This was with 1152 concurrent simulations, with data being written 200 times per run. However, I have encountered one error since then,
 where a single row was appended with no newline character to another, likely due to a similar race condition. 
 
-In summary, the chances of problems are low, but never zero[^fn2].
+In summary, the chances of problems are low, but never zero[^fn4].
 
 ### Multiple file output
 
@@ -484,7 +486,7 @@ initialize() {
 ```
 
 The output filename of this simulation will be ```out_<modelindex>_<seed>_slim.csv```. Since each simulation is writing to a different file,
-there is no chance of the output being overwritten[^fn3]. At the end of your simulations, you can join all these files into one using the 
+there is no chance of the output being overwritten[^fn5]. At the end of your simulations, you can join all these files into one using the 
 ```cat``` bash command:
 
 ```{bash cat_join, eval = F}
@@ -498,7 +500,7 @@ do
     echo "" >> "$file"
 done
 ```
-Which will apend a newline character to the end of each file[^fn4].
+Which will append a newline character to the end of each file[^fn6].
 
 
 The main problem with this method is writing to many different files creates overhead that will slow your simulation down, and has the potential
@@ -507,7 +509,7 @@ one single large file that you constantly append to, whereas smaller runs are pr
 
 
 # Footnotes
-[^fn1]: https://xkcd.com/612/
-[^fn2]: Much like the chances of your cat eating you in your sleep.
-[^fn3]: There is still a small chance of ```stdout``` losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don't do that.
-[^fn4]: https://stackoverflow.com/a/31053205/13586824
+[^fn3]: https://xkcd.com/612/
+[^fn4]: Much like the chances of your cat eating you in your sleep.
+[^fn5]: There is still a small chance of ```stdout``` losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don't do that.
+[^fn6]: https://stackoverflow.com/a/31053205/13586824

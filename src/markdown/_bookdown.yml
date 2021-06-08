@@ -1,17 +1,17 @@
 delete_merged_file: true
 new_session: yes
+output_dir: "docs"
 
 rmd_files: [
 	"index.Rmd",
-	
 	"1_introduction.rmd",
 	"2_installation.Rmd",
 	"3_terminal.Rmd",
 	"4_polygenicAdaptation.Rmd",
 	"5_polygenicSlim.Rmd",
 	"6_slimInParallel.Rmd",
-	"7_slimOnHPC"
+	"7_slimOnHPC.Rmd"
 
 ]
 
-before_chapter_script "_common.R"
+# before_chapter_script: "_common.R"

@@ -10,7 +10,9 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 5.1 Overview
+# Polygenic Adaptation in SLiM
+
+## Overview
 
 In this chapter I'll provide a number of templates aiming to reconstruct some of the polygenic models we have seen in SLiM. 
 I've aimed to make these templates highly customisable, with many features that can be adjusted as you see fit. 
@@ -18,7 +20,7 @@ As such, I'll break down each section of the code to explain what it does, which
 or which parts can be removed if you don't need them and want to maximise your speed and/or minimise memory use.
 
 
-## 5.2 A Single Polygenic Trait (Chp5-1_1T.slim)
+## A Single Polygenic Trait (Chp5-1_1T.slim)
 
 The first example we'll go over models a single polygenic trait evolving through either drift, stabilising selection, or directional selection. 
 This template has been built to be very broad, with a large array of parameters. These parameters are defined at the top of the file - 

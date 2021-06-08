@@ -10,14 +10,16 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 3.1 Overview
+# Terminal Shortcuts and Basics
+
+## Overview
 
 One major difference between Windows/Mac and Linux operating systems is that it's necessary to learn how to use a command prompt 
 (called the terminal) to use the operating system. You've already done a bit of that when you were installing Ubuntu and Gnome, 
 but now I'll show you some of the most useful commands for navigating directories via the terminal, installing and updating your software, 
 manipulating text files, and what programs you'll likely use for various tasks.
 
-## 3.2 Navigating folders
+## Navigating folders
 
 When you open a terminal emulator in Gnome, you'll be met with a screen that looks something like this:
 ![](images/chapter2/terminalex.png)
@@ -63,7 +65,7 @@ mkcdir ()
 ::::
 
 
-## 3.3 Installing and updating software
+## Installing and updating software
 
 With Ubuntu, you don't need to worry about Windows updates taking your computer hostage whenever it feels like it. 
 However, it is on you to keep your software updated (or not, if you need a particular version of some software!).
@@ -99,11 +101,17 @@ sudo apt-get install fortune-mod cowsay
 This will install both fortune-mod and cowsay (a program that draws an ASCII animal with a speech bubble saying whatever you type).
 
 Now that your programs are installing, you can try them out!
-``` {bash fortune3}
+``` {bash fortune3, eval = F}
 fortune
 
 cowsay "I don't think, therefore I don't am."
 ```
+``` {bash fortune3_2, echo = F}
+/usr/games/fortune
+
+/usr/games/cowsay "I don't think, therefore I don't am."
+```
+
 
 :::: {.extrabox data-latex=""}
 ::: {.center data-latex=""}
@@ -162,7 +170,7 @@ look for the command's manual page with `man <command>`
 | history  | Display history of commands in the terminal. Rerun any of them with !CommandNumber | history && !! && !3       |
 ::::
 
-## 3.4 Input and output
+## Input and output
 
 Linux programs are written in such a way that programs take their inputs and spit out their outputs in a standardised way. 
 This means that you can use the same command or tool to affect many different programs' outputs or inputs with the same 

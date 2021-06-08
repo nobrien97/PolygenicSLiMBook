@@ -10,9 +10,9 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introduction
 
-
-## 1.1 Preface
+## Preface
 
 The past couple of decades have seen the development of powerful computer systems that have become pervasive 
 in every human endeavour. Scientists have long regarded computation as a helpful tool for tackling difficult problems, 
@@ -27,7 +27,7 @@ provide a plethora of templates, tutorials, and tips that I have learned through
 as provide detail on where to find additional help.
 
 
-## 1.2 Overview
+## Overview
 
 In this book, I'll cover:
 
@@ -41,7 +41,6 @@ In this book, I'll cover:
     Build tools necessary
     CMake and make (extra box with info on compilation)
     Installing SLiM - with install script
-#    Troubleshooting - black screen, .bashrc fix (All included in the Install script)
     Additional useful software - R, RStudio, FileZilla, Visual Studio Code
 - Using the terminal, basic shortcuts (with hyperlinked video tutorials),
     cd, pwd, mkdir, and creating a custom mkcdir command
@@ -114,7 +113,7 @@ Throughout, I'll put additional information in boxes, so those interested can le
 Boxes look like this!
 ::::
 
-## 1.3 Prerequisites
+## Prerequisites
 
 The tutorials in here assume you are at least somewhat familiar with quantitative and population genetics.
 

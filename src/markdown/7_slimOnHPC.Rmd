@@ -10,7 +10,9 @@ css: styles.css
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 7.1 Overview
+# Running SLiM on a HPC Cluster
+
+## Overview
 
 When running SLiM simulations, it is often necessary to run many more than you have CPU cores available
 on your PC or laptop. As such, even with all cores going at once, you'll still be looking at a long time 
@@ -22,7 +24,7 @@ will have access to a similar system, and although there may be some differences
 the concepts remain the same.
 
 
-## 7.2 Connecting to Tinaroo and Set-up
+## Connecting to Tinaroo and Set-up
 
 To connect to Tinaroo, after having [gained access](https://rcc.uq.edu.au/tinaroo), use the ssh command with your
 username: 
@@ -83,7 +85,7 @@ install.packages("future",
 Having done this, you are ready to write some scripts. You can do this on either the compute node, or the login node, or on your local
 computer and transfer them across with `sftp` or FileZilla, which we'll get to later. 
 
-# 7.3 PBS Scripts
+## PBS Scripts
 
 A PBS script contains the instructions that the job scheduler will use to determine what we want our job to do. It is simply a 
 bash script with some 'directives' at the start to instruct the scheduler on how many resources we want to use. The interactive job
@@ -223,7 +225,7 @@ to put your files and drag and drop them into that folder:
 Now when you run your job, you'll have 24 cores instead of the $<10$ of your local PC, which will make things a tad faster. 
 But we're still only using one node. We can access multiple nodes in a job and use many more cores at once. Which is exciting! Be excited!
 
-## 7.4 Multi-node jobs
+## Multi-node jobs
 
 There are two types of multi-node jobs on Tinaroo, and some form of both should exist on most HPCs. The first, job arrays,
 is like simultaneously running a whole bunch of these PBS scripts separately and having each work on a subset of your inputs.
@@ -233,7 +235,7 @@ this for you, and you only need one extra flag to be set in your PBS script. The
 which uses a different approach: it assigns individual cores to do jobs as they become freed, irrespective of the node they belong to. 
 This is much more powerful for large jobs, where the amount of wasted time between one SLiM run ending and the next beginning can accumulate. 
 
-### 7.4.1 Job array SLiM jobs
+### Job array SLiM jobs
 
 Job array jobs are very simple to set-up. A single line has to be added to the PBS Script:
 
@@ -315,7 +317,7 @@ An alternative is to use Tinaroo's Embedded Nimrod system, which treats each cor
 device for running a process on.
 
 
-### 7.4.2 Embedded Nimrod SLiM jobs
+### Embedded Nimrod SLiM jobs
 
 To use Embedded Nimrod, we need to make some changes to both our R script and PBS script. In fact, our PBS isn't even a .pbs
 anymore: it's a .nsh.

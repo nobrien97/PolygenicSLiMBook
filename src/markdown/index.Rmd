@@ -1,9 +1,16 @@
 ---
-title: "SLiMulations in polygenic space: How to use SLiM for polygenic adaptation."
+title: "Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3."
 author: "Nick O'Brien"
+date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 
+output:
+    bookdown::gitbook: default
+
+documentclass: book
 #bibliography: .bib
 #csl: .csl
+biblio-style: apalike
+link-citations: yes
 #suppress-bibliography: true
 ---
