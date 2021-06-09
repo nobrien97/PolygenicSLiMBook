@@ -110,12 +110,12 @@ void PBSGenerator::FileGenerate()
     scriptLines.emplace_back(nimPars);
 
     scriptLines.emplace_back("if [ -z \"${NIMROD_VAR_LS}\" ]; then\n"
-                              "\t\t\t\techo \"\$NIMROD_VAR_LS isn't set, cannot continue...\"\n"
+                              "\t\t\t\techo \"\\$NIMROD_VAR_LS isn't set, cannot continue...\"\n"
                               "\t\t\t\texit 2\n"
                               "fi");
 
     scriptLines.emplace_back("if [ -z \"${NIMROD_VAR_SEED}\" ]; then\n"
-                              "\t\t\t\techo \"\$NIMROD_VAR_SEED isn't set, cannot continue...\"\n"
+                              "\t\t\t\techo \"\\$NIMROD_VAR_SEED isn't set, cannot continue...\"\n"
                               "\t\t\t\texit 2\n"
                               "fi");
 
@@ -237,6 +237,7 @@ void PBSGenerator::FileGenerate()
 
     void RGenerator::R_SetVars(const FileGenerator &FG)
     {
+      this->_filename = FG._filename;
       this->_LHC = FG._LHC;
       this->_LHC_dir = FG._LHC_dir;
       this->_seeds_dir = FG._seeds_dir;

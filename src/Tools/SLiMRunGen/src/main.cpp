@@ -38,6 +38,8 @@ using std::string;
         { "mem",            required_argument,  0,  'm' },
         { "R-only",         no_argument,        0,  'R' },
         { "PBS-only",       no_argument,        0,  'P' },
+        { "combo-dir",      required_argument,  0,  'l' },
+        { "seed-dir",       required_argument,  0,  'S' },
         {0,0,0,0}
     };
 
@@ -60,15 +62,15 @@ void doHelp(char* appname) {
     "               Example: -J='1-3' OR -J'1-3'\n"
     "\n"
     "-d FILEPATH    Specify a filepath and name for the generated scripts. Defaults to ./slim_job.\n"
-    "               Example: -d ~/Desktop/slim_job.csv\n"
+    "               Example: -d ~/Desktop/slim_job\n"
     "\n"
     "-w HH:MM:SS    Specify a walltime for your job in hours, minutes seconds.\n"
     "               -w '10:00:00'\n"
     "\n"
     "-c N           Specify the number of cores to use per node.\n"
     "\n"
-    "-m N           Specify the amount of memory to use per node.\n"
-    "               Example: -m '50G\n"
+    "-m N           Specify the amount of memory to use per node in GB.\n"
+    "               Example: -m '50\n"
     "\n"
     "-p LIST        Provide a list of SLiM parameters to vary, delimited by commas.\n"
     "               Example: -p \"nloci,Ne,param1,param2\"\n"
@@ -81,11 +83,16 @@ void doHelp(char* appname) {
     "-R             Specify if you would like to only generate a .R file.\n"
     "\n"
     "-P             Specify if you would like to only generate a .PBS file.\n"
+    "\n"
+    "-l             Specify the filepath of the parameter combos file.\n"
+    "               Example: -l ~/combos.csv\n"
+    "\n"
+    "-S             Specify the filepath of the seeds file.\n"
+    "               Example: -S ~/Seeds.csv\n"
     "\n",
     appname,
     appname
     );
-
 }
 
 int main(int argc, char* argv[]) {
@@ -102,9 +109,11 @@ int main(int argc, char* argv[]) {
         { "nodes",          required_argument,  0,  'o' },
         { "cores",          required_argument,  0,  'c' },
         { "memory",         required_argument,  0,  'm' },
-        { "parameters",     required_argument,  0,  's' },
+        { "parameters",     required_argument,  0,  'p' },
         { "R-Only",         no_argument,        0,  'R' },
         { "PBS-Only",       no_argument,        0,  'P' },
+        { "combo-dir",      required_argument,  0,  'l' },
+        { "seed-dir",       required_argument,  0,  'S' },
         {0,0,0,0}
     };
 
@@ -116,7 +125,7 @@ int main(int argc, char* argv[]) {
     while (options != -1) {
 
 
-        options = getopt_long(argc, argv, "N:d:hvJ:w:nc:m:s:RP", voptions, &optionindex);
+        options = getopt_long(argc, argv, "N:d:hvJ:w:nc:m:s:RPS:l:", voptions, &optionindex);
 
         switch (options) {
             case 'N':
@@ -157,7 +166,7 @@ int main(int argc, char* argv[]) {
                 fileinit._mem = fileinit.MemG(optarg); // how much memory to use
                 continue;
 
-            case 's':
+            case 'p':
                 fileinit._parameters = optarg; // list of parameters, delimited by commas and encapsulated in ""
                 continue;
 
@@ -172,6 +181,13 @@ int main(int argc, char* argv[]) {
             case 'P':
                 fileinit._pbs_only = true;
                 continue;
+
+            case 'l':
+                fileinit._combos_dir = optarg; // path to combos file
+                continue;
+            
+            case 'S':
+                fileinit._seeds_dir = optarg; // path to seeds file
 
             case -1:
                 break;
