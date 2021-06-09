@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6 Running SLiM in Parallel | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</title>
+  <meta name="description" content="6 Running SLiM in Parallel | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="6 Running SLiM in Parallel | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6 Running SLiM in Parallel | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  
+  
+  
+
+<meta name="author" content="Nick O’Brien" />
+
+
+<meta name="date" content="2021-06-08" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="polygenic-adaptation-in-slim.html"/>
+<link rel="next" href="running-slim-on-a-hpc-cluster.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#preface"><i class="fa fa-check"></i><b>1.1</b> Preface</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview"><i class="fa fa-check"></i><b>1.2</b> Overview</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>1.3</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#references"><i class="fa fa-check"></i><b>1.4</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html"><i class="fa fa-check"></i><b>2</b> Installing a Linux environment &amp; SLiM on the WSL</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#overview-1"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#why-linux"><i class="fa fa-check"></i><b>2.2</b> Why Linux?</a></li>
+<li class="chapter" data-level="2.3" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#the-windows-subsystem-for-linux"><i class="fa fa-check"></i><b>2.3</b> The Windows Subsystem for Linux</a></li>
+<li class="chapter" data-level="2.4" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-wsl"><i class="fa fa-check"></i><b>2.4</b> Installing WSL</a></li>
+<li class="chapter" data-level="2.5" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-a-desktop-and-setting-up-x11"><i class="fa fa-check"></i><b>2.5</b> Installing a desktop and setting up X11</a></li>
+<li class="chapter" data-level="2.6" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#building-slim"><i class="fa fa-check"></i><b>2.6</b> Building SLiM</a></li>
+<li class="chapter" data-level="2.7" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-other-useful-apps"><i class="fa fa-check"></i><b>2.7</b> Installing other useful apps</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html"><i class="fa fa-check"></i><b>3</b> Terminal Shortcuts and Basics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#overview-2"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#navigating-folders"><i class="fa fa-check"></i><b>3.2</b> Navigating folders</a></li>
+<li class="chapter" data-level="3.3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#installing-and-updating-software"><i class="fa fa-check"></i><b>3.3</b> Installing and updating software</a></li>
+<li class="chapter" data-level="3.4" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#input-and-output"><i class="fa fa-check"></i><b>3.4</b> Input and output</a></li>
+<li class="chapter" data-level="3.5" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git"><i class="fa fa-check"></i><b>3.5</b> Git</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git-branches-and-pull-requests"><i class="fa fa-check"></i><b>3.5.1</b> Git Branches and Pull Requests</a></li>
+<li class="chapter" data-level="3.5.2" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git-for-slim"><i class="fa fa-check"></i><b>3.5.2</b> Git for SLiM</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html"><i class="fa fa-check"></i><b>4</b> A Brief Overview of Polygenic Adaptation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#overview-3"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#what-is-polygenic-adaptation"><i class="fa fa-check"></i><b>4.2</b> What is polygenic adaptation?</a></li>
+<li class="chapter" data-level="4.3" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#fishers-geometrical-model-of-adaptation"><i class="fa fa-check"></i><b>4.3</b> Fisher’s Geometrical model of adaptation</a></li>
+<li class="chapter" data-level="4.4" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#references-1"><i class="fa fa-check"></i><b>4.4</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html"><i class="fa fa-check"></i><b>5</b> Polygenic Adaptation in SLiM</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#overview-4"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#a-single-polygenic-trait-chp5-1_1t.slim"><i class="fa fa-check"></i><b>5.2</b> A Single Polygenic Trait (Chp5-1_1T.slim)</a></li>
+<li class="chapter" data-level="5.3" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#parameters"><i class="fa fa-check"></i><b>5.3</b> Parameters</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#ne"><i class="fa fa-check"></i><b>5.3.1</b> Ne</a></li>
+<li class="chapter" data-level="5.3.2" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#del_mean-and-del_shape"><i class="fa fa-check"></i><b>5.3.2</b> del_mean and del_shape</a></li>
+<li class="chapter" data-level="5.3.3" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#mutweights"><i class="fa fa-check"></i><b>5.3.3</b> mutWeights</a></li>
+<li class="chapter" data-level="5.3.4" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#rwide"><i class="fa fa-check"></i><b>5.3.4</b> rwide</a></li>
+<li class="chapter" data-level="5.3.5" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#genomelength"><i class="fa fa-check"></i><b>5.3.5</b> genomelength</a></li>
+<li class="chapter" data-level="5.3.6" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#locimu-locisigma-and-locidist"><i class="fa fa-check"></i><b>5.3.6</b> locimu, locisigma, and locidist</a></li>
+<li class="chapter" data-level="5.3.7" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#width"><i class="fa fa-check"></i><b>5.3.7</b> width</a></li>
+<li class="chapter" data-level="5.3.8" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#printh"><i class="fa fa-check"></i><b>5.3.8</b> printH</a></li>
+<li class="chapter" data-level="5.3.9" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#samplerate"><i class="fa fa-check"></i><b>5.3.9</b> samplerate</a></li>
+<li class="chapter" data-level="5.3.10" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#modelindex"><i class="fa fa-check"></i><b>5.3.10</b> modelindex</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html"><i class="fa fa-check"></i><b>6</b> Running SLiM in Parallel</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#overview-5"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#slim-at-the-command-line"><i class="fa fa-check"></i><b>6.2</b> SLiM at the Command Line</a></li>
+<li class="chapter" data-level="6.3" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-bash"><i class="fa fa-check"></i><b>6.3</b> Running SLiM via Bash</a></li>
+<li class="chapter" data-level="6.4" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-r"><i class="fa fa-check"></i><b>6.4</b> Running SLiM via R</a></li>
+<li class="chapter" data-level="6.5" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-in-python"><i class="fa fa-check"></i><b>6.5</b> Running SLiM in Python</a></li>
+<li class="chapter" data-level="6.6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-a-c-program"><i class="fa fa-check"></i><b>6.6</b> Running SLiM via a C++ Program</a></li>
+<li class="chapter" data-level="6.7" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#writing-slim-code-with-parallelism-in-mind"><i class="fa fa-check"></i><b>6.7</b> Writing SLiM code with parallelism in mind</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
+<li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#overview-6"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#connecting-to-tinaroo-and-set-up"><i class="fa fa-check"></i><b>7.2</b> Connecting to Tinaroo and Set-up</a></li>
+<li class="chapter" data-level="7.3" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#pbs-scripts"><i class="fa fa-check"></i><b>7.3</b> PBS Scripts</a></li>
+<li class="chapter" data-level="7.4" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#multi-node-jobs"><i class="fa fa-check"></i><b>7.4</b> Multi-node jobs</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#job-array-slim-jobs"><i class="fa fa-check"></i><b>7.4.1</b> Job array SLiM jobs</a></li>
+<li class="chapter" data-level="7.4.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#embedded-nimrod-slim-jobs"><i class="fa fa-check"></i><b>7.4.2</b> Embedded Nimrod SLiM jobs</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="running-slim-in-parallel" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Running SLiM in Parallel</h1>
+<div id="overview-5" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Overview</h2>
+<p>Now that we have an understanding of SLiM and a couple of models that might be useful, you’re probably wondering: how do we make this useful?
+To answer a question, we need multiple simulations with different variable inputs (e.g. different recombination rates), and replicates of each.
+The problem here is that the more simulations you need to do, the longer the time required if you were to run them sequentially.
+Luckily, SLiM is designed with parallelism in mind. That is, you can have many SLiM simulations going at once, each running on a separate CPU core.
+This can all be done in whatever programming language you like, as long as it has a function to invoke system operating system commands
+(like <code>system()</code> in R), and ssupport for multicore processing.</p>
+<p>In this section, I’ll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them.
+I even provide a C++ implementation which is overkill and not necessary at all, but it was fun<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> to program!</p>
+<p>Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the
+<a href="https://github.com/MesserLab/SLiM-Extras">SLiM-Extras repository</a> under ‘sublaunching’. Source code for all of the examples shown
+in this document is available in the <code>/src/Parallelisation</code> folder.</p>
+</div>
+<div id="slim-at-the-command-line" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> SLiM at the Command Line</h2>
+<p>To use SLiM from the command line, you simply call the <code>slim</code> command, followed by a path to a file. For example:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="running-slim-in-parallel.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/Desktop/example_script.slim</span></code></pre></div>
+<p>This would run the script ‘example_script.slim’ with it’s set parameters. Say you want to do some replicates.
+To do this you might want to change the random seed, which adjusts state of the random number generator that determines when,
+where, and how mutations, recombination, and mating between certain individuals might happen. You can do this using the <code>-s</code> flag:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="running-slim-in-parallel.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> -s 123 ~/Desktop/example_script.slim</span></code></pre></div>
+<p>This would run the above script with the seed <code>123</code>. Note that you shouldn’t choose numbers like this,
+but instead use a random number generator to generate random numbers for you.</p>
+<p>Similarly, you can adjust parameters in your model with the <code>-d</code> flag, of which you can have as many as you want.
+For example, say you want to change the population size which is defined in your script as a parameter called <code>Ne</code>. You could run:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="running-slim-in-parallel.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> -s 123 -d Ne=1000 ~/Desktop/example_script.slim</span></code></pre></div>
+<p>Here, we’ve set Ne to be 1000, so <code>slim</code> will run the script with 1000 individuals and a seed of 123.</p>
+<div class="extrabox">
+<div class="center">
+<p><strong>Box 6.2.1</strong></p>
+</div>
+<p>When it comes to random numbers, it comes as little surprise that humans are bad at generating them.
+We have biases towards certain numbers by conscious (or unconscious!) recognition of those numbers.
+But it turns out that computers have just as hard a time as we do! Computers are designed to be deterministic,
+so generating random numbers can be quite difficult. To do it, various algorithms have been written to generate
+numbers from some distribution, fed with a random ‘seed’ to spit out that number. This seed is typically a signed
+32-bit integer (of the range -2,147,483,648 to 2,147,483,648), but realistically any size or type can be used
+(and 64-bit integers are becoming increasingly common as the range of possible values is massive).</p>
+<p>But how do you generate a seed?
+With another random number generator. Which must have come from some deterministic process.
+So no matter how many generators you have generating seeds for your random output, you can always go back to a
+deterministic value that seeded it all. It isn’t ever truly random, just pseudo-random. Of course, certain trickery
+has allowed for more complex randomness: some of the latest has to do with quantum mechanics of a laser reflecting
+or absorbing photons and treating the output of the number absorbed vs reflected as a random number, which is
+theoretically truly random. But do you really need a laser to seed a pseudo-random process? Or a system of lava
+lamps (a la <a href="https://www.youtube.com/watch?v=1cUUfMeOijg">CloudFlare</a>)? Probably not. As long as you are blind to
+the original seed that created your random numbers, it might as well be random: the chance that you are going to be
+able to find that original seed is astronomically small (<span class="math inline">\(\frac{1}{2^{63}-1}\)</span> for a signed 64-bit seed).
+<code>/dev/random</code>, which we saw in Box 2.1.1, generates random numbers based on environmental noise from your computer
+hardware drivers, which is supposedly close to ‘true’ randomness. <a href="https://en.wikipedia.org/wiki/Determinism">But is ‘true’ randomness a thing at all</a>?
+Is the universe deterministic? What is the universe’s seed? If you put the universe’s seed into a Minecraft
+world generator, would that world have many diamonds?
+Food for thought.</p>
+<p>The point is that you should be careful with generating random numbers and make sure you know that the
+ultimate source of randomness is as close to ‘true’ random as possible, but if it isn’t, as long as it is secure and
+probabilistically close to impossible to crack, it is probably a good enough source of randomness for whatever you are trying to do.</p>
+</div>
+<p>OK, so we can run SLiM via the command line for a single seed or variable combination. Now we could run that command multiple times,
+changing the seed or parameters manually every time we run it, but that’s inefficient and makes it difficult to use all your available
+resources on your computer (notably, cores for running separate SLiM instances in parallel). This is where sublaunching
+scripts can come in handy. These enable us to use a pre-written script to vary all the parameters we would like automatically,
+and run many SLiM experiments at once as possible.</p>
+<p>As a quick aside, these template scripts I’m providing require a <code>seeds.csv</code> file to be in the format of a single column
+with a header called ‘Seed’. My SeedGenerator program which I have provided (Under “Tools” in the <a href="https://github.com/nobrien97/PolygenicSLiMBook">main GitHub branch</a>),
+(along with an install script) will generate these for you. To use SeedGenerator, simply run <code>seedgen_install.sh</code>,
+and then <code>./seedgenerator</code>. There are a variety of options, listed with the -h or –help flag:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="running-slim-in-parallel.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shows the help file with instructions on each of the options</span></span>
+<span id="cb39-2"><a href="running-slim-in-parallel.html#cb39-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">../Tools/SeedGenerator/seedgenerator</span> --help</span></code></pre></div>
+<pre><code>## Uniformly Distributed Seed Generator
+## 
+## This program generates a .csv of uniformly distributed 32-bit integers for use as RNG seeds.
+## Usage: ../Tools/SeedGenerator/seedgenerator [OPTION]...
+## Example: ../Tools/SeedGenerator/seedgenerator -h
+## 
+## -h             Print this help manual.
+## 
+## -n N           Generate N random samples. Defaults to 10.
+## 
+## -v             Turn on verbose mode.
+## 
+## -t NAME        Choose a header name. Defaults to &#39;Seed&#39;. Enter nothing to have no header.
+##                Example: -t=Number OR -tNumber
+## 
+## -d FILEPATH    Specify a filepath and name for the generated seeds to be saved. Defaults to ./seeds.csv.
+##                Example: -d ~/Desktop/seeds.csv</code></pre>
+<p>Now onto sublaunching SLiM. We’ll start with Bash, which is perhaps the simplest.</p>
+</div>
+<div id="running-slim-via-bash" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Running SLiM via Bash</h2>
+<p>The simplest way to run SLiM at the command line is through Bash, the standard command line scripting language of Linux based systems.
+Note that the SLiM Online Workshop - ‘<em>Running SLiM from the command line</em>’ tutorial goes over much of what I’ll be presenting below.
+The Bash syntax is pretty similar to the standard way of running SLiM on the command line, and in fact you’ll be using almost identical commands.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="running-slim-in-parallel.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="ex">seed</span> in seeds.csv<span class="kw">;</span> <span class="kw">do</span></span>
+<span id="cb41-2"><a href="running-slim-in-parallel.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">&quot;Running with seed == &quot;</span> <span class="va">$(</span><span class="ex">seed</span><span class="va">)</span>:</span>
+<span id="cb41-3"><a href="running-slim-in-parallel.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">slim</span> -s <span class="va">$(</span><span class="ex">seed</span><span class="va">)</span> ~/Desktop/example_script.slim <span class="kw">&amp;</span></span>
+<span id="cb41-4"><a href="running-slim-in-parallel.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> </span>
+<span id="cb41-5"><a href="running-slim-in-parallel.html#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="kw">done</span></span></code></pre></div>
+<p>Here, we do a simple for loop over the seeds in a file called seeds.csv (generated by Tools/SeedGenerator/seedgenerator).
+For this to work in bash, make sure you have the header disabled (<code>./seedgenerator -t</code>)
+The <code>&amp;</code> character tells Bash to run the slim process as a background task, meaning it is put on an available core.
+This results in SLiM processes running parallelised across multiple cores!</p>
+<p>Bash can also be used to parallelise over many parameters, but it quickly becomes difficult to read. For example,
+here is an example script with two parameters and a seed variable:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="running-slim-in-parallel.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="ex">param1</span> in 0.1 0.2 0.3</span>
+<span id="cb42-2"><a href="running-slim-in-parallel.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">do</span></span>
+<span id="cb42-3"><a href="running-slim-in-parallel.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">for</span> <span class="ex">param2</span> in <span class="st">&quot;Low&quot;</span> <span class="st">&quot;Medium&quot;</span> <span class="st">&quot;High&quot;</span></span>
+<span id="cb42-4"><a href="running-slim-in-parallel.html#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">do</span></span>
+<span id="cb42-5"><a href="running-slim-in-parallel.html#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> <span class="ex">seed</span> in seeds.csv</span>
+<span id="cb42-6"><a href="running-slim-in-parallel.html#cb42-6" aria-hidden="true" tabindex="-1"></a>      <span class="kw">do</span></span>
+<span id="cb42-7"><a href="running-slim-in-parallel.html#cb42-7" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="st">&quot;Seed = &quot;</span> <span class="va">$(</span><span class="ex">seed</span><span class="va">)</span> <span class="st">&quot; param1 = &quot;</span> <span class="va">$(</span><span class="ex">param1</span><span class="va">)</span> <span class="st">&quot; param2 = &quot;</span> <span class="va">$(</span><span class="ex">param2</span><span class="va">)</span>:</span>
+<span id="cb42-8"><a href="running-slim-in-parallel.html#cb42-8" aria-hidden="true" tabindex="-1"></a>      <span class="ex">slim</span> -s <span class="va">$(</span><span class="ex">seed</span><span class="va">)</span> -d param1=<span class="va">$(</span><span class="ex">param1</span><span class="va">)</span> -d param2=<span class="va">$(</span><span class="ex">param2</span><span class="va">)</span> ~/Desktop/example_script.slim <span class="kw">&amp;</span></span>
+<span id="cb42-9"><a href="running-slim-in-parallel.html#cb42-9" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span></span>
+<span id="cb42-10"><a href="running-slim-in-parallel.html#cb42-10" aria-hidden="true" tabindex="-1"></a>      <span class="kw">done</span></span>
+<span id="cb42-11"><a href="running-slim-in-parallel.html#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">done</span></span>
+<span id="cb42-12"><a href="running-slim-in-parallel.html#cb42-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">done</span></span></code></pre></div>
+<p>While it is also possible to read in files and split columns into different variables, it’s much easier to do this in R or Python.
+So for more complex scripts, I would highly suggest using either of those to sublaunch your SLiM jobs. I will provide examples of both below.</p>
+</div>
+<div id="running-slim-via-r" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Running SLiM via R</h2>
+<p>This is how I normally sublaunch SLiM. R has a variety of packages that make it easy to parallelise across cores,
+and because of R’s rich feature set and the breadth of user-made libraries, the options are endless when it comes to
+feeding parameters to SLiM, loading output, or integrating with SLiM.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="running-slim-in-parallel.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parallelisation libraries </span></span>
+<span id="cb43-2"><a href="running-slim-in-parallel.html#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="running-slim-in-parallel.html#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb43-4"><a href="running-slim-in-parallel.html#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb43-5"><a href="running-slim-in-parallel.html#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb43-6"><a href="running-slim-in-parallel.html#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="running-slim-in-parallel.html#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="running-slim-in-parallel.html#cb43-8" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;~/Desktop/seeds.csv&quot;</span>, <span class="at">header =</span> T)</span>
+<span id="cb43-9"><a href="running-slim-in-parallel.html#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="running-slim-in-parallel.html#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="running-slim-in-parallel.html#cb43-11" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(future<span class="sc">::</span><span class="fu">availableCores</span>())</span>
+<span id="cb43-12"><a href="running-slim-in-parallel.html#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb43-13"><a href="running-slim-in-parallel.html#cb43-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-14"><a href="running-slim-in-parallel.html#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
+<span id="cb43-15"><a href="running-slim-in-parallel.html#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-16"><a href="running-slim-in-parallel.html#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
+<span id="cb43-17"><a href="running-slim-in-parallel.html#cb43-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use string manipulation functions to configure the command line args, feeding from a data frame of seeds</span></span>
+<span id="cb43-18"><a href="running-slim-in-parallel.html#cb43-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then run SLiM with system(),</span></span>
+<span id="cb43-19"><a href="running-slim-in-parallel.html#cb43-19" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/path/to/slim -s %s ~/Desktop/example_script.slim&quot;</span>, </span>
+<span id="cb43-20"><a href="running-slim-in-parallel.html#cb43-20" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">as.character</span>(i), <span class="at">intern=</span>T))</span>
+<span id="cb43-21"><a href="running-slim-in-parallel.html#cb43-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb43-22"><a href="running-slim-in-parallel.html#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
+<p>This script first loads a series of libraries that allow R to run a for loop across multiple cores.
+Each iteration of the for loop is assigned to a free core when it becomes available. We then load in <code>seeds.csv</code> as a dataframe,
+and set up a local ‘cluster’, which basically lets R know how many cores are available on your system that it can use.
+The seeds are then fed into our for loop (<code>foreach</code>, which is implemented specifically to be parallel). For each seed, we run the for loop,
+with the <code>%dopar%</code> operator saying that we should do those iterations across as many cores as are available.
+The <code>system()</code> command tells the operating system to run a command, given as a string. <code>sprintf()</code> creates a string
+from its inputs, with support for variables to be added to the string on the fly. This is done with the <code>%</code> symbol
+followed by the type that is being fed to <code>sprintf()</code>. For example, <code>%s</code> provides a placeholder for a string variable.
+These variables are listed at the end of the line _in the order that they are mentioned in the <code>sprintf()</code> command.
+For example, here <code>%s</code>, being the first variable mentioned in the string, is replaced by the first variable mentioned after the
+string ends with the closing ". In this case, we feed SLiM a seed with the <code>-s</code> command, replacing <code>%s</code> with <code>as.character(i)</code>,
+which is the seed given by the for loop. As well as <code>%s</code>, there is also <code>i</code> and <code>f</code> for integer and floating point
+(or double, since R only supports doubles) numbers.
+So why do we feed SLiM a string as a seed instead of an integer? It’s to ensure it gets read properly. R only supports signed 32-bit integers,
+which are a fair bit smaller than SLiM’s 64-bit integers. Since the idea of randomly choosing seeds is to uniformly sample
+across the entire range of possible values to avoid any kind of correlations, we sample across the range of 64 bit values.
+However, R can’t handle numbers so big as integers, so it automatically coerces them to doubles.
+Doubles are stored in computers very differently to integers, and having R treat this number as an integer (or as a float) and then feed it to
+SLiM that way results in unexpected behaviour. I’ve found it’s safest to just treat the seed as a string so no coercion happens -
+SLiM automatically will treat that string as an integer when it is loaded anyway.</p>
+<p>Now, the R script is a little more complex at base-level than a Bash script, but I find it much easier to expand upon.
+Say for example we have two parameters as before. We could use nested <code>foreach</code> loops just like we did in Bash, but
+it’s easier to exploit R’s dataframe support to have a dataframe of possible parameter combinations, and then use each
+iteration to choose the right combination. This way, we simply need one level of nesting regardless of how many parameters
+we have: one <code>foreach</code> loop for seeds, and a nested one for parameter combinations.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="running-slim-in-parallel.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a list of parameters</span></span>
+<span id="cb44-2"><a href="running-slim-in-parallel.html#cb44-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb44-3"><a href="running-slim-in-parallel.html#cb44-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>param1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>)</span>
+<span id="cb44-4"><a href="running-slim-in-parallel.html#cb44-4" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>param2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;&quot;Low&quot;&#39;</span>, <span class="st">&#39;&quot;Medium&quot;&#39;</span>, <span class="st">&#39;&quot;High&quot;&#39;</span>) <span class="co">#&#39;&quot; is necessary for SLiM to read them as strings</span></span>
+<span id="cb44-5"><a href="running-slim-in-parallel.html#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="running-slim-in-parallel.html#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the list as a data frame with all possible combinations</span></span>
+<span id="cb44-7"><a href="running-slim-in-parallel.html#cb44-7" aria-hidden="true" tabindex="-1"></a>df.p <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(p)</span>
+<span id="cb44-8"><a href="running-slim-in-parallel.html#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="running-slim-in-parallel.html#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also save df.p as a csv file and import it later, as with seeds: write.csv(df.p, row.names = F)</span></span>
+<span id="cb44-10"><a href="running-slim-in-parallel.html#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="running-slim-in-parallel.html#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we can use those data frame rows as inputs for our script</span></span>
+<span id="cb44-12"><a href="running-slim-in-parallel.html#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-13"><a href="running-slim-in-parallel.html#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Parallelisation libraries </span></span>
+<span id="cb44-14"><a href="running-slim-in-parallel.html#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="running-slim-in-parallel.html#cb44-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb44-16"><a href="running-slim-in-parallel.html#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb44-17"><a href="running-slim-in-parallel.html#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb44-18"><a href="running-slim-in-parallel.html#cb44-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-19"><a href="running-slim-in-parallel.html#cb44-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-20"><a href="running-slim-in-parallel.html#cb44-20" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;~/Desktop/seeds.csv&quot;</span>, <span class="at">header =</span> T)</span>
+<span id="cb44-21"><a href="running-slim-in-parallel.html#cb44-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-22"><a href="running-slim-in-parallel.html#cb44-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-23"><a href="running-slim-in-parallel.html#cb44-23" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(future<span class="sc">::</span><span class="fu">availableCores</span>())</span>
+<span id="cb44-24"><a href="running-slim-in-parallel.html#cb44-24" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb44-25"><a href="running-slim-in-parallel.html#cb44-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-26"><a href="running-slim-in-parallel.html#cb44-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
+<span id="cb44-27"><a href="running-slim-in-parallel.html#cb44-27" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df.p)) <span class="sc">%:%</span></span>
+<span id="cb44-28"><a href="running-slim-in-parallel.html#cb44-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span>(<span class="at">j=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
+<span id="cb44-29"><a href="running-slim-in-parallel.html#cb44-29" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/path/to/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim&quot;</span>, </span>
+<span id="cb44-30"><a href="running-slim-in-parallel.html#cb44-30" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">as.character</span>(j), df.p[i,]<span class="sc">$</span>param1, df.p[i,]<span class="sc">$</span>param2, <span class="at">intern=</span>T))</span>
+<span id="cb44-31"><a href="running-slim-in-parallel.html#cb44-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb44-32"><a href="running-slim-in-parallel.html#cb44-32" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
+<p>Here we do the exact thing as before: creating a local cluster and running a <code>foreach</code> loop. However, in this case we
+nest a second <code>foreach</code> loop so we can include both seeds and the parameter combinations. Each <code>i</code> in this loop is a
+different row in the <code>df.p</code> dataframe of parameter combinations. Each <code>j</code> is a different seed. Notice we only ues <code>%dopar%</code>
+once, and use that on the innermost <code>foreach</code> loop. This means for each parameter combination (<code>i</code>), we will parallelise
+across seeds (<code>j</code>). This can be extended to as many parameter values as you want, as we simply fill each parameter using
+the <code>sprintf()</code> variable-filling functionality as before, this time referencing <code>df.p</code> and choosing the appropriate column (parameter value).</p>
+</div>
+<div id="running-slim-in-python" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> Running SLiM in Python</h2>
+<p>Running SLiM in Python is similarly straightforward, and due to its plethora of libraries, quite powerful also.
+Here’s an example</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="running-slim-in-parallel.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os <span class="im">import</span> system</span>
+<span id="cb45-2"><a href="running-slim-in-parallel.html#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> multiprocessing <span class="im">import</span> Pool</span>
+<span id="cb45-3"><a href="running-slim-in-parallel.html#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> read_csv</span>
+<span id="cb45-4"><a href="running-slim-in-parallel.html#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="running-slim-in-parallel.html#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the seeds file</span></span>
+<span id="cb45-6"><a href="running-slim-in-parallel.html#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="running-slim-in-parallel.html#cb45-7" aria-hidden="true" tabindex="-1"></a>seeds <span class="op">=</span> read_csv(<span class="vs">r&#39;../Inputs/seeds.csv&#39;</span>)</span>
+<span id="cb45-8"><a href="running-slim-in-parallel.html#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="running-slim-in-parallel.html#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-10"><a href="running-slim-in-parallel.html#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slim_call(seed):</span>
+<span id="cb45-11"><a href="running-slim-in-parallel.html#cb45-11" aria-hidden="true" tabindex="-1"></a>    system(<span class="st">&#39;slim -s </span><span class="sc">{}</span><span class="st"> ~/Desktop/example_script.slim&#39;</span>.<span class="bu">format</span>(seed)) </span>
+<span id="cb45-12"><a href="running-slim-in-parallel.html#cb45-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-13"><a href="running-slim-in-parallel.html#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Open a new &#39;pool&#39; - like makeCluster() in R</span></span>
+<span id="cb45-14"><a href="running-slim-in-parallel.html#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-15"><a href="running-slim-in-parallel.html#cb45-15" aria-hidden="true" tabindex="-1"></a>cluster <span class="op">=</span> Pool()</span>
+<span id="cb45-16"><a href="running-slim-in-parallel.html#cb45-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-17"><a href="running-slim-in-parallel.html#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Do an operation on the pool - this is like mclapply() in R</span></span>
+<span id="cb45-18"><a href="running-slim-in-parallel.html#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb45-19"><a href="running-slim-in-parallel.html#cb45-19" aria-hidden="true" tabindex="-1"></a>    cluster.<span class="bu">map</span>(slim_call, seeds[<span class="st">&#39;Seed&#39;</span>].tolist())</span>
+<span id="cb45-20"><a href="running-slim-in-parallel.html#cb45-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-21"><a href="running-slim-in-parallel.html#cb45-21" aria-hidden="true" tabindex="-1"></a>cluster.close()</span>
+<span id="cb45-22"><a href="running-slim-in-parallel.html#cb45-22" aria-hidden="true" tabindex="-1"></a>cluster.join()</span></code></pre></div>
+<p>In this script, we iterate over seeds only, using the built-in <code>os</code> and <code>multiprocessing</code> libraries, and the popular <code>pandas</code> library.
+To install pandas, run <code>python -m pip install pandas</code> in a Terminal and restart Python if you have it open.</p>
+<p>We first use the <code>pandas</code> function <code>read_csv()</code> to load our seeds into a dataframe. From there we create a new pool - this is analogous
+to creating a new cluster with <code>makeCluster()</code> in R. The default setting as shown creates a pool with all available cores, however using
+<code>Pool(x)</code> where x is the number of cores you would like to use.
+We define a function to call slim via the <code>os.system()</code> command, and use our Pool’s own function <code>map</code> to map a list of imputs to our SLiM
+function. This will run the function for all values in that vector, and on as many cores available to the Pool.
+Using <code>cluster.close()</code> followed by <code>cluster.join()</code> is good practice, just like closing the cluster in R with <code>stopCluster()</code></p>
+<p>Now lets expand this to our list of combinations like in R:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="running-slim-in-parallel.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> os <span class="im">import</span> system</span>
+<span id="cb46-2"><a href="running-slim-in-parallel.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> multiprocessing <span class="im">import</span> Pool</span>
+<span id="cb46-3"><a href="running-slim-in-parallel.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> product</span>
+<span id="cb46-4"><a href="running-slim-in-parallel.html#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas <span class="im">import</span> read_csv, DataFrame</span>
+<span id="cb46-5"><a href="running-slim-in-parallel.html#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> Parallel, delayed</span>
+<span id="cb46-6"><a href="running-slim-in-parallel.html#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="running-slim-in-parallel.html#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the seeds file as a list</span></span>
+<span id="cb46-8"><a href="running-slim-in-parallel.html#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="running-slim-in-parallel.html#cb46-9" aria-hidden="true" tabindex="-1"></a>seeds <span class="op">=</span> read_csv(<span class="vs">r&#39;../Inputs/seeds.csv&#39;</span>)[<span class="st">&#39;Seed&#39;</span>].to_list()</span>
+<span id="cb46-10"><a href="running-slim-in-parallel.html#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="running-slim-in-parallel.html#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a list of parameters and generate unique combinations, then form a list of tuples</span></span>
+<span id="cb46-12"><a href="running-slim-in-parallel.html#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also use the pandas.write_csv() function to store this output and read it later like</span></span>
+<span id="cb46-13"><a href="running-slim-in-parallel.html#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="co"># we have been doing with seeds</span></span>
+<span id="cb46-14"><a href="running-slim-in-parallel.html#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="running-slim-in-parallel.html#cb46-15" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> {<span class="st">&#39;param1&#39;</span> : [<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>], <span class="st">&#39;param2&#39;</span> : [<span class="st">&#39;&quot;Low&quot;&#39;</span>, <span class="st">&#39;&quot;Medium&quot;&#39;</span>, <span class="st">&#39;&quot;High&quot;&#39;</span>]}</span>
+<span id="cb46-16"><a href="running-slim-in-parallel.html#cb46-16" aria-hidden="true" tabindex="-1"></a>keys, values <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>p.items())</span>
+<span id="cb46-17"><a href="running-slim-in-parallel.html#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="co"># https://stackoverflow.com/a/61335465/13586824</span></span>
+<span id="cb46-18"><a href="running-slim-in-parallel.html#cb46-18" aria-hidden="true" tabindex="-1"></a>combos <span class="op">=</span> [<span class="bu">dict</span>(<span class="bu">zip</span>(keys, v)) <span class="cf">for</span> v <span class="kw">in</span> product(<span class="op">*</span>values)]</span>
+<span id="cb46-19"><a href="running-slim-in-parallel.html#cb46-19" aria-hidden="true" tabindex="-1"></a>combos <span class="op">=</span> DataFrame.from_dict(combos)</span>
+<span id="cb46-20"><a href="running-slim-in-parallel.html#cb46-20" aria-hidden="true" tabindex="-1"></a>combos <span class="op">=</span> <span class="bu">list</span>(combos.itertuples(index<span class="op">=</span><span class="va">False</span>, name<span class="op">=</span><span class="va">None</span>))</span>
+<span id="cb46-21"><a href="running-slim-in-parallel.html#cb46-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-22"><a href="running-slim-in-parallel.html#cb46-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-23"><a href="running-slim-in-parallel.html#cb46-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Do an operation on the pool - this is like foreach() in R</span></span>
+<span id="cb46-24"><a href="running-slim-in-parallel.html#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="co"># \&quot; is an escaped string, which we need for the command line to be able to feed SLiM string parameters properly</span></span>
+<span id="cb46-25"><a href="running-slim-in-parallel.html#cb46-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-26"><a href="running-slim-in-parallel.html#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slim_call(param1, param2):</span>
+<span id="cb46-27"><a href="running-slim-in-parallel.html#cb46-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> seed <span class="kw">in</span> seeds:</span>
+<span id="cb46-28"><a href="running-slim-in-parallel.html#cb46-28" aria-hidden="true" tabindex="-1"></a>        system(<span class="st">&#39;/path/to/slim -s </span><span class="sc">{se}</span><span class="st"> -d param1=</span><span class="sc">{p1}</span><span class="st"> -d </span><span class="ch">\&quot;</span><span class="st">param2=</span><span class="ch">\&#39;</span><span class="sc">{p2}</span><span class="ch">\&#39;\&quot;</span><span class="st"> ~/Desktop/example_script.slim&#39;</span>.<span class="bu">format</span>(se<span class="op">=</span>seed, p1<span class="op">=</span>param1, p2<span class="op">=</span>param2)) </span>
+<span id="cb46-29"><a href="running-slim-in-parallel.html#cb46-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-30"><a href="running-slim-in-parallel.html#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Open a new &#39;pool&#39; - like makeCluster() in R</span></span>
+<span id="cb46-31"><a href="running-slim-in-parallel.html#cb46-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-32"><a href="running-slim-in-parallel.html#cb46-32" aria-hidden="true" tabindex="-1"></a>cluster <span class="op">=</span> Pool()</span>
+<span id="cb46-33"><a href="running-slim-in-parallel.html#cb46-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-34"><a href="running-slim-in-parallel.html#cb46-34" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb46-35"><a href="running-slim-in-parallel.html#cb46-35" aria-hidden="true" tabindex="-1"></a>    cluster.starmap(slim_call, combos)</span>
+<span id="cb46-36"><a href="running-slim-in-parallel.html#cb46-36" aria-hidden="true" tabindex="-1"></a>cluster.close()</span>
+<span id="cb46-37"><a href="running-slim-in-parallel.html#cb46-37" aria-hidden="true" tabindex="-1"></a>cluster.join()</span></code></pre></div>
+<p>This is a little bit more painful than in R. We construct a list of tuples of every combination of our parameters. We do this by first
+constructing a dictionary of the possible values for the parameters. We then use <code>zip()</code> to construct an iterator of tuples: basically
+a pairing of param1 to param2. Then we get the product of each key’s values with the other key’s values for all possible combinations in a
+list of dictionaries. From this list of dictionaries, we construct a <code>pandas</code> DataFrame, and then convert that to a list of tuples.</p>
+<p>Here, we encapsulate our SLiM call in a function which includes a for loop over seeds. We then use the <code>Pool.starmap()</code> function to run in
+parallel these SLiM runs across combinations. Indeed, this ordering could also be reversed so that the for loop contains the combinations
+and <code>starmap()</code> iterates over seeds. This might be a good idea if the number of combinations is less than the number of seeds, to leverage
+as much parallel power as possible and reduce wasted time.</p>
+</div>
+<div id="running-slim-via-a-c-program" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> Running SLiM via a C++ Program</h2>
+<p>Before we go on, I should mention that this part is pretty much always overkill. There really isn’t much of an overhead from running SLiM in
+parallel via interpreted languages, so there is little reason to use any C-based language for running SLiM. It’s clunky and kind of a pain.
+However, it is an interesting exercise, and in the cases where you need to eke out every iota of performance during a particularly slow
+simulation, it might be worthwhile.</p>
+<p>This program uses an open source header library to read csv files into vectors. That can be found in the /includes/ folder, and also at the
+<a href="https://github.com/ben-strasser/fast-cpp-csv-parser">original GitHub repository</a>. The program uses OpenMP to parallelise a for loop across
+multiple cores.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb47-1"><a href="running-slim-in-parallel.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;includes/csv.h&quot;</span><span class="pp"> </span><span class="co">// https://github.com/awdeorio/csvstream</span></span>
+<span id="cb47-2"><a href="running-slim-in-parallel.html#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;stdlib.h&quot;</span></span>
+<span id="cb47-3"><a href="running-slim-in-parallel.html#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb47-4"><a href="running-slim-in-parallel.html#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;utility&gt;</span></span>
+<span id="cb47-5"><a href="running-slim-in-parallel.html#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb47-6"><a href="running-slim-in-parallel.html#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb47-7"><a href="running-slim-in-parallel.html#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;omp.h&quot;</span></span>
+<span id="cb47-8"><a href="running-slim-in-parallel.html#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;map&gt;</span></span>
+<span id="cb47-9"><a href="running-slim-in-parallel.html#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="running-slim-in-parallel.html#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="bu">std::</span>vector; <span class="kw">using</span> <span class="bu">std::</span>string;</span>
+<span id="cb47-11"><a href="running-slim-in-parallel.html#cb47-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-12"><a href="running-slim-in-parallel.html#cb47-12" aria-hidden="true" tabindex="-1"></a><span class="pp">#define THREAD_NUM </span><span class="dv">4</span><span class="pp"> </span><span class="co">//omp_get_thread_num(); // Max CPUs on machine</span></span>
+<span id="cb47-13"><a href="running-slim-in-parallel.html#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="running-slim-in-parallel.html#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="running-slim-in-parallel.html#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="co">// Escaped &quot; and &#39; are so the command line doesn&#39;t freak out with quotations in the middle of the line for string input</span></span>
+<span id="cb47-16"><a href="running-slim-in-parallel.html#cb47-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Feed in a single row of the combos.csv and a single seed at a time: the parallelised for loop will do this</span></span>
+<span id="cb47-17"><a href="running-slim-in-parallel.html#cb47-17" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> runSLiM(<span class="bu">std::</span>pair&lt;<span class="dt">float</span>, string&gt; combo, string seed) {</span>
+<span id="cb47-18"><a href="running-slim-in-parallel.html#cb47-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> param1 = combo.first;     <span class="co">// Access the pair&#39;s first value, which is param1</span></span>
+<span id="cb47-19"><a href="running-slim-in-parallel.html#cb47-19" aria-hidden="true" tabindex="-1"></a>    string param2 = combo.second;</span>
+<span id="cb47-20"><a href="running-slim-in-parallel.html#cb47-20" aria-hidden="true" tabindex="-1"></a>    string callLine = <span class="st">&quot;/path/to/slim -s &quot;</span> + seed + <span class="st">&quot; -d param1=&quot;</span> + <span class="bu">std::</span>to_string(param1) + <span class="st">&quot; -d </span><span class="sc">\&quot;</span><span class="st">param2=</span><span class="sc">\&#39;</span><span class="st">&quot;</span> + param2 + <span class="st">&quot;</span><span class="sc">\&#39;\&quot;</span><span class="st"> ~/Desktop/example_script.slim&quot;</span>;</span>
+<span id="cb47-21"><a href="running-slim-in-parallel.html#cb47-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>system(callLine.c_str());</span>
+<span id="cb47-22"><a href="running-slim-in-parallel.html#cb47-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-23"><a href="running-slim-in-parallel.html#cb47-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-24"><a href="running-slim-in-parallel.html#cb47-24" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main() {</span>
+<span id="cb47-25"><a href="running-slim-in-parallel.html#cb47-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Read the seeds and combos</span></span>
+<span id="cb47-26"><a href="running-slim-in-parallel.html#cb47-26" aria-hidden="true" tabindex="-1"></a>    io::CSVReader&lt;<span class="dv">1</span>&gt; seeds(<span class="st">&quot;./seeds.csv&quot;</span>);</span>
+<span id="cb47-27"><a href="running-slim-in-parallel.html#cb47-27" aria-hidden="true" tabindex="-1"></a>    seeds.read_header(io::ignore_extra_column, <span class="st">&quot;Seed&quot;</span>);</span>
+<span id="cb47-28"><a href="running-slim-in-parallel.html#cb47-28" aria-hidden="true" tabindex="-1"></a>    vector&lt;string&gt; vSeeds;</span>
+<span id="cb47-29"><a href="running-slim-in-parallel.html#cb47-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int64_t</span> curSeed;</span>
+<span id="cb47-30"><a href="running-slim-in-parallel.html#cb47-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// For each row in the file, fill variables with that row&#39;s values</span></span>
+<span id="cb47-31"><a href="running-slim-in-parallel.html#cb47-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (seeds.read_row(curSeed)) {</span>
+<span id="cb47-32"><a href="running-slim-in-parallel.html#cb47-32" aria-hidden="true" tabindex="-1"></a>        vSeeds.emplace_back(<span class="bu">std::</span>to_string(curSeed)); <span class="co">// Stick it into a vector of all seeds</span></span>
+<span id="cb47-33"><a href="running-slim-in-parallel.html#cb47-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb47-34"><a href="running-slim-in-parallel.html#cb47-34" aria-hidden="true" tabindex="-1"></a>    io::CSVReader&lt;<span class="dv">2</span>&gt; combos(<span class="st">&quot;./combos.csv&quot;</span>);</span>
+<span id="cb47-35"><a href="running-slim-in-parallel.html#cb47-35" aria-hidden="true" tabindex="-1"></a>    combos.read_header(io::ignore_extra_column, <span class="st">&quot;param1&quot;</span>, <span class="st">&quot;param2&quot;</span>);</span>
+<span id="cb47-36"><a href="running-slim-in-parallel.html#cb47-36" aria-hidden="true" tabindex="-1"></a>    vector&lt;<span class="bu">std::</span>pair&lt;<span class="dt">float</span>, string&gt;&gt; vCombos;</span>
+<span id="cb47-37"><a href="running-slim-in-parallel.html#cb47-37" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> curP1;</span>
+<span id="cb47-38"><a href="running-slim-in-parallel.html#cb47-38" aria-hidden="true" tabindex="-1"></a>    string curP2;</span>
+<span id="cb47-39"><a href="running-slim-in-parallel.html#cb47-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (combos.read_row(curP1, curP2)) {</span>
+<span id="cb47-40"><a href="running-slim-in-parallel.html#cb47-40" aria-hidden="true" tabindex="-1"></a>        vCombos.emplace_back(curP1, curP2); <span class="co">// Same as above, but we are constructing a vector of pairs, where the pair is param1 and param2</span></span>
+<span id="cb47-41"><a href="running-slim-in-parallel.html#cb47-41" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb47-42"><a href="running-slim-in-parallel.html#cb47-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb47-43"><a href="running-slim-in-parallel.html#cb47-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb47-44"><a href="running-slim-in-parallel.html#cb47-44" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Start of parallel processing code</span></span>
+<span id="cb47-45"><a href="running-slim-in-parallel.html#cb47-45" aria-hidden="true" tabindex="-1"></a>    omp_set_num_threads(THREAD_NUM); <span class="co">// How many cores to use?</span></span>
+<span id="cb47-46"><a href="running-slim-in-parallel.html#cb47-46" aria-hidden="true" tabindex="-1"></a>    <span class="pp">#pragma omp parallel for collapse(2) </span><span class="co">// 2 for loops, so collapse those loops into one parallelisable structure</span></span>
+<span id="cb47-47"><a href="running-slim-in-parallel.html#cb47-47" aria-hidden="true" tabindex="-1"></a>    { </span>
+<span id="cb47-48"><a href="running-slim-in-parallel.html#cb47-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="dt">int</span> i=<span class="dv">0</span>; i &lt; vSeeds.size() - <span class="dv">1</span>; ++i) {</span>
+<span id="cb47-49"><a href="running-slim-in-parallel.html#cb47-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> (<span class="dt">int</span> j=<span class="dv">0</span>; j &lt; vCombos.size() - <span class="dv">1</span>; ++j) {</span>
+<span id="cb47-50"><a href="running-slim-in-parallel.html#cb47-50" aria-hidden="true" tabindex="-1"></a>                runSLiM(vCombos[j], vSeeds[i]); <span class="co">// run SLiM with a given seed and parameter combination</span></span>
+<span id="cb47-51"><a href="running-slim-in-parallel.html#cb47-51" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb47-52"><a href="running-slim-in-parallel.html#cb47-52" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb47-53"><a href="running-slim-in-parallel.html#cb47-53" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb47-54"><a href="running-slim-in-parallel.html#cb47-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-55"><a href="running-slim-in-parallel.html#cb47-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb47-56"><a href="running-slim-in-parallel.html#cb47-56" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Most of this code is just sorting out csv files into structures that we can perform for loops on. We use openMP to parallelise
+a nested for loop structure and automatically dish out seed-parameter combinations to the runSLiM() function out to available cores.
+This code isn’t particularly nice to look at, nor is it going to work as-is for more than two parameters (<code>std::pair</code> will need
+to be another <code>std::vector</code>), however it could be expanded upon to be more customisable (e.g. accepting user input for
+filepaths). In addition, it could be part of a larger GUI app to launch parallel SLiM jobs in a more user-friendly way (coming soon?).</p>
+</div>
+<div id="writing-slim-code-with-parallelism-in-mind" class="section level2" number="6.7">
+<h2><span class="header-section-number">6.7</span> Writing SLiM code with parallelism in mind</h2>
+<p>When it comes to writing your SLiM code, there are a few factors to keep in mind. Perhaps the most important is how you will deal with
+output. Will your models all write into the same output file or separate files? Each option has its pros and cons, so I’ll give descriptions
+of both.</p>
+<div id="single-file-output" class="section level3" number="6.7.1">
+<h3><span class="header-section-number">6.7.1</span> Single file output</h3>
+<p>If you want to write your output into a single file, you will need to ensure that all <code>writeFile()</code> calls in your script have the
+<code>append</code> flag set to <code>T</code>. This way, when writing to the file, SLiM will write a new line character followed by what you are writing
+rather than overwriting the file. Be warned that this method isn’t completely safe and can introduce you to race conditions: if two simulations
+try to write at the same time, which of the two will write? Will one line of results be lost, will they both be glued together and become a pain
+to format, or will everything go as planned? This may or may not be a problem. For example, if you are tracking evolution over long periods of time,
+a single missed data point isn’t going to cause you any problems realistically. However, if your data is very detailed and written multiple times
+during a generation, then the chances for files to be written at the same time increases. The lesson really is if you write this way, write as little
+as you can to minimise the risk of race conditions becoming a problem. I have written output this way through my Honours, and had no issues with overwriting
+or missing output. This was with 1152 concurrent simulations, with data being written 200 times per run. However, I have encountered one error since then,
+where a single row was appended with no newline character to another, likely due to a similar race condition.</p>
+<p>In summary, the chances of problems are low, but never zero<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</p>
+</div>
+<div id="multiple-file-output" class="section level3" number="6.7.2">
+<h3><span class="header-section-number">6.7.2</span> Multiple file output</h3>
+<p>If you want to write to multiple files, then you will need to write your output into generated folders or file names based on your seed and parameter
+combinations. For this, I recommend defining a ‘model index’ parameter in SLiM, which is unique for each parameter combination. In fact, this parameter
+will be useful regardless of your output protocol, as we will see later. This can simply be set asthe row number in your parameter combination table.
+For example, in R:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="running-slim-in-parallel.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
+<span id="cb48-2"><a href="running-slim-in-parallel.html#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df.p)) <span class="sc">%:%</span></span>
+<span id="cb48-3"><a href="running-slim-in-parallel.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span>(<span class="at">j=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
+<span id="cb48-4"><a href="running-slim-in-parallel.html#cb48-4" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d modelindex=%i  ~/Desktop/example_script.slim&quot;</span>, <span class="fu">as.character</span>(j), df.p[i,]<span class="sc">$</span>param1, i, <span class="at">intern=</span>T))</span>
+<span id="cb48-5"><a href="running-slim-in-parallel.html#cb48-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>Here we set the SLiM constant <code>modelindex</code> equal to <code>i</code>, which is the row number of the parameter combination dataframe in our for loop.</p>
+<p>Now to name the output files, we need to combine the seed and modelindex in our SLiM script and specify a filename, like so:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb49-1"><a href="running-slim-in-parallel.html#cb49-1" aria-hidden="true" tabindex="-1"></a>initialize() {</span>
+<span id="cb49-2"><a href="running-slim-in-parallel.html#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (!exists(<span class="st">&quot;slimgui&quot;</span>)) {</span>
+<span id="cb49-3"><a href="running-slim-in-parallel.html#cb49-3" aria-hidden="true" tabindex="-1"></a>        setCfgParam(<span class="st">&quot;seed&quot;</span>, getSeed()); <span class="co">// Set the seed as a constant if we&#39;ve run from the command line</span></span>
+<span id="cb49-4"><a href="running-slim-in-parallel.html#cb49-4" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb49-5"><a href="running-slim-in-parallel.html#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> {</span>
+<span id="cb49-6"><a href="running-slim-in-parallel.html#cb49-6" aria-hidden="true" tabindex="-1"></a>        setSeed(asInteger(round(runif(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>^<span class="dv">62</span> - <span class="dv">1</span>))));</span>
+<span id="cb49-7"><a href="running-slim-in-parallel.html#cb49-7" aria-hidden="true" tabindex="-1"></a>        setCfgParam(<span class="st">&quot;seed&quot;</span>, getSeed());</span>
+<span id="cb49-8"><a href="running-slim-in-parallel.html#cb49-8" aria-hidden="true" tabindex="-1"></a>        catn(<span class="st">&quot;Actual seed: &quot;</span> + asInteger(seed)); <span class="co">// Reset the seed to a more controlled value if we&#39;ve run from SLiMgui</span></span>
+<span id="cb49-9"><a href="running-slim-in-parallel.html#cb49-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb49-10"><a href="running-slim-in-parallel.html#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="running-slim-in-parallel.html#cb49-11" aria-hidden="true" tabindex="-1"></a>    setCfgParam(<span class="st">&quot;modelindex&quot;</span>, <span class="dv">1</span>); <span class="co">// Identifier for the combination of predictors used in latin hypercube: this is the row number in the lscombos.csv file</span></span>
+<span id="cb49-12"><a href="running-slim-in-parallel.html#cb49-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb49-13"><a href="running-slim-in-parallel.html#cb49-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb49-14"><a href="running-slim-in-parallel.html#cb49-14" aria-hidden="true" tabindex="-1"></a>    setCfgParam(<span class="st">&quot;outputFilepath&quot;</span>, <span class="ch">&#39;.</span><span class="er">/out_</span><span class="ch">&#39;</span> + modelindex + <span class="ch">&#39;_&#39;</span> + seed + <span class="ch">&#39;_</span><span class="er">slim.csv</span><span class="ch">&#39;</span>); <span class="co">// Output filename/path</span></span></code></pre></div>
+<p>The output filename of this simulation will be <code>out_&lt;modelindex&gt;_&lt;seed&gt;_slim.csv</code>. Since each simulation is writing to a different file,
+there is no chance of the output being overwritten<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>. At the end of your simulations, you can join all these files into one using the
+<code>cat</code> bash command:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb50-1"><a href="running-slim-in-parallel.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ./* <span class="op">&gt;</span> slim_out.csv</span></code></pre></div>
+<p>This will grab all files in the selected folder <code>./</code> and concatenate them together. Note that if newlines aren’t at the bottom
+of each file, then this won’t work. However, SLiM should automatically do this, and if not you can use the script:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb51-1"><a href="running-slim-in-parallel.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="fu">file</span> in /path/*.csv</span>
+<span id="cb51-2"><a href="running-slim-in-parallel.html#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">do</span></span>
+<span id="cb51-3"><a href="running-slim-in-parallel.html#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;&quot;</span> <span class="op">&gt;&gt;</span> <span class="st">&quot;</span><span class="va">$file</span><span class="st">&quot;</span></span>
+<span id="cb51-4"><a href="running-slim-in-parallel.html#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="kw">done</span></span></code></pre></div>
+<p>Which will append a newline character to the end of each file<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
+<p>The main problem with this method is writing to many different files creates overhead that will slow your simulation down, and has the potential
+to overload the filesystem. This can cause problems for other users if you are on a HPC. My recommendation is for large simulations you should use
+one single large file that you constantly append to, whereas smaller runs are probably fine to do using multiple files.</p>
+</div>
+</div>
+<div id="footnotes" class="section level2" number="6.8">
+<h2><span class="header-section-number">6.8</span> Footnotes</h2>
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p><a href="https://xkcd.com/612/" class="uri">https://xkcd.com/612/</a><a href="running-slim-in-parallel.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Much like the chances of your cat eating you in your sleep.<a href="running-slim-in-parallel.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>There is still a small chance of <code>stdout</code> losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don’t do that.<a href="running-slim-in-parallel.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://stackoverflow.com/a/31053205/13586824" class="uri">https://stackoverflow.com/a/31053205/13586824</a><a href="running-slim-in-parallel.html#fnref6" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="polygenic-adaptation-in-slim.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="running-slim-on-a-hpc-cluster.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Terminal Shortcuts and Basics | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</title>
+  <meta name="description" content="3 Terminal Shortcuts and Basics | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Terminal Shortcuts and Basics | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Terminal Shortcuts and Basics | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  
+  
+  
+
+<meta name="author" content="Nick O’Brien" />
+
+
+<meta name="date" content="2021-06-08" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="installing-a-linux-environment-slim-on-the-wsl.html"/>
+<link rel="next" href="a-brief-overview-of-polygenic-adaptation.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#preface"><i class="fa fa-check"></i><b>1.1</b> Preface</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview"><i class="fa fa-check"></i><b>1.2</b> Overview</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>1.3</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#references"><i class="fa fa-check"></i><b>1.4</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html"><i class="fa fa-check"></i><b>2</b> Installing a Linux environment &amp; SLiM on the WSL</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#overview-1"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#why-linux"><i class="fa fa-check"></i><b>2.2</b> Why Linux?</a></li>
+<li class="chapter" data-level="2.3" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#the-windows-subsystem-for-linux"><i class="fa fa-check"></i><b>2.3</b> The Windows Subsystem for Linux</a></li>
+<li class="chapter" data-level="2.4" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-wsl"><i class="fa fa-check"></i><b>2.4</b> Installing WSL</a></li>
+<li class="chapter" data-level="2.5" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-a-desktop-and-setting-up-x11"><i class="fa fa-check"></i><b>2.5</b> Installing a desktop and setting up X11</a></li>
+<li class="chapter" data-level="2.6" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#building-slim"><i class="fa fa-check"></i><b>2.6</b> Building SLiM</a></li>
+<li class="chapter" data-level="2.7" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-other-useful-apps"><i class="fa fa-check"></i><b>2.7</b> Installing other useful apps</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html"><i class="fa fa-check"></i><b>3</b> Terminal Shortcuts and Basics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#overview-2"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#navigating-folders"><i class="fa fa-check"></i><b>3.2</b> Navigating folders</a></li>
+<li class="chapter" data-level="3.3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#installing-and-updating-software"><i class="fa fa-check"></i><b>3.3</b> Installing and updating software</a></li>
+<li class="chapter" data-level="3.4" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#input-and-output"><i class="fa fa-check"></i><b>3.4</b> Input and output</a></li>
+<li class="chapter" data-level="3.5" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git"><i class="fa fa-check"></i><b>3.5</b> Git</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git-branches-and-pull-requests"><i class="fa fa-check"></i><b>3.5.1</b> Git Branches and Pull Requests</a></li>
+<li class="chapter" data-level="3.5.2" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git-for-slim"><i class="fa fa-check"></i><b>3.5.2</b> Git for SLiM</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html"><i class="fa fa-check"></i><b>4</b> A Brief Overview of Polygenic Adaptation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#overview-3"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#what-is-polygenic-adaptation"><i class="fa fa-check"></i><b>4.2</b> What is polygenic adaptation?</a></li>
+<li class="chapter" data-level="4.3" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#fishers-geometrical-model-of-adaptation"><i class="fa fa-check"></i><b>4.3</b> Fisher’s Geometrical model of adaptation</a></li>
+<li class="chapter" data-level="4.4" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#references-1"><i class="fa fa-check"></i><b>4.4</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html"><i class="fa fa-check"></i><b>5</b> Polygenic Adaptation in SLiM</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#overview-4"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#a-single-polygenic-trait-chp5-1_1t.slim"><i class="fa fa-check"></i><b>5.2</b> A Single Polygenic Trait (Chp5-1_1T.slim)</a></li>
+<li class="chapter" data-level="5.3" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#parameters"><i class="fa fa-check"></i><b>5.3</b> Parameters</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#ne"><i class="fa fa-check"></i><b>5.3.1</b> Ne</a></li>
+<li class="chapter" data-level="5.3.2" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#del_mean-and-del_shape"><i class="fa fa-check"></i><b>5.3.2</b> del_mean and del_shape</a></li>
+<li class="chapter" data-level="5.3.3" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#mutweights"><i class="fa fa-check"></i><b>5.3.3</b> mutWeights</a></li>
+<li class="chapter" data-level="5.3.4" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#rwide"><i class="fa fa-check"></i><b>5.3.4</b> rwide</a></li>
+<li class="chapter" data-level="5.3.5" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#genomelength"><i class="fa fa-check"></i><b>5.3.5</b> genomelength</a></li>
+<li class="chapter" data-level="5.3.6" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#locimu-locisigma-and-locidist"><i class="fa fa-check"></i><b>5.3.6</b> locimu, locisigma, and locidist</a></li>
+<li class="chapter" data-level="5.3.7" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#width"><i class="fa fa-check"></i><b>5.3.7</b> width</a></li>
+<li class="chapter" data-level="5.3.8" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#printh"><i class="fa fa-check"></i><b>5.3.8</b> printH</a></li>
+<li class="chapter" data-level="5.3.9" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#samplerate"><i class="fa fa-check"></i><b>5.3.9</b> samplerate</a></li>
+<li class="chapter" data-level="5.3.10" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#modelindex"><i class="fa fa-check"></i><b>5.3.10</b> modelindex</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html"><i class="fa fa-check"></i><b>6</b> Running SLiM in Parallel</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#overview-5"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#slim-at-the-command-line"><i class="fa fa-check"></i><b>6.2</b> SLiM at the Command Line</a></li>
+<li class="chapter" data-level="6.3" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-bash"><i class="fa fa-check"></i><b>6.3</b> Running SLiM via Bash</a></li>
+<li class="chapter" data-level="6.4" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-r"><i class="fa fa-check"></i><b>6.4</b> Running SLiM via R</a></li>
+<li class="chapter" data-level="6.5" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-in-python"><i class="fa fa-check"></i><b>6.5</b> Running SLiM in Python</a></li>
+<li class="chapter" data-level="6.6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-a-c-program"><i class="fa fa-check"></i><b>6.6</b> Running SLiM via a C++ Program</a></li>
+<li class="chapter" data-level="6.7" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#writing-slim-code-with-parallelism-in-mind"><i class="fa fa-check"></i><b>6.7</b> Writing SLiM code with parallelism in mind</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
+<li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#overview-6"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#connecting-to-tinaroo-and-set-up"><i class="fa fa-check"></i><b>7.2</b> Connecting to Tinaroo and Set-up</a></li>
+<li class="chapter" data-level="7.3" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#pbs-scripts"><i class="fa fa-check"></i><b>7.3</b> PBS Scripts</a></li>
+<li class="chapter" data-level="7.4" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#multi-node-jobs"><i class="fa fa-check"></i><b>7.4</b> Multi-node jobs</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#job-array-slim-jobs"><i class="fa fa-check"></i><b>7.4.1</b> Job array SLiM jobs</a></li>
+<li class="chapter" data-level="7.4.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#embedded-nimrod-slim-jobs"><i class="fa fa-check"></i><b>7.4.2</b> Embedded Nimrod SLiM jobs</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="terminal-shortcuts-and-basics" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Terminal Shortcuts and Basics</h1>
+<div id="overview-2" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Overview</h2>
+<p>One major difference between Windows/Mac and Linux operating systems is that it’s necessary to learn how to use a command prompt
+(called the terminal) to use the operating system. You’ve already done a bit of that when you were installing Ubuntu and Gnome,
+but now I’ll show you some of the most useful commands for navigating directories via the terminal, installing and updating your software,
+manipulating text files, and what programs you’ll likely use for various tasks.</p>
+</div>
+<div id="navigating-folders" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Navigating folders</h2>
+<p>When you open a terminal emulator in Gnome, you’ll be met with a screen that looks something like this:
+<img src="images/chapter2/terminalex.png" /></p>
+<p>Notice the start of the line: this tells you whereabouts in the filesystem you are. By default, when you open a terminal you’ll
+start at the root directory: the first folder that contains all other folders and files within it. To check your current working
+directory, type <code>pwd</code> (print working directory). Lets go to our Desktop directory. To do that type <code>cd ~/Desktop</code>. The <code>~</code> character
+tells linux that the directory you are looking for is a branch off of home. Since opening a new terminal defaults you to the home directory,
+an alternative to do the same thing is <code>./Desktop</code>. <code>./</code> tells linux that the directory is a branch off of the current directory
+(the one shown with <code>pwd</code>). Now let’s list what’s on our Desktop using the <code>ls</code> command. To go back to your home directory (Desktop’s parent directory),
+type <code>cd ../</code>.</p>
+<p><img src="images/chapter2/terminalcd.png" /></p>
+<p>Now lets say we want to create a directory. We can use the <code>mkdir</code> command for that. Go back to your desktop and enter:
+<code>mkdir Cool_Folder</code>.
+On your Gnome desktop, you should see that folder appear. If we want to create folders within folders, we can use the
+recursive flag with <code>mkdir</code>, as follows:
+<code>mkdir -r Cool_Folder/Cooler_Folder</code></p>
+<p>Now say we want to make a folder, and then enter it immediately after. We can do this a number of ways.
+You could simply call <code>cd</code> as a second command, but you can also use <code>&amp;&amp;</code> to chain together commands, like so:
+<code>mkdir -r Cool_Folder/Cooler_folder &amp;&amp; cd ./Cool_Folder/Cooler_folder</code></p>
+<p>If you ever want to learn about the flags that are available for a certain command, you can enter <code>man command_name</code>
+to view the manual, or <code>command-name --help</code> to view a usually shorter list of available options.</p>
+<div class="extrabox">
+<div class="center">
+<p><strong>Box 3.2.1</strong></p>
+</div>
+<p>Say you want to make a directory and then enter it immediately rather than having to chain together commands or
+enter them one at a time. You can do that by creating a custom command and putting it inside your /home/.bashrc file
+(courtesy of Ouki on <a href="https://unix.stackexchange.com/questions/125385/combined-mkdir-and-cd">Stack Overflow</a>):</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="terminal-shortcuts-and-basics.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkcdir ()</span></span>
+<span id="cb25-2"><a href="terminal-shortcuts-and-basics.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb25-3"><a href="terminal-shortcuts-and-basics.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mkdir</span> -p -- <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span></span>
+<span id="cb25-4"><a href="terminal-shortcuts-and-basics.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">cd</span> -P -- <span class="st">&quot;</span><span class="va">$1</span><span class="st">&quot;</span></span>
+<span id="cb25-5"><a href="terminal-shortcuts-and-basics.html#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div>
+</div>
+</div>
+<div id="installing-and-updating-software" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Installing and updating software</h2>
+<p>With Ubuntu, you don’t need to worry about Windows updates taking your computer hostage whenever it feels like it.
+However, it is on you to keep your software updated (or not, if you need a particular version of some software!).
+To update all the packages you have installed, run the following:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="terminal-shortcuts-and-basics.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update</span>
+<span id="cb26-2"><a href="terminal-shortcuts-and-basics.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get upgrade</span></code></pre></div>
+<p><code>sudo</code> is like ‘Run as Administrator’ in Windows, and allows programs to gain root access (access to non-user
+directories like where most of your software is installed). <code>apt-get update</code> updates the list of Ubuntu-supported
+packages you are able to install directly via Ubuntu. <code>apt-get upgrade</code> downloads those latest versions of the
+Ubuntu-supported packages you have installed and updates them for you.
+Before installing new software using <code>apt-get</code>, it’s always a good idea to run <code>apt-get update</code> to make
+sure you’re downloading the latest version.</p>
+<p>Now lets say we want to download a new program - like fortune, a little program that shows a quote on the screen.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="terminal-shortcuts-and-basics.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update</span>
+<span id="cb27-2"><a href="terminal-shortcuts-and-basics.html#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install fortune-mod</span></code></pre></div>
+<p>If you don’t know the full name of a package (or how to spell it), you can press tab to autocomplete your line,
+or double-press tab to give a list of all the possible packages available matching what you’ve typed so far.
+This works for anything in terminal, and is extremely useful, especially when cd’ing to a directory: rather than
+typing out the whole directory, you can usually hit tab a few times, type a few letters and hit tab some more to
+get to where you want. Much faster!</p>
+<p><code>apt-get install</code> also works with multiple packages at once. For example,</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="terminal-shortcuts-and-basics.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update</span>
+<span id="cb28-2"><a href="terminal-shortcuts-and-basics.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install fortune-mod cowsay</span></code></pre></div>
+<p>This will install both fortune-mod and cowsay (a program that draws an ASCII animal with a speech bubble saying whatever you type).</p>
+<p>Now that your programs are installing, you can try them out!</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="terminal-shortcuts-and-basics.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fortune</span></span>
+<span id="cb29-2"><a href="terminal-shortcuts-and-basics.html#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="terminal-shortcuts-and-basics.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cowsay</span> <span class="st">&quot;I don&#39;t think, therefore I don&#39;t am.&quot;</span></span></code></pre></div>
+<pre><code>## Slow day.  Practice crawling.
+##  ______________________________________
+## &lt; I don&#39;t think, therefore I don&#39;t am. &gt;
+##  --------------------------------------
+##         \   ^__^
+##          \  (oo)\_______
+##             (__)\       )\/\
+##                 ||----w |
+##                 ||     ||</code></pre>
+<div class="extrabox">
+<div class="center">
+<p><strong>Box 3.3.1</strong></p>
+</div>
+<p>As I’ve alluded to with the tab shortcut, the Linux terminal has many useful shortcuts that can save a lot of time.
+I’ll describe a few below:</p>
+<table>
+<colgroup>
+<col width="18%" />
+<col width="81%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Shortcut</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ctrl + Alt + T</td>
+<td>Open a new terminal</td>
+</tr>
+<tr class="even">
+<td>Ctrl + C</td>
+<td>Cancel the current command</td>
+</tr>
+<tr class="odd">
+<td>Ctrl + L</td>
+<td>Clear the terminal of all output</td>
+</tr>
+<tr class="even">
+<td>Home</td>
+<td>Move to the beginning of the line</td>
+</tr>
+<tr class="odd">
+<td>End</td>
+<td>Move to the end of a line</td>
+</tr>
+<tr class="even">
+<td>Ctrl + U</td>
+<td>Clear the line</td>
+</tr>
+<tr class="odd">
+<td>Ctrl + Shift + -</td>
+<td>Undo</td>
+</tr>
+<tr class="even">
+<td>Ctrl + Shift + C</td>
+<td>Copy</td>
+</tr>
+<tr class="odd">
+<td>Ctrl + Shift + V</td>
+<td>Paste</td>
+</tr>
+<tr class="even">
+<td>Ctrl + R</td>
+<td>Recall the last command you entered with the characters you provide</td>
+</tr>
+<tr class="odd">
+<td>!</td>
+<td>Run the last command again</td>
+</tr>
+</tbody>
+</table>
+<p>Similarly, rather than typing out entire directories every time, you can use some special characters to get some of the way there:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Character</th>
+<th>Location</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>~</td>
+<td>Home directory</td>
+<td>~/Desktop</td>
+</tr>
+<tr class="even">
+<td>.</td>
+<td>Current directory</td>
+<td>./ChildDirectoryofCurrentDirectory</td>
+</tr>
+<tr class="odd">
+<td>..</td>
+<td>Parent directory</td>
+<td>../build</td>
+</tr>
+<tr class="even">
+<td>/</td>
+<td>Root directory</td>
+<td>/bin</td>
+</tr>
+</tbody>
+</table>
+<p>And here are a number of some really helpful commands that you’ll likely be using often. I’ll only be showing
+you the base cases here: often there are a number of options you can enable to do different things
+(e.g. recursively make directories with mkdir -r), but to see the available options all you need to do is
+look for the command’s manual page with <code>man &lt;command&gt;</code></p>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="62%" />
+<col width="30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>cat</td>
+<td>Concatenante/display a file’s contents in terminal</td>
+<td>cat ~/.bashrc</td>
+</tr>
+<tr class="even">
+<td>cp</td>
+<td>Copy a file/folder to another folder</td>
+<td>cp ~/file.txt ~/Desktop</td>
+</tr>
+<tr class="odd">
+<td>mv</td>
+<td>Move a file/folder to another folder</td>
+<td>mv ~/file.txt ~/Desktop</td>
+</tr>
+<tr class="even">
+<td>rm</td>
+<td>Remove a file/folder (delete)</td>
+<td>rm ~/file.txt</td>
+</tr>
+<tr class="odd">
+<td>alias</td>
+<td>Assign a string of commands another command name</td>
+<td>alias cowfort=“fortune | cowsay”</td>
+</tr>
+<tr class="even">
+<td>curl</td>
+<td>Fetch a file from the internet (not pre-installed; alternative to wget)</td>
+<td>curl <a href="https://github.com/nobrien97/PolygenicSLiMBook/blob/main/src/SLiM/box2.1.slim" class="uri">https://github.com/nobrien97/PolygenicSLiMBook/blob/main/src/SLiM/box2.1.slim</a> -o box2.1.slim</td>
+</tr>
+<tr class="odd">
+<td>grep</td>
+<td>Search a file’s lines for a particular pattern</td>
+<td>grep hello ~/file.txt</td>
+</tr>
+<tr class="even">
+<td>sed</td>
+<td>Modify text coming in from stdin. Combine with grep for powerful editing</td>
+<td><a href="https://www.digitalocean.com/community/tutorials/the-basics-of-using-the-sed-stream-editor-to-manipulate-text-in-linux">See here</a></td>
+</tr>
+<tr class="odd">
+<td>top</td>
+<td>Display info on active processes, CPU and memory usage etc.</td>
+<td>top</td>
+</tr>
+<tr class="even">
+<td>head</td>
+<td>Display the first few lines of a file</td>
+<td>head ~/multilinefile.txt</td>
+</tr>
+<tr class="odd">
+<td>tail</td>
+<td>Display the last few lines of a file</td>
+<td>tail ~/multilinefile.txt</td>
+</tr>
+<tr class="even">
+<td>tar</td>
+<td>Bundle files into an archive (compressed with -j or -z)</td>
+<td>tar -cg Files.tar.gz ~/FolderOfFiles</td>
+</tr>
+<tr class="odd">
+<td>ssh</td>
+<td>Connect to a remote server</td>
+<td>ssh <a href="mailto:user@tinaroo1.rcc.uq.edu.au" class="email">user@tinaroo1.rcc.uq.edu.au</a></td>
+</tr>
+<tr class="even">
+<td>shutdown</td>
+<td>Shuts the Linux system down in one minute (now for immediate)</td>
+<td>shutdown now</td>
+</tr>
+<tr class="odd">
+<td>less</td>
+<td>Open and read a file (press q to exit)</td>
+<td>less ~/file.txt</td>
+</tr>
+<tr class="even">
+<td>vim</td>
+<td>Powerful terminal text editor with steep learning curve</td>
+<td>vim ~/file.txt</td>
+</tr>
+<tr class="odd">
+<td>nano</td>
+<td>Considerably more user friendly text editor</td>
+<td>nano ~/file.txt</td>
+</tr>
+<tr class="even">
+<td>gedit</td>
+<td>Another text editor, this time exists out of the terminal</td>
+<td>gedit ~/file.txt</td>
+</tr>
+<tr class="odd">
+<td>history</td>
+<td>Display history of commands in the terminal. Rerun any of them with !CommandNumber</td>
+<td>history &amp;&amp; !! &amp;&amp; !3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="input-and-output" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Input and output</h2>
+<p>Linux programs are written in such a way that programs take their inputs and spit out their outputs in a standardised way.
+This means that you can use the same command or tool to affect many different programs’ outputs or inputs with the same
+syntax. This is done through input and output ‘channels’. The main ones are standard input (stdin),
+standard output (stdout), and standard error (stderr). You might also see these referred to as file descriptors.
+Programmers can write code to send their output to stdout (and error messages to stderr) to avoid having to implement
+their own system. If they require addition functionality, they can create their own channels as well. For more on
+input/output and file descriptors, see <a href="https://youtu.be/2xlk4bSPG38?t=2544">this video</a>.</p>
+<p>By default, stdin takes the input of what the user types in the terminal, and stdout (and stderr) prints everything
+to the terminal. This behaviour can be changed by using pipes and redirection, making these input/output streams
+very powerful indeed. One consequence of this is we can chain together commands, feeding their output into another
+command. Take this example:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="terminal-shortcuts-and-basics.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">fortune</span> <span class="kw">|</span> <span class="ex">cowsay</span></span></code></pre></div>
+<pre><code>##  _____________________________________
+## / You will be audited by the Internal \
+## \ Revenue Service.                    /
+##  -------------------------------------
+##         \   ^__^
+##          \  (oo)\_______
+##             (__)\       )\/\
+##                 ||----w |
+##                 ||     ||</code></pre>
+<p>Here, we use the <code>|</code>, called the ‘pipe’, to ‘pipe in’ fortune’s stdout into cowsay’s stdin. The result is a cow
+with a textbox (<code>cowsay</code>) relaying a quote from <code>fortune</code>.</p>
+<p>You can also save the output of a command to a file using redirection <code>&gt;</code>
+Take this example:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="terminal-shortcuts-and-basics.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Hello, world!&quot;</span> <span class="op">&gt;</span> ~/Desktop/file.txt</span></code></pre></div>
+<p>Redirection is in particular very important in general, and will be used pretty extensively to copy files to
+the proper place, append files with new lines of results from SLiM, and interface with supercomputers (all coming later!).
+For that reason, I strongly suggest watching this <a href="https://www.youtube.com/watch?v=mV_8GbzwZMM">10 minute video</a> on
+all the common redirection and piping methods available so when you see it in future (or need to use their functionality!)
+you know what you’re looking at.</p>
+</div>
+<div id="git" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Git</h2>
+<p>Git is a version control software which allows you to maintain a working history of your files. It’s most useful with plaintext files,
+such as code, where you can directly view the differences between an older version of a file and the current version. In large projects it is vital,
+but even in small projects with only a few files, version control is very import for organisation, and being able to keep track of your work
+easily. If you want to test out a change but you are unsure if it will work, Git allows you to do that while always being able to go back
+to your old version if required. You could save a backup file somewhere, but this is clunky, prone to error, and hard to maintain over time.
+Git can be a bit confusing to start out, but because of its ubiquity there is a massive amount of information available. Simply googling
+what you are trying to do will likely get you in the right direction. I would also highly recommend following <a href="https://guides.github.com/activities/hello-world/">GitHub’s tutorial to create your
+first repository</a>, and also checking out <a href="https://www.atlassian.com/git/tutorials/setting-up-a-repository">Atlassian’s git tutorials</a>.</p>
+<p>To save your data online, Git has a feature called ‘remotes’. You can have a local git repository/folder to keep track of your files,
+and then a remote repository that you and/or others can access from the internet. You can update your files locally, and when you want to
+update the version on the cloud you ‘push’ them to your remote repository. There a few services which host remotes, but the most used is GitHub.</p>
+<p>Git is a command line tool, however it is directly integrated into a variety of software. Both RStudio and VS Code have git support, for instance.
+Because of this, you will rarely have to use the command line to use git.
+Nonetheless, there are a few command line options you should know about in case something isn’t working for you with these programs’ integration.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="terminal-shortcuts-and-basics.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a new Repository</span></span>
+<span id="cb34-2"><a href="terminal-shortcuts-and-basics.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> ~/MyRepositoryFolder</span>
+<span id="cb34-3"><a href="terminal-shortcuts-and-basics.html#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/MyRepositoryFolder</span>
+<span id="cb34-4"><a href="terminal-shortcuts-and-basics.html#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init MyRepository </span>
+<span id="cb34-5"><a href="terminal-shortcuts-and-basics.html#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add * <span class="co"># add all files that git init generates to the repository</span></span>
+<span id="cb34-6"><a href="terminal-shortcuts-and-basics.html#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit -a -m <span class="st">&#39;Initial commit&#39;</span> <span class="co"># commit all files to the repo with message &#39;Initial Commit&#39;</span></span>
+<span id="cb34-7"><a href="terminal-shortcuts-and-basics.html#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="terminal-shortcuts-and-basics.html#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Link a repository to a remote (create a new remote at [GitHub](https://github.com/new))</span></span>
+<span id="cb34-9"><a href="terminal-shortcuts-and-basics.html#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin https:/github.com/UserName/MyRepository.git</span>
+<span id="cb34-10"><a href="terminal-shortcuts-and-basics.html#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-11"><a href="terminal-shortcuts-and-basics.html#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Clone a repository (easiest way to make a new repo: create on GitHub, then clone that into a local folder)</span></span>
+<span id="cb34-12"><a href="terminal-shortcuts-and-basics.html#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone MyRepository https:/github.com/UserName/MyRepository.git</span>
+<span id="cb34-13"><a href="terminal-shortcuts-and-basics.html#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-14"><a href="terminal-shortcuts-and-basics.html#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add edited/new files to your repository</span></span>
+<span id="cb34-15"><a href="terminal-shortcuts-and-basics.html#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add . <span class="co"># &#39;.&#39; to add all edited files in the folder, you can alternatively specify particular files</span></span>
+<span id="cb34-16"><a href="terminal-shortcuts-and-basics.html#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="co"># This will open up a text editor asking for your commit message</span></span>
+<span id="cb34-17"><a href="terminal-shortcuts-and-basics.html#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="co"># This will push your commit to the remote </span></span>
+<span id="cb34-18"><a href="terminal-shortcuts-and-basics.html#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-19"><a href="terminal-shortcuts-and-basics.html#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove files from the repository, recursively and forcefully</span></span>
+<span id="cb34-20"><a href="terminal-shortcuts-and-basics.html#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> rm -rf ./AwfulFile.c</span>
+<span id="cb34-21"><a href="terminal-shortcuts-and-basics.html#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit</span></code></pre></div>
+<p>In VS Code,the sidebar has a ‘Source Control’ tab that will allow you to link a repository and/or a remote.
+If you load VS Code from within a repository, i.e. <code>cd ~/MyRepository; code .</code>, it will do this automatically,
+assuming you already have a remote linked.</p>
+<p><img src="images/chapter2/vscodegit1.png" /></p>
+<p>This tab will keep track of the changes you’ve made in the local repo, with options to ‘stage changes’ (<code>git add</code>),
+commit, and push to a remote, although the remote is hidden by default and will require you to right click on the
+‘Source Control’ header and tick the ‘Source Control Repositories’ flag:</p>
+<p><img src="images/chapter2/vscodegit2.png" /></p>
+<p>You might find that some files won’t automatically add themselves to the ‘Changes’ list in VS Code, in which case you’ll have
+to click the ‘Refresh’ button next to ‘Source Control’. If this doesn’t work, you’ll have to do it in command line.
+I find that VS Code is generally good at keep track of existing files, but not very good at keep track of the folder itself:
+that is, removing files and adding files generally won’t be picked up by VS Code, so you’ll need to directly add them through
+the command line with <code>git add .</code>.</p>
+<div id="git-branches-and-pull-requests" class="section level3" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Git Branches and Pull Requests</h3>
+<p>Sometimes you’ll want to change a heap of files at once in your git repository, and going back to the original state
+if it doesn’t work would be a massive pain. Alternatively, you might want to have a separate files organised in a separate
+‘partition’ of your repository. You might also be collaborating with others, in which case you don’t want to be constantly
+overwriting each others’ work (although Git does automatically merge files with changes on different lines, if you are editing
+the same file on the same line, some decisions need to be made as to which version to keep). This is where branches come in.
+A branch is a splitting off point from your repository. You can imagine your repository as a phylogeny: over time, the files
+change, and branches are created at various points in time creating new, distinct edits. The idea is you can preserve your
+main repository’s files, work on an experimental branch, and then either abandon it if it doesn’t work, or merge it into
+your main branch using a ‘pull request’. If you’re collaborating, you can create your own branch so as not to disturb other
+collaborators, and when you are done, you can create a pull request to pull your branch into the main one. You can also
+use branches to organise your repository into categories: for example, R bookdown repositories often have a separate branch
+for hosting the .html website, and another for storing markdown documents, uncompiled code, and data not relevant to the
+bookdown itself.</p>
+<p><a href="https://www.atlassian.com/git/tutorials/using-branches"><img src="images/chapter2/branches_eg.svg" /></a>
+From <a href="https://www.atlassian.com/git/tutorials/using-branches" class="uri">https://www.atlassian.com/git/tutorials/using-branches</a></p>
+<p>To create a new local branch and link it to a new remote branch, you can use the following commands:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="terminal-shortcuts-and-basics.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch NewBranch <span class="co"># Create the new local branch</span></span>
+<span id="cb35-2"><a href="terminal-shortcuts-and-basics.html#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout NewBranch <span class="co"># Swap to the new local branch</span></span>
+<span id="cb35-3"><a href="terminal-shortcuts-and-basics.html#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push NewRemoteBranch NewBranch~ <span class="co"># Create a new branch on the remote called NewRemoteBranch</span></span></code></pre></div>
+<p>To view all of the branches available on your project, you can run <code>git branch</code> with no arguments.</p>
+<p>Most of the time, branches aren’t super necessary. They do have their uses, but I wouldn’t recommend creating a heap of
+branches for every experiment you want to do: you can always use <code>git reset</code> to reset your repo to a certain commit.
+Similarly, pull requests are only necessary if you’re collaborating and need to have code approved. For more information
+on that, I’d recommend checking out <a href="https://www.atlassian.com/git/tutorials/making-a-pull-request">Atlassian</a>.</p>
+</div>
+<div id="git-for-slim" class="section level3" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> Git for SLiM</h3>
+<p>I find Git very helpful for maintaining SLiM code. Particularly when playing around with input variables and adding new features,
+it can be useful to keep track of what is made. However, the main feature I like is the cloud backup which is always available at
+GitHub.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="installing-a-linux-environment-slim-on-the-wsl.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="a-brief-overview-of-polygenic-adaptation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
