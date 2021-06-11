@@ -110,6 +110,8 @@ Boxes look like this!
 ## Prerequisites
 
 The tutorials in here assume you are at least somewhat familiar with quantitative and population genetics.
+In addition, you should have completed the [SLiM Online Workshop](http://benhaller.com/workshops/workshops.html), 
+or at least perused through it to be familiar with the SLiM software.
 
 ## References
 [^fn1]: B. Peng, Kimmel M., simuPOP: a forward-time population genetics simulation environment, Bioinformatics, Volume 21, Issue 18, Pages 3686-3687, https://doi.org/10.1093/bioinformatics/bti584

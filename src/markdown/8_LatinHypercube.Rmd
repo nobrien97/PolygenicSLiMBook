@@ -1,0 +1,60 @@
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Latin Hypercube Sampling
+
+## Overview
+
+When we add a lot of parameters to an experimental design, a problem appears: in order to 
+measure each parameter's effect across a range of parameter levels or values, you must increase the 
+number of experiments exponentially. For example, to sample two parameters with two levels each, 
+you need four treatments to measure them all. With three parameters with two levels each, you need
+eight treatment groups. By the time you're at six parameters, you need 64 groups, and that's just with 
+two treatment levels each. How do you effectively sample this parameter space well then? Latin hypercube
+sampling offers a potential solution. 
+
+## What is Latin hypercube sampling?
+
+In Latin hypercube sampling (LHC), a continuous range of each variable is specified, and combinations
+of these parameters are sampled together. The idea is to sample parameter combinations, which when taken 
+together explain the total parameter space (possible values for each parameter) while minimising 
+correlations between sampled variables (so as to avoid collinearity between factors).
+
+## Generating hypercubes in R
+
+To generate LHCs in R, you can use the ```DoE.wrapper``` package, which nicely wraps a bunch of
+LHC methods from ```LHS``` into an easy and user-friendly interface.
+
+```{r, eval = F}
+library(DoE.wrapper)
+
+lhc <- lhs.design(nruns = 256,
+           nfactors = 2,
+           seed = 1312022408,
+           type = "maximin",
+           factor.names = list(
+             param1 = c(0.0001, 1), 
+             param2 = c(0.0, 1.0)
+           ))
+
+plot(lhc)
+hist(lhc$param1)
+cor(lhc)
+
+write.csv(lhc, "./LHC.csv")
+```
+
+The `lhs.design` function creates a Latin hypercube of `nruns` samples, with `nfactors` factors/columns.
+You can choose a method for sampling your parameter combinations with `type`. I find that most of the time 
+`maximin` is best suited to generate LHCs with maximised spaced between samples and minimised correlations
+between factors. `factor.names` is used to specify a list of factor names, and the minimum and maximum values
+to sample from. For example, here `param1` will be sampled from 0.0001 to 1. 
+The function will output a dataframe, which you can save as a file to load and reference later.
+It's a good idea to run some diagnostics on your hypercube when its done before you go to use it. You're looking for 
+even spacing between samples (no obvious large gaps in sampling) and very little correlation between parameters,
+to ensure you get a good sample of all parameters' effects on your model. To do this, you can `plot` the LHC,
+which will give you a pairwise matrix of parameter combinations, showing you the spread of samples in the whole
+parameter space. You can also create histograms of each parameter to check that they are uniformly distributed, and
+run `cor` to get the correlations between parameter pairs.
