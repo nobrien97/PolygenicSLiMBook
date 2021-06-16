@@ -469,5 +469,65 @@ slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%
 Very familiar, but there's no for loop. R isn't handling any parallelism in Nimrod. Each SLiM job will run its own
 one of these R scripts, with its own unique combination of seeds and combos. 
 
-## Considerations
+## Estimating Simulation Time 
 
+When you scale up your simulations, you might notice that your job gets stuck in queue for a while. Such is the cost of
+shared resources, comrades. It's important to have a look at the maximum resource allocations for your HPC and queue to
+make sure you aren't stuck in an indefinite queue which will never end. On Tinaroo, the maximum wall time is 336 hours,
+for instance. This information can typically be found in your HPC's user guide.
+
+A way to reduce your queue time is to more accurately estimate how much time your simulations will take to run. This way,
+you will have a better idea of how much walltime to request, and whether you need a large number of cores and nodes, or if
+you can afford to scale it back. To measure this, you need a per-simulation worst-case scenario running time. Choose the
+parameter values that will lead to the slowest simulation in your experiment: for example, the greatest population size in
+your range of values, the highest recombination rate, highest mutation rate etc. You can measure running time in SLiM using the 
+`clock()` function:
+
+```{slim clock, eval=F}
+defineConstant(beginTime, clock()); // record the computer's time at the start of the run 
+
+// The rest of your SLiM script goes here
+
+catn("Time taken: " + clock() - beginTime);
+sim.simulationFinished();
+```
+
+Pretty self-explanatory, but we take the start time of the run from the end time using `clock()` and print out the time taken
+to stdout.
+
+The reason we choose the worst-case scenario rather than the average case is because typically the average can be misleading when 
+the longest-running and shortest-running simulations are very different in time taken. In fact, in most computer experiments, 
+the worst-case scenario is closer to the time it will take to run. If it isn't, it is better to over-compensate than under-compensate, 
+as the former won't result in the job being prematurely terminated, meaning you would have to run it from scratch. 
+We also account for Murphy's law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
+by your total number of runs:
+$t_(w) = t_s * (n_p * n_r)$
+Where $t_s$ is the time taken for a single run, $n_p$ is the number of parameter combinations, and $n_r$ is the number of replicates.
+This is your sequential walltime: if you were to run every simulation sequentially it would take approximately that long to do the
+job. That's why we run in parallel - we need to reduce that walltime for any kind of SLiM computer experiment to be feasible.
+You can divide this sequential walltime by the total number of cores you are requesting to gauge how long it will actually take.
+Let's do a worked example:
+
+Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter combinations with 50 replicates each.
+Hence, my sequential walltime would be: 
+$8 * (256 * 100) = 102400$ hours.
+Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
+Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
+your worst-case time, since you can't have half of a core. So in actuality, this example's walltime would be $213 + 8 = 221$ hours.
+
+If you suspect your RAM or storage might be an issue, you can do a similar exercise to calculate the maximum RAM used per simulation
+and the amount of storage space (although this can also be done per sample rather than per simulation to save time, assuming your samples
+are of equal/close to equal size for each time they are taken). 
+
+From this information, you'll be better equipped to figure out how many nodes and cores you need to request, and also how much time the 
+simulation will take to run.
+
+## Other Considerations
+
+As well as managing queuing and predicting experiment times, you will also want to keep in mind your experiment's RAM usage. Typically SLiM
+simulations don't use a great deal of memory, however this depends on a number of factors including the number of simulated individuals,
+and whether or not you are invoking other commands via `system()` which will have other associated memory costs.
+Queue times - avoiding problems
+    Managing RAM
+    Big output - compression etc.
+  Timing runs
