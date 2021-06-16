@@ -468,3 +468,6 @@ slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%
 
 Very familiar, but there's no for loop. R isn't handling any parallelism in Nimrod. Each SLiM job will run its own
 one of these R scripts, with its own unique combination of seeds and combos. 
+
+## Considerations
+

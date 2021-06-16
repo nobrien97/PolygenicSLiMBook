@@ -58,3 +58,30 @@ to ensure you get a good sample of all parameters' effects on your model. To do 
 which will give you a pairwise matrix of parameter combinations, showing you the spread of samples in the whole
 parameter space. You can also create histograms of each parameter to check that they are uniformly distributed, and
 run `cor` to get the correlations between parameter pairs.
+
+If you are satisfied that your hypercube looks uniformly distributed, there are no big gaps you aren't sampling in any of your 
+parameter combinations, and there is little correlation between parameters, then you are all good to save the hypercube with
+`write.csv()`.
+
+## Running SLiM with hypercube parameters
+
+You shouldn't have to change any of your sublauncher script to use hypercube parameters: the LHC dataframe is formatted in the 
+same way as any other parameter combination dataframe. Simply load the hypercube .csv instead of combos.csv, and as long as you
+select the right columns, you'll be good to go.
+
+
+## Considerations
+
+When analysing your data, there are some considerations to make: you are treating each parameter as a continuous value, and 
+hypercube combinations will not be nice even numbers. It's up to you how to deal with this, but some parameters will need
+truncating or rounding (such as population size, which requires an integer), or ordinal variables like the distribution of 
+size effects (normal, gamma, etc.). For something like that, you can assign cut off values for each factor level (e.g. hypercube
+value < 0.5 is normal, > 0.5 is gamma), or run your hypercube without those parameters, and repeat the experiment for each level 
+of those ordinal variables. Note that this will exponentially increase the number of runs, as you are incorporating a level of 
+factorial design to your experiment.
+
+In addition, individual hypercube samples can be difficult to use, as they are continuous rather than discrete levels of factors.
+Hence, they are better suited to be analysed as a whole rather than in sections. However, it is still possible to factorialise LHC
+combinations by creating levels from ranges of values. For example, the first third of your parameter range could be assigned 'Low',
+the middle third being 'Medium' and the top third being 'High'. However, it's usually not necessary to do this unless you are missing 
+combinations of particular parameters, which can occur if you do not have enough samples (`nruns` in `lhs.design()`). 
