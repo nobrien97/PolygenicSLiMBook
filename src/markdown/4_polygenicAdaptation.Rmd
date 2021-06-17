@@ -34,7 +34,7 @@ rather than genes as the focal point, look at the traits instead.
 
 ## Fisher's Geometrical model of adaptation
 
-In 1930, Ronald Fisher published a seminal paper which revolutionised the way biologists thought about adaptation[^fn2]. 
+In 1930, Ronald Fisher published a seminal paper which revolutionised the way biologists thought about adaptation[^fn3]. 
 In this paper, Fisher described his geometric model of adaptation (FGM), where traits evolve by mutations which have a 
 given effect on the trait. If a phenotypic optimum exists, and a population's mean phenotype starts some distance away 
 from that optimum, then mutations that move a population's mean closer to that optimum phenotype are beneficial. 
@@ -69,4 +69,4 @@ a pattern which has been validated with theoretical, simulation, and empirical d
 
 
 ## References
-[^fn2]: Fisher, R. A. (1930). The genetical theory of natural selection. Clarendon Press. https://doi.org/10.5962/bhl.title.27468
+[^fn3]: Fisher, R. A. (1930). The genetical theory of natural selection. Clarendon Press. https://doi.org/10.5962/bhl.title.27468

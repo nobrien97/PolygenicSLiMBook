@@ -406,7 +406,7 @@ cat /${TMPDIR}/slim_output.csv >> /30days/${USER}/slim_output.csv
 
 ```
 
-Obviously a bit more involved, so lets go through it:
+Obviously a bit more involved, so let's go through it:
 
 The start of the script is pretty similar to a regular PBS script: you specify how many resources you want, give a job name, etc.
 The only difference is the addition of an `ompthreads` parameter in your list of resources. `ompthreads` is a specifier
@@ -474,3 +474,74 @@ slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%
 
 Very familiar, but there's no for loop. R isn't handling any parallelism in Nimrod. Each SLiM job will run its own
 one of these R scripts, with its own unique combination of seeds and combos. 
+
+## Estimating Simulation Time 
+
+When you scale up your simulations, you might notice that your job gets stuck in queue for a while. Such is the cost of
+shared resources, comrades. It's important to have a look at the maximum resource allocations for your HPC and queue to
+make sure you aren't stuck in an indefinite queue which will never end. On Tinaroo, the maximum wall time is 336 hours,
+for instance. This information can typically be found in your HPC's user guide.
+
+A way to reduce your queue time is to more accurately estimate how much time your simulations will take to run. This way,
+you will have a better idea of how much walltime to request, and whether you need a large number of cores and nodes, or if
+you can afford to scale it back. To measure this, you need a per-simulation worst-case scenario running time. Choose the
+parameter values that will lead to the slowest simulation in your experiment: for example, the greatest population size in
+your range of values, the highest recombination rate, highest mutation rate etc. You can measure running time in SLiM using the 
+`clock()` function:
+
+
+```slim
+defineConstant(beginTime, clock()); // record the computer's time at the start of the run 
+
+// The rest of your SLiM script goes here
+
+catn("Time taken: " + clock() - beginTime);
+sim.simulationFinished();
+```
+
+Pretty self-explanatory, but we take the start time of the run from the end time using `clock()` and print out the time taken
+to stdout.
+
+The reason we choose the worst-case scenario rather than the average case is because typically the average can be misleading when 
+the longest-running and shortest-running simulations are very different in time taken. In fact, in most computer experiments, 
+the worst-case scenario is closer to the time it will take to run. If it isn't, it is better to over-compensate than under-compensate, 
+as the former won't result in the job being prematurely terminated, meaning you would have to run it from scratch. 
+We also account for Murphy's law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
+by your total number of runs:
+$t_{w} = t_{s}(n_{p}n_{r})$
+Where $t_{s}$ is the time taken for a single run, $n_{p}$ is the number of parameter combinations, and $n_{r}$ is the number of replicates.
+This is your sequential walltime: if you were to run every simulation sequentially it would take approximately that long to do the
+job. That's why we run in parallel - we need to reduce that walltime for any kind of SLiM computer experiment to be feasible.
+You can divide this sequential walltime by the total number of cores you are requesting to gauge how long it will actually take.
+Let's do a worked example:
+
+Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter combinations with 50 replicates each.
+Hence, my sequential walltime would be: 
+$8 \times (256 \times 100) = 102400$ hours.
+Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
+Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
+your worst-case time, since you can't have half of a core. So in actuality, this example's walltime would be $213 + 8 = 221$ hours.
+
+If you suspect your RAM or storage might be an issue, you can do a similar exercise to calculate the maximum RAM used per simulation
+and the amount of storage space (although this can also be done per sample rather than per simulation to save time, assuming your samples
+are of equal/close to equal size for each time they are taken). 
+
+From this information, you'll be better equipped to figure out how many nodes and cores you need to request, and also how much time the 
+simulation will take to run.
+
+## Other Considerations
+
+As well as managing queuing and predicting experiment times, you will also want to keep in mind your experiment's RAM usage. Typically SLiM
+simulations don't use a great deal of memory, however this depends on a number of factors including the number of simulated individuals,
+and whether or not you are invoking other commands via `system()` which will have other associated memory costs. Remember that since each 
+CPU core is running a separate model, your memory usage per core needs to be on average less than the total RAM per core. For example,
+if you are working on a HPC with 120 GB of available memory and 24 cores, that is $\frac{120}{24} = 5$ GB of memory per core, so your simulations 
+cannot exceed an average of 5 GB per simulation. This typically isn't a problem, but in cases where you are running R from SLiM (as mentioned
+in SLiM Online Workshop #14), memory usage can balloon. If you need to use R's (or another language's) functionality to solve a problem that SLiM
+doesn't natively support, you will need to keep this in mind: if you are exceeding the memory limit, you might have to reduce the number of cores
+you are using per node so each running simulation has access to more memory.
+
+Another problem is in the form of getting data out: in large simulations the SLiM output can be many 100s of GBs. While not as extreme as genomic
+data, copying this across can still be slow. Unfortunately, since most of the data is stored in plaintext, it is difficult to compress as well. 
+Nonetheless, using tools such as `gzip`, `tar` and `zip` can help with reducing the size of your output for easier transfer from the HPC's network
+to your more permanent storage facility (either a local drive or another cloud storage service).

@@ -105,7 +105,7 @@ cowsay "I don't think, therefore I don't am."
 ```
 
 ```
-## Slow day.  Practice crawling.
+## You can rent this space for only $5 a week.
 ##  ______________________________________
 ## < I don't think, therefore I don't am. >
 ##  --------------------------------------
@@ -197,8 +197,8 @@ fortune | cowsay
 
 ```
 ##  _____________________________________
-## / You will be audited by the Internal \
-## \ Revenue Service.                    /
+## / Change your thoughts and you change \
+## \ your world.                         /
 ##  -------------------------------------
 ##         \   ^__^
 ##          \  (oo)\_______
@@ -228,7 +228,7 @@ you know what you're looking at.
 
 Git is a version control software which allows you to maintain a working history of your files. It's most useful with plaintext files, 
 such as code, where you can directly view the differences between an older version of a file and the current version. In large projects it is vital,
-but even in small projects with only a few files, version control is very import for organisation, and being able to keep track of your work
+but even in small projects with only a few files, version control is very important for organisation, and being able to keep track of your work
 easily. If you want to test out a change but you are unsure if it will work, Git allows you to do that while always being able to go back
 to your old version if required. You could save a backup file somewhere, but this is clunky, prone to error, and hard to maintain over time.
 Git can be a bit confusing to start out, but because of its ubiquity there is a massive amount of information available. Simply googling

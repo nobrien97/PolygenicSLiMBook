@@ -24,7 +24,7 @@
 <meta name="author" content="Nick O’Brien" />
 
 
-<meta name="date" content="2021-06-08" />
+<meta name="date" content="2021-06-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -212,6 +212,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.4.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#job-array-slim-jobs"><i class="fa fa-check"></i><b>7.4.1</b> Job array SLiM jobs</a></li>
 <li class="chapter" data-level="7.4.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#embedded-nimrod-slim-jobs"><i class="fa fa-check"></i><b>7.4.2</b> Embedded Nimrod SLiM jobs</a></li>
 </ul></li>
+<li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
+<li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#overview-7"><i class="fa fa-check"></i><b>8.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#what-is-latin-hypercube-sampling"><i class="fa fa-check"></i><b>8.2</b> What is Latin hypercube sampling?</a></li>
+<li class="chapter" data-level="8.3" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#generating-hypercubes-in-r"><i class="fa fa-check"></i><b>8.3</b> Generating hypercubes in R</a></li>
+<li class="chapter" data-level="8.4" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#running-slim-with-hypercube-parameters"><i class="fa fa-check"></i><b>8.4</b> Running SLiM with hypercube parameters</a></li>
+<li class="chapter" data-level="8.5" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#considerations"><i class="fa fa-check"></i><b>8.5</b> Considerations</a></li>
 </ul></li>
 </ul>
 
@@ -233,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</h1>
 <p class="author"><em>Nick O’Brien</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-06-08</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-06-17</em></p>
 </div>
 <div id="introduction" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
@@ -337,7 +347,9 @@ sed, grep for filtering for what you want</p></li>
 </div>
 <div id="prerequisites" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Prerequisites</h2>
-<p>The tutorials in here assume you are at least somewhat familiar with quantitative and population genetics.</p>
+<p>The tutorials in here assume you are at least somewhat familiar with quantitative and population genetics.
+In addition, you should have completed the <a href="http://benhaller.com/workshops/workshops.html">SLiM Online Workshop</a>,
+or at least perused through it to be familiar with the SLiM software.</p>
 </div>
 <div id="references" class="section level2" number="1.4">
 <h2><span class="header-section-number">1.4</span> References</h2>

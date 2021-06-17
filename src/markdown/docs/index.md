@@ -1,7 +1,7 @@
 ---
 title: "Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3."
 author: "Nick O'Brien"
-date: "2021-06-08"
+date: "2021-06-17"
 site: bookdown::bookdown_site
 css: "styles.css"
 

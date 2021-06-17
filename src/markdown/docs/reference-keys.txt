@@ -56,3 +56,11 @@ pbs-scripts
 multi-node-jobs
 job-array-slim-jobs
 embedded-nimrod-slim-jobs
+estimating-simulation-time
+other-considerations
+latin-hypercube-sampling
+overview-7
+what-is-latin-hypercube-sampling
+generating-hypercubes-in-r
+running-slim-with-hypercube-parameters
+considerations

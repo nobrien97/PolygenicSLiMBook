@@ -400,7 +400,7 @@ cat /${TMPDIR}/slim_output.csv >> /30days/${USER}/slim_output.csv
 
 ```
 
-Obviously a bit more involved, so lets go through it:
+Obviously a bit more involved, so let's go through it:
 
 The start of the script is pretty similar to a regular PBS script: you specify how many resources you want, give a job name, etc.
 The only difference is the addition of an `ompthreads` parameter in your list of resources. `ompthreads` is a specifier
@@ -501,8 +501,12 @@ the worst-case scenario is closer to the time it will take to run. If it isn't, 
 as the former won't result in the job being prematurely terminated, meaning you would have to run it from scratch. 
 We also account for Murphy's law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
 by your total number of runs:
-$t_(w) = t_s * (n_p * n_r)$
-Where $t_s$ is the time taken for a single run, $n_p$ is the number of parameter combinations, and $n_r$ is the number of replicates.
+
+:::: {.center data-latex=""}
+$t_{w} = t_{s}(n_{p}n_{r})$
+::::
+
+Where $t_{s}$ is the time taken for a single run, $n_{p}$ is the number of parameter combinations, and $n_{r}$ is the number of replicates.
 This is your sequential walltime: if you were to run every simulation sequentially it would take approximately that long to do the
 job. That's why we run in parallel - we need to reduce that walltime for any kind of SLiM computer experiment to be feasible.
 You can divide this sequential walltime by the total number of cores you are requesting to gauge how long it will actually take.
@@ -510,7 +514,11 @@ Let's do a worked example:
 
 Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter combinations with 50 replicates each.
 Hence, my sequential walltime would be: 
-$8 * (256 * 100) = 102400$ hours.
+
+:::: {.center data-latex=""}
+$8 \times (256 \times 100) = 102400$ hours.
+::::
+
 Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
 Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
 your worst-case time, since you can't have half of a core. So in actuality, this example's walltime would be $213 + 8 = 221$ hours.
@@ -528,7 +536,7 @@ As well as managing queuing and predicting experiment times, you will also want 
 simulations don't use a great deal of memory, however this depends on a number of factors including the number of simulated individuals,
 and whether or not you are invoking other commands via `system()` which will have other associated memory costs. Remember that since each 
 CPU core is running a separate model, your memory usage per core needs to be on average less than the total RAM per core. For example,
-if you are working on a HPC with 120 GB of available memory and 24 cores, that is $120/24 = 5$ GB of memory per core, so your simulations 
+if you are working on a HPC with 120 GB of available memory and 24 cores, that is $\frac{120}{24} = 5$ GB of memory per core, so your simulations 
 cannot exceed an average of 5 GB per simulation. This typically isn't a problem, but in cases where you are running R from SLiM (as mentioned
 in SLiM Online Workshop #14), memory usage can balloon. If you need to use R's (or another language's) functionality to solve a problem that SLiM
 doesn't natively support, you will need to keep this in mind: if you are exceeding the memory limit, you might have to reduce the number of cores

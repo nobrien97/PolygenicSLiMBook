@@ -24,10 +24,10 @@ correlations between sampled variables (so as to avoid collinearity between fact
 
 ## Generating hypercubes in R
 
-To generate LHCs in R, you can use the ```DoE.wrapper``` package, which nicely wraps a bunch of
-LHC methods from ```LHS``` into an easy and user-friendly interface.
+To generate LHCs in R, you can use the `DoE.wrapper` package, which nicely wraps a bunch of
+LHC methods from `LHS` into an easy and user-friendly interface.
 
-```{r, eval = F}
+```{r hypercube, eval = F}
 # Script to generate a Latin hypercube for two parameters
 library(DoE.wrapper)
 
@@ -35,7 +35,6 @@ library(DoE.wrapper)
 lhc_seed <- sample(0:.Machine$integer.max, 1)
 
 # In the example in chapter 8, this is 1868057774
-
 lhc <- lhs.design(
   nruns = 512,
   nfactors = 2,
@@ -45,9 +44,7 @@ lhc <- lhs.design(
     param2 = c(100, 20000)),
   seed = lhc_seed
 )
-
 # Diagnostics
-
 # Plot param1 against param2 to visualise any obvious gaps in sampling and correlations
 plot(lhc)
 
@@ -59,7 +56,6 @@ hist(lhc$param1)
 hist(lhc$param2)
 
 # Save the output to file
-
 write.csv(lhc, "./LHC.csv")
 ```
 

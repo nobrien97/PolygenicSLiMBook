@@ -24,7 +24,7 @@
 <meta name="author" content="Nick O’Brien" />
 
 
-<meta name="date" content="2021-06-08" />
+<meta name="date" content="2021-06-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -212,6 +212,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.4.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#job-array-slim-jobs"><i class="fa fa-check"></i><b>7.4.1</b> Job array SLiM jobs</a></li>
 <li class="chapter" data-level="7.4.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#embedded-nimrod-slim-jobs"><i class="fa fa-check"></i><b>7.4.2</b> Embedded Nimrod SLiM jobs</a></li>
 </ul></li>
+<li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
+<li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#overview-7"><i class="fa fa-check"></i><b>8.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#what-is-latin-hypercube-sampling"><i class="fa fa-check"></i><b>8.2</b> What is Latin hypercube sampling?</a></li>
+<li class="chapter" data-level="8.3" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#generating-hypercubes-in-r"><i class="fa fa-check"></i><b>8.3</b> Generating hypercubes in R</a></li>
+<li class="chapter" data-level="8.4" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#running-slim-with-hypercube-parameters"><i class="fa fa-check"></i><b>8.4</b> Running SLiM with hypercube parameters</a></li>
+<li class="chapter" data-level="8.5" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#considerations"><i class="fa fa-check"></i><b>8.5</b> Considerations</a></li>
 </ul></li>
 </ul>
 
@@ -261,7 +271,7 @@ they are a .txt or something, but they are exposed to the filesystem and can be 
 to /dev/null will silence the output so it isn’t displayed in the terminal:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim # With output</span></code></pre></div>
 <pre><code>## // Initial random seed:
-## 1811147691502
+## 1666730990154
 ## 
 ## // RunInitializeCallbacks():
 ## initializeMutationRate(1e-07);
@@ -277,16 +287,16 @@ to /dev/null will silence the output so it isn’t displayed in the terminal:</p
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim <span class="op">&gt;</span> /dev/null # Output nullified</span></code></pre></div>
 <p>/dev/urandom will generate pseudorandom numbers:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">od</span> -d /dev/urandom <span class="kw">|</span> <span class="fu">head</span> <span class="co"># Generate random decimal integers</span></span></code></pre></div>
-<pre><code>## 0000000 26454 11110 36472  5424 39170 48463 59520 55269
-## 0000020  9790 51679 34346 28694 17187 10990 48744 63349
-## 0000040 62973 15945 34469 45864 23159 20048 60260 12318
-## 0000060  6861 41806 22348  5455 18864 53141 56433 52632
-## 0000100 15950 61464 36667  3887 63695 29466 64653   872
-## 0000120 57915 58299 33289 15336 57142 10893  1453 49367
-## 0000140 50299 48269  2427 57500 11663 64985 14771 23556
-## 0000160 51238 21934 46156 17700 58930 41438 40225 40078
-## 0000200 27744 28049 58735 14609 15059 19017 59876 34035
-## 0000220 39296 15311 56660 37858  8054 16988 30030  7173</code></pre>
+<pre><code>## 0000000 51566 20743 37379  7886 52765 55066 19692  8011
+## 0000020 17824 47854 13118  4703 26907 39126 38323 35082
+## 0000040 26845 62415  9241 21587 53309 33421 34474 12415
+## 0000060 30569 25916  7730 43445 14953 60327 26056 13910
+## 0000100 34166 28105 36522 48102 44135 27830 31716 46269
+## 0000120 18994 51504 36802 14122  6645 47585 55603 32616
+## 0000140 61763 50629 33273 38663 41129 13247 46580  8772
+## 0000160   283 63232 56152 11240 21489 21999 37263  5863
+## 0000200  6866 25986 11650  8720 35360 53358 17094  1246
+## 0000220 32048 30904 43637 27073  9109  9709 43764 55051</code></pre>
 <p>The power of having these very specific commands which can act on a lot of different types of files is that Linux users can
 chain together these commands to efficiently solve a larger problem.</p>
 </div>
