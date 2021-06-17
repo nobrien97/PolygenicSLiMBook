@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>8 Latin Hypercube Sampling | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</title>
+  <meta name="description" content="8 Latin Hypercube Sampling | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="8 Latin Hypercube Sampling | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="8 Latin Hypercube Sampling | Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3." />
+  
+  
+  
+
+<meta name="author" content="Nick O’Brien" />
+
+
+<meta name="date" content="2021-06-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="running-slim-on-a-hpc-cluster.html"/>
+
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#preface"><i class="fa fa-check"></i><b>1.1</b> Preface</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview"><i class="fa fa-check"></i><b>1.2</b> Overview</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>1.3</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#references"><i class="fa fa-check"></i><b>1.4</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html"><i class="fa fa-check"></i><b>2</b> Installing a Linux environment &amp; SLiM on the WSL</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#overview-1"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#why-linux"><i class="fa fa-check"></i><b>2.2</b> Why Linux?</a></li>
+<li class="chapter" data-level="2.3" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#the-windows-subsystem-for-linux"><i class="fa fa-check"></i><b>2.3</b> The Windows Subsystem for Linux</a></li>
+<li class="chapter" data-level="2.4" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-wsl"><i class="fa fa-check"></i><b>2.4</b> Installing WSL</a></li>
+<li class="chapter" data-level="2.5" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-a-desktop-and-setting-up-x11"><i class="fa fa-check"></i><b>2.5</b> Installing a desktop and setting up X11</a></li>
+<li class="chapter" data-level="2.6" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#building-slim"><i class="fa fa-check"></i><b>2.6</b> Building SLiM</a></li>
+<li class="chapter" data-level="2.7" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-other-useful-apps"><i class="fa fa-check"></i><b>2.7</b> Installing other useful apps</a></li>
+<li class="chapter" data-level="2.8" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#footnotes"><i class="fa fa-check"></i><b>2.8</b> Footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html"><i class="fa fa-check"></i><b>3</b> Terminal Shortcuts and Basics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#overview-2"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#navigating-folders"><i class="fa fa-check"></i><b>3.2</b> Navigating folders</a></li>
+<li class="chapter" data-level="3.3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#installing-and-updating-software"><i class="fa fa-check"></i><b>3.3</b> Installing and updating software</a></li>
+<li class="chapter" data-level="3.4" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#input-and-output"><i class="fa fa-check"></i><b>3.4</b> Input and output</a></li>
+<li class="chapter" data-level="3.5" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git"><i class="fa fa-check"></i><b>3.5</b> Git</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git-branches-and-pull-requests"><i class="fa fa-check"></i><b>3.5.1</b> Git Branches and Pull Requests</a></li>
+<li class="chapter" data-level="3.5.2" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html#git-for-slim"><i class="fa fa-check"></i><b>3.5.2</b> Git for SLiM</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html"><i class="fa fa-check"></i><b>4</b> A Brief Overview of Polygenic Adaptation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#overview-3"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#what-is-polygenic-adaptation"><i class="fa fa-check"></i><b>4.2</b> What is polygenic adaptation?</a></li>
+<li class="chapter" data-level="4.3" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#fishers-geometrical-model-of-adaptation"><i class="fa fa-check"></i><b>4.3</b> Fisher’s Geometrical model of adaptation</a></li>
+<li class="chapter" data-level="4.4" data-path="a-brief-overview-of-polygenic-adaptation.html"><a href="a-brief-overview-of-polygenic-adaptation.html#references-1"><i class="fa fa-check"></i><b>4.4</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html"><i class="fa fa-check"></i><b>5</b> Polygenic Adaptation in SLiM</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#overview-4"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#a-single-polygenic-trait-chp5-1_1t.slim"><i class="fa fa-check"></i><b>5.2</b> A Single Polygenic Trait (Chp5-1_1T.slim)</a></li>
+<li class="chapter" data-level="5.3" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#parameters"><i class="fa fa-check"></i><b>5.3</b> Parameters</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#ne"><i class="fa fa-check"></i><b>5.3.1</b> Ne</a></li>
+<li class="chapter" data-level="5.3.2" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#del_mean-and-del_shape"><i class="fa fa-check"></i><b>5.3.2</b> del_mean and del_shape</a></li>
+<li class="chapter" data-level="5.3.3" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#mutweights"><i class="fa fa-check"></i><b>5.3.3</b> mutWeights</a></li>
+<li class="chapter" data-level="5.3.4" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#rwide"><i class="fa fa-check"></i><b>5.3.4</b> rwide</a></li>
+<li class="chapter" data-level="5.3.5" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#genomelength"><i class="fa fa-check"></i><b>5.3.5</b> genomelength</a></li>
+<li class="chapter" data-level="5.3.6" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#locimu-locisigma-and-locidist"><i class="fa fa-check"></i><b>5.3.6</b> locimu, locisigma, and locidist</a></li>
+<li class="chapter" data-level="5.3.7" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#width"><i class="fa fa-check"></i><b>5.3.7</b> width</a></li>
+<li class="chapter" data-level="5.3.8" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#printh"><i class="fa fa-check"></i><b>5.3.8</b> printH</a></li>
+<li class="chapter" data-level="5.3.9" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#samplerate"><i class="fa fa-check"></i><b>5.3.9</b> samplerate</a></li>
+<li class="chapter" data-level="5.3.10" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#modelindex"><i class="fa fa-check"></i><b>5.3.10</b> modelindex</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html"><i class="fa fa-check"></i><b>6</b> Running SLiM in Parallel</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#overview-5"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#slim-at-the-command-line"><i class="fa fa-check"></i><b>6.2</b> SLiM at the Command Line</a></li>
+<li class="chapter" data-level="6.3" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-bash"><i class="fa fa-check"></i><b>6.3</b> Running SLiM via Bash</a></li>
+<li class="chapter" data-level="6.4" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-r"><i class="fa fa-check"></i><b>6.4</b> Running SLiM via R</a></li>
+<li class="chapter" data-level="6.5" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-in-python"><i class="fa fa-check"></i><b>6.5</b> Running SLiM in Python</a></li>
+<li class="chapter" data-level="6.6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#running-slim-via-a-c-program"><i class="fa fa-check"></i><b>6.6</b> Running SLiM via a C++ Program</a></li>
+<li class="chapter" data-level="6.7" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#writing-slim-code-with-parallelism-in-mind"><i class="fa fa-check"></i><b>6.7</b> Writing SLiM code with parallelism in mind</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
+<li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-1"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#overview-6"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#connecting-to-tinaroo-and-set-up"><i class="fa fa-check"></i><b>7.2</b> Connecting to Tinaroo and Set-up</a></li>
+<li class="chapter" data-level="7.3" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#pbs-scripts"><i class="fa fa-check"></i><b>7.3</b> PBS Scripts</a></li>
+<li class="chapter" data-level="7.4" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#multi-node-jobs"><i class="fa fa-check"></i><b>7.4</b> Multi-node jobs</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#job-array-slim-jobs"><i class="fa fa-check"></i><b>7.4.1</b> Job array SLiM jobs</a></li>
+<li class="chapter" data-level="7.4.2" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#embedded-nimrod-slim-jobs"><i class="fa fa-check"></i><b>7.4.2</b> Embedded Nimrod SLiM jobs</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
+<li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#overview-7"><i class="fa fa-check"></i><b>8.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#what-is-latin-hypercube-sampling"><i class="fa fa-check"></i><b>8.2</b> What is Latin hypercube sampling?</a></li>
+<li class="chapter" data-level="8.3" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#generating-hypercubes-in-r"><i class="fa fa-check"></i><b>8.3</b> Generating hypercubes in R</a></li>
+<li class="chapter" data-level="8.4" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#running-slim-with-hypercube-parameters"><i class="fa fa-check"></i><b>8.4</b> Running SLiM with hypercube parameters</a></li>
+<li class="chapter" data-level="8.5" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#considerations"><i class="fa fa-check"></i><b>8.5</b> Considerations</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Polygenic SLiMulations: Investigating polygenic adaptation with SLiM 3.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="latin-hypercube-sampling" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Latin Hypercube Sampling</h1>
+<div id="overview-7" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Overview</h2>
+<p>When we add a lot of parameters to an experimental design, a problem appears: in order to
+measure each parameter’s effect across a range of parameter levels or values, you must increase the
+number of experiments exponentially. For example, to sample two parameters with two levels each,
+you need four treatments to measure them all. With three parameters with two levels each, you need
+eight treatment groups. By the time you’re at six parameters, you need 64 groups, and that’s just with
+two treatment levels each. How do you effectively sample this parameter space well then? Latin hypercube
+sampling offers a potential solution.</p>
+</div>
+<div id="what-is-latin-hypercube-sampling" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> What is Latin hypercube sampling?</h2>
+<p>In Latin hypercube sampling (LHC), a continuous range of each variable is specified, and combinations
+of these parameters are sampled together. The idea is to sample parameter combinations, which when taken
+together explain the total parameter space (possible values for each parameter) while minimising
+correlations between sampled variables (so as to avoid collinearity between factors).</p>
+</div>
+<div id="generating-hypercubes-in-r" class="section level2" number="8.3">
+<h2><span class="header-section-number">8.3</span> Generating hypercubes in R</h2>
+<p>To generate LHCs in R, you can use the <code>DoE.wrapper</code> package, which nicely wraps a bunch of
+LHC methods from <code>LHS</code> into an easy and user-friendly interface.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="latin-hypercube-sampling.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Script to generate a Latin hypercube for two parameters</span></span>
+<span id="cb63-2"><a href="latin-hypercube-sampling.html#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoE.wrapper)</span>
+<span id="cb63-3"><a href="latin-hypercube-sampling.html#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="latin-hypercube-sampling.html#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample a random 32 bit int as a seed for the LHC generation</span></span>
+<span id="cb63-5"><a href="latin-hypercube-sampling.html#cb63-5" aria-hidden="true" tabindex="-1"></a>lhc_seed <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>.Machine<span class="sc">$</span>integer.max, <span class="dv">1</span>)</span>
+<span id="cb63-6"><a href="latin-hypercube-sampling.html#cb63-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-7"><a href="latin-hypercube-sampling.html#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co"># In the example in chapter 8, this is 1868057774</span></span>
+<span id="cb63-8"><a href="latin-hypercube-sampling.html#cb63-8" aria-hidden="true" tabindex="-1"></a>lhc <span class="ot">&lt;-</span> <span class="fu">lhs.design</span>(</span>
+<span id="cb63-9"><a href="latin-hypercube-sampling.html#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nruns =</span> <span class="dv">512</span>,</span>
+<span id="cb63-10"><a href="latin-hypercube-sampling.html#cb63-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
+<span id="cb63-11"><a href="latin-hypercube-sampling.html#cb63-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;maximin&quot;</span>,</span>
+<span id="cb63-12"><a href="latin-hypercube-sampling.html#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">factor.names =</span> <span class="fu">list</span>(</span>
+<span id="cb63-13"><a href="latin-hypercube-sampling.html#cb63-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">param1 =</span> <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>),</span>
+<span id="cb63-14"><a href="latin-hypercube-sampling.html#cb63-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">param2 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">20000</span>)),</span>
+<span id="cb63-15"><a href="latin-hypercube-sampling.html#cb63-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> lhc_seed</span>
+<span id="cb63-16"><a href="latin-hypercube-sampling.html#cb63-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-17"><a href="latin-hypercube-sampling.html#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostics</span></span>
+<span id="cb63-18"><a href="latin-hypercube-sampling.html#cb63-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot param1 against param2 to visualise any obvious gaps in sampling and correlations</span></span>
+<span id="cb63-19"><a href="latin-hypercube-sampling.html#cb63-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lhc)</span>
+<span id="cb63-20"><a href="latin-hypercube-sampling.html#cb63-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-21"><a href="latin-hypercube-sampling.html#cb63-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a matrix of correlations between factors</span></span>
+<span id="cb63-22"><a href="latin-hypercube-sampling.html#cb63-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(lhc)</span>
+<span id="cb63-23"><a href="latin-hypercube-sampling.html#cb63-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-24"><a href="latin-hypercube-sampling.html#cb63-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histograms to check uniformity</span></span>
+<span id="cb63-25"><a href="latin-hypercube-sampling.html#cb63-25" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lhc<span class="sc">$</span>param1)</span>
+<span id="cb63-26"><a href="latin-hypercube-sampling.html#cb63-26" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lhc<span class="sc">$</span>param2)</span>
+<span id="cb63-27"><a href="latin-hypercube-sampling.html#cb63-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-28"><a href="latin-hypercube-sampling.html#cb63-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the output to file</span></span>
+<span id="cb63-29"><a href="latin-hypercube-sampling.html#cb63-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lhc, <span class="st">&quot;./LHC.csv&quot;</span>)</span></code></pre></div>
+<p>The <code>lhs.design</code> function creates a Latin hypercube of <code>nruns</code> samples, with <code>nfactors</code> factors/columns.
+You can choose a method for sampling your parameter combinations with <code>type</code>. I find that most of the time
+<code>maximin</code> is best suited to generate LHCs with maximised spaced between samples and minimised correlations
+between factors. <code>factor.names</code> is used to specify a list of factor names, and the minimum and maximum values
+to sample from. For example, here <code>param1</code> will be sampled from 0 to 1.
+The function will output a dataframe, which you can save as a file to load and reference later.
+It’s a good idea to run some diagnostics on your hypercube when its done before you go to use it. You’re looking for
+even spacing between samples (no obvious large gaps in sampling) and very little correlation between parameters,
+to ensure you get a good sample of all parameters’ effects on your model. To do this, you can <code>plot</code> the LHC,
+which will give you a pairwise matrix of parameter combinations, showing you the spread of samples in the whole
+parameter space, which should look something like this:
+(<img src="images/chapter8/lhc_plot.png" />)</p>
+<p>You can also create histograms of each parameter to check that they are uniformly distributed with <code>hist()</code>, and
+run <code>cor</code> to get the correlations between parameter pairs:
+<img src="images/chapter8/lhc_hist_param1.png" />
+<img src="images/chapter8/lhc_hist_param2.png" />
+<img src="images/chapter8/lhc_cor.png" /></p>
+<p>If you are satisfied that your hypercube looks uniformly distributed, there are no big gaps you aren’t sampling in any of your
+parameter combinations, and there is little correlation between parameters, then you are all good to save the hypercube with
+<code>write.csv()</code>.</p>
+</div>
+<div id="running-slim-with-hypercube-parameters" class="section level2" number="8.4">
+<h2><span class="header-section-number">8.4</span> Running SLiM with hypercube parameters</h2>
+<p>You shouldn’t have to change any of your sublauncher script to use hypercube parameters: the LHC dataframe is formatted in the
+same way as any other parameter combination dataframe. Simply load the hypercube .csv instead of combos.csv, and as long as you
+select the right columns, you’ll be good to go.</p>
+</div>
+<div id="considerations" class="section level2" number="8.5">
+<h2><span class="header-section-number">8.5</span> Considerations</h2>
+<p>When analysing your data, there are some considerations to make: you are treating each parameter as a continuous value, and
+hypercube combinations will not be nice even numbers. It’s up to you how to deal with this, but some parameters will need
+truncating or rounding (such as population size, which requires an integer), or ordinal variables like the distribution of
+size effects (normal, gamma, etc.). For something like that, you can assign cut off values for each factor level (e.g. hypercube
+value &lt; 0.5 is normal, &gt; 0.5 is gamma), or run your hypercube without those parameters, and repeat the experiment for each level
+of those ordinal variables. Note that this will exponentially increase the number of runs, as you are incorporating a level of
+factorial design to your experiment.</p>
+<p>In addition, individual hypercube samples can be difficult to use, as they are continuous rather than discrete levels of factors.
+Hence, they are better suited to be analysed as a whole rather than in sections. However, it is still possible to factorialise LHC
+combinations by creating levels from ranges of values. For example, the first third of your parameter range could be assigned ‘Low’,
+the middle third being ‘Medium’ and the top third being ‘High’. However, it’s usually not necessary to do this unless you are missing
+combinations of particular parameters, which can occur if you do not have enough samples (<code>nruns</code> in <code>lhs.design()</code>).</p>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="running-slim-on-a-hpc-cluster.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
