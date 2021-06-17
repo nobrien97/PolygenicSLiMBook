@@ -526,8 +526,15 @@ simulation will take to run.
 
 As well as managing queuing and predicting experiment times, you will also want to keep in mind your experiment's RAM usage. Typically SLiM
 simulations don't use a great deal of memory, however this depends on a number of factors including the number of simulated individuals,
-and whether or not you are invoking other commands via `system()` which will have other associated memory costs.
-Queue times - avoiding problems
-    Managing RAM
-    Big output - compression etc.
-  Timing runs
+and whether or not you are invoking other commands via `system()` which will have other associated memory costs. Remember that since each 
+CPU core is running a separate model, your memory usage per core needs to be on average less than the total RAM per core. For example,
+if you are working on a HPC with 120 GB of available memory and 24 cores, that is $120/24 = 5$ GB of memory per core, so your simulations 
+cannot exceed an average of 5 GB per simulation. This typically isn't a problem, but in cases where you are running R from SLiM (as mentioned
+in SLiM Online Workshop #14), memory usage can balloon. If you need to use R's (or another language's) functionality to solve a problem that SLiM
+doesn't natively support, you will need to keep this in mind: if you are exceeding the memory limit, you might have to reduce the number of cores
+you are using per node so each running simulation has access to more memory.
+
+Another problem is in the form of getting data out: in large simulations the SLiM output can be many 100s of GBs. While not as extreme as genomic
+data, copying this across can still be slow. Unfortunately, since most of the data is stored in plaintext, it is difficult to compress as well. 
+Nonetheless, using tools such as `gzip`, `tar` and `zip` can help with reducing the size of your output for easier transfer from the HPC's network
+to your more permanent storage facility (either a local drive or another cloud storage service).
