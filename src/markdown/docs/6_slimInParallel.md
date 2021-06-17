@@ -14,7 +14,7 @@ This can all be done in whatever programming language you like, as long as it ha
 (like `system()` in R), and ssupport for multicore processing.
 
 In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. 
-I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn3] to program! 
+I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn4] to program! 
 
 Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the 
 [SLiM-Extras repository](https://github.com/MesserLab/SLiM-Extras) under 'sublaunching'. Source code for all of the examples shown 
@@ -466,7 +466,7 @@ as you can to minimise the risk of race conditions becoming a problem. I have wr
 or missing output. This was with 1152 concurrent simulations, with data being written 200 times per run. However, I have encountered one error since then,
 where a single row was appended with no newline character to another, likely due to a similar race condition. 
 
-In summary, the chances of problems are low, but never zero[^fn4].
+In summary, the chances of problems are low, but never zero[^fn5].
 
 ### Multiple file output
 
@@ -508,7 +508,7 @@ initialize() {
 ```
 
 The output filename of this simulation will be `out_<modelindex>_<seed>_slim.csv`. Since each simulation is writing to a different file,
-there is no chance of the output being overwritten[^fn5]. At the end of your simulations, you can join all these files into one using the 
+there is no chance of the output being overwritten[^fn6]. At the end of your simulations, you can join all these files into one using the 
 `cat` bash command:
 
 
@@ -524,7 +524,7 @@ do
     echo "" >> "$file"
 done
 ```
-Which will append a newline character to the end of each file[^fn6].
+Which will append a newline character to the end of each file[^fn7].
 
 
 The main problem with this method is writing to many different files creates overhead that will slow your simulation down, and has the potential
@@ -533,7 +533,7 @@ one single large file that you constantly append to, whereas smaller runs are pr
 
 
 ## Footnotes
-[^fn3]: https://xkcd.com/612/
-[^fn4]: Much like the chances of your cat eating you in your sleep.
-[^fn5]: There is still a small chance of `stdout` losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don't do that.
-[^fn6]: https://stackoverflow.com/a/31053205/13586824
+[^fn4]: https://xkcd.com/612/
+[^fn5]: Much like the chances of your cat eating you in your sleep.
+[^fn6]: There is still a small chance of `stdout` losing your output if you have a massive amount of I/O that is overloading the filesystem. But just don't do that.
+[^fn7]: https://stackoverflow.com/a/31053205/13586824

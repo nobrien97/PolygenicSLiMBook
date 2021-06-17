@@ -149,6 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.5" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-a-desktop-and-setting-up-x11"><i class="fa fa-check"></i><b>2.5</b> Installing a desktop and setting up X11</a></li>
 <li class="chapter" data-level="2.6" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#building-slim"><i class="fa fa-check"></i><b>2.6</b> Building SLiM</a></li>
 <li class="chapter" data-level="2.7" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#installing-other-useful-apps"><i class="fa fa-check"></i><b>2.7</b> Installing other useful apps</a></li>
+<li class="chapter" data-level="2.8" data-path="installing-a-linux-environment-slim-on-the-wsl.html"><a href="installing-a-linux-environment-slim-on-the-wsl.html#footnotes"><i class="fa fa-check"></i><b>2.8</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="terminal-shortcuts-and-basics.html"><a href="terminal-shortcuts-and-basics.html"><i class="fa fa-check"></i><b>3</b> Terminal Shortcuts and Basics</a>
 <ul>
@@ -200,7 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
 <li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
 </ul></li>
-<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-1"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
 <ul>
@@ -666,17 +667,21 @@ the longest-running and shortest-running simulations are very different in time 
 the worst-case scenario is closer to the time it will take to run. If it isn’t, it is better to over-compensate than under-compensate,
 as the former won’t result in the job being prematurely terminated, meaning you would have to run it from scratch.
 We also account for Murphy’s law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
-by your total number of runs:
-<span class="math inline">\(t_{w} = t_{s}(n_{p}n_{r})\)</span>
-Where <span class="math inline">\(t_{s}\)</span> is the time taken for a single run, <span class="math inline">\(n_{p}\)</span> is the number of parameter combinations, and <span class="math inline">\(n_{r}\)</span> is the number of replicates.
+by your total number of runs:</p>
+<div class="center">
+<p><span class="math inline">\(t_{w} = t_{s}(n_{p}n_{r})\)</span></p>
+</div>
+<p>Where <span class="math inline">\(t_{s}\)</span> is the time taken for a single run, <span class="math inline">\(n_{p}\)</span> is the number of parameter combinations, and <span class="math inline">\(n_{r}\)</span> is the number of replicates.
 This is your sequential walltime: if you were to run every simulation sequentially it would take approximately that long to do the
 job. That’s why we run in parallel - we need to reduce that walltime for any kind of SLiM computer experiment to be feasible.
 You can divide this sequential walltime by the total number of cores you are requesting to gauge how long it will actually take.
 Let’s do a worked example:</p>
 <p>Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter combinations with 50 replicates each.
-Hence, my sequential walltime would be:
-<span class="math inline">\(8 \times (256 \times 100) = 102400\)</span> hours.
-Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
+Hence, my sequential walltime would be:</p>
+<div class="center">
+<p><span class="math inline">\(8 \times (256 \times 100) = 102400\)</span> hours.</p>
+</div>
+<p>Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
 Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
 your worst-case time, since you can’t have half of a core. So in actuality, this example’s walltime would be <span class="math inline">\(213 + 8 = 221\)</span> hours.</p>
 <p>If you suspect your RAM or storage might be an issue, you can do a similar exercise to calculate the maximum RAM used per simulation

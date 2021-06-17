@@ -11,6 +11,7 @@ installing-wsl
 installing-a-desktop-and-setting-up-x11
 building-slim
 installing-other-useful-apps
+footnotes
 terminal-shortcuts-and-basics
 overview-2
 navigating-folders
@@ -48,7 +49,7 @@ running-slim-via-a-c-program
 writing-slim-code-with-parallelism-in-mind
 single-file-output
 multiple-file-output
-footnotes
+footnotes-1
 running-slim-on-a-hpc-cluster
 overview-6
 connecting-to-tinaroo-and-set-up

@@ -105,7 +105,8 @@ cowsay "I don't think, therefore I don't am."
 ```
 
 ```
-## You can rent this space for only $5 a week.
+## You're growing out of some of your problems, but there are others that
+## you're growing into.
 ##  ______________________________________
 ## < I don't think, therefore I don't am. >
 ##  --------------------------------------
@@ -196,10 +197,13 @@ fortune | cowsay
 ```
 
 ```
-##  _____________________________________
-## / Change your thoughts and you change \
-## \ your world.                         /
-##  -------------------------------------
+##  _________________________________________
+## / Q: What do you call a principal female  \
+## | opera singer whose high C               |
+## |                                         |
+## | is lower than those of other principal  |
+## \ female opera singers? A: A deep C diva. /
+##  -----------------------------------------
 ##         \   ^__^
 ##          \  (oo)\_______
 ##             (__)\       )\/\

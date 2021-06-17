@@ -508,7 +508,11 @@ the worst-case scenario is closer to the time it will take to run. If it isn't, 
 as the former won't result in the job being prematurely terminated, meaning you would have to run it from scratch. 
 We also account for Murphy's law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
 by your total number of runs:
+
+:::: {.center data-latex=""}
 $t_{w} = t_{s}(n_{p}n_{r})$
+::::
+
 Where $t_{s}$ is the time taken for a single run, $n_{p}$ is the number of parameter combinations, and $n_{r}$ is the number of replicates.
 This is your sequential walltime: if you were to run every simulation sequentially it would take approximately that long to do the
 job. That's why we run in parallel - we need to reduce that walltime for any kind of SLiM computer experiment to be feasible.
@@ -517,7 +521,11 @@ Let's do a worked example:
 
 Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter combinations with 50 replicates each.
 Hence, my sequential walltime would be: 
+
+:::: {.center data-latex=""}
 $8 \times (256 \times 100) = 102400$ hours.
+::::
+
 Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
 Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
 your worst-case time, since you can't have half of a core. So in actuality, this example's walltime would be $213 + 8 = 221$ hours.

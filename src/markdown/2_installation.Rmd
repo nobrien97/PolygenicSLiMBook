@@ -254,7 +254,9 @@ wget -o - --quiet https://raw.githubusercontent.com/MesserLab/SLiM-Extras/master
 
 This will download and install SLiM, Eidos, and SLiMgui on your system.
 You should be able to find SLiMgui in your applications now, and you'll have something looking like this:
-![](images/chapter2/slimgui.PNG "SLiMgui")
+```{r out.width="100%", fig.link='./images/chapter2/slimgui.PNG', echo = F}
+knitr::include_graphics('./images/chapter2/slimgui.PNG')
+```
 
 ::::{.extrabox data-latex=""}
 :::{.center data-latex=""}
@@ -266,11 +268,11 @@ source code is available for download, which means that the user can download th
 application, while being able to poke around and make adjustments to the software if they want. What the SLiM 
 installer script does is run a series of commands to compile SLiM's source code into machine code (1s and 0s), 
 which are treated as an application. The applications you installed are the commands which are used to 
-install SLiM: build-essential includes a bunch of compilers to translate huamn-written code to binary, cmake is 
+install SLiM: build-essential includes a bunch of compilers to translate human-written code to binary, cmake is 
 a tool to generate makefiles (which are used to tell the compiler how to link certain parts of the code with others, 
 and generally make compiling possible on large projects), qt5 is a graphics framework for drawing windows 
 (such as the SLiMgui window), qmake is a makefile generator specifically for qt projects, and mesa-utils, libgl1-mesa-glx, 
-and x11-apps provide tools to test that x11 and video drivers are working properly.
+and x11-apps provide tools to test that X11 and video drivers are working properly.
 
 The concept of software compilation is fascinating, so I will leave a link [here](https://www.youtube.com/watch?v=9mZw6Rwz1vg) 
 for anyone interested in learning more. 
@@ -349,10 +351,10 @@ sudo dpkg -i code_*
 
 ```
 The `*` is a wildcard that means 'anything': so any file that starts with code_ will be selected 
-(which there should only be one of, the installer you just downloaded with wget) `dpkg -i` is a command 
+(which there should only be one of, the installer you just downloaded with wget). `dpkg -i` is a command 
 to extract and process a debian package, with -i meaning to install it to root (rather than just to the current folder).
 
-You can open VS Code without opening a file, you can use `code .`
+You can open VS Code without opening a file, using `code .`
 When you load VS Code from your WSL Ubuntu installation, you'll get a message warning you that you should 
 install it on Windows instead. It stills works perfectly fine on Linux, you just have to press Y to accept 
 the message that appears:
@@ -362,7 +364,7 @@ If you want to install VS Code on Windows and connect remotely to your Ubuntu di
 have access to the Terminal etc.), you can download the installer for Windows from the [Visual Studio website](https://code.visualstudio.com/) 
 and install as usual. From there, you can install the [Remote-WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl), 
 which will run the VS Code UI on Windows, but all the inner workings on Linux, giving you access to all of the 
-useful tools Linux provides (such as Clang and gcc if you are working with compilers).
+useful tools Linux provides (such as Clang and gcc if you are working with a compiled language).
 
 When you work with VS Code, it will automatically detect what language your code is based on the filename. 
 For example, if you save a file as .py, VS Code will ask if you want to install a language extension for Python, 
@@ -373,7 +375,9 @@ showing mutation frequency dynamics, which VS Code would lack.
 
 Congratulations! You now have a Linux desktop, SLiM, RStudio, VSCode and FileZilla installed and ready to go 
 for exploring polygenic adaptation using computer simulations!
-![](images/chapter2/desktopapps.PNG "GNOME, SLiM, RStudio (Server) and FileZilla")
+```{r out.width="100%", fig.link='./images/chapter2/desktopapps.PNG', echo = F}
+knitr::include_graphics('./images/chapter2/desktopapps.PNG')
+```
 
 ## Footnotes
 [^fn2] One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 

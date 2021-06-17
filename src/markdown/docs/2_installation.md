@@ -6,15 +6,15 @@
 
 ## Overview
 
-SLiM was built primarily with MacOS in mind, and so no native Windows version exists. However, since MacOS is very 
-similar to many Linux distributions, we can use Windows 10's new Windows subsystem for Linux to run SLiM on Windows 
-(or if we want to be pedantic, we're running SLiM on a Linux kernel running off Windows). The [SLiM manual](http://benhaller.com/slim/SLiM_Manual.pdf) 
+SLiM was built primarily with MacOS in mind, so no native Windows version exists. However, a Linux version is around. 
+We can use Windows 10's new Windows subsystem for Linux (WSL) to run SLiM on Windows (or if we want to be pedantic, we're running 
+SLiM on a Linux kernel running off Windows). The [SLiM manual](http://benhaller.com/slim/SLiM_Manual.pdf) 
 has a pretty good step-by-step instruction for this if you want to run SLiM by itself, and not worry about using WSL for anything else. 
 However, Linux is a fantastic base for many scientific applications, such as connecting to supercomputers, which are more often 
 than not Linux-based. As such, I'll be guiding you through installing a desktop environment for WSL, installing R, RStudio, and SLiM, 
 and getting you up to speed with some basics of using Linux. For MacOS users, you can simply install SLiM using the installer package 
 available [here](https://messerlab.org/slim/). There are also instructions in the SLiM manual for building SLiM from source for MacOS 
-if you would prefer that. For Windows users not on Windows 10, I'm afraid there is no way at the moment to run SLiM "natively" on 
+if you would prefer to do that. For Windows users not on Windows 10, I'm afraid there is no way at the moment to run SLiM "natively" on 
 Windows - your best bet would be to dual boot a Linux distribution, or run a virtual machine with VirtualBox or VMware. 
 
 ::::{.extrabox data-latex=""}
@@ -25,7 +25,7 @@ Windows - your best bet would be to dual boot a Linux distribution, or run a vir
 Linux (or any Unix based operating system, such as MacOS) differs from Windows in the sense that absolutely everything is treated as a file - 
 including devices like printers or monitors. These devices have specialised files that store information about that device. 
 Programs can read those files (or write to them) to communicate with the device itself. Note that these aren't files in the sense that 
-they are a .txt or something, but they are exposed to the filesystem and can be treated as different files depending on what commands you give it.
+they are a .txt or something, but they are exposed to the filesystem in the same way and can be treated differently depending on what commands you give it.
 
 For example, you could enter 
 
@@ -53,7 +53,7 @@ slim ~/PolygenicSLiM/box2.1.slim # With output
 
 ```
 ## // Initial random seed:
-## 1666730990154
+## 1682804588459
 ## 
 ## // RunInitializeCallbacks():
 ## initializeMutationRate(1e-07);
@@ -79,16 +79,16 @@ od -d /dev/urandom | head # Generate random decimal integers
 ```
 
 ```
-## 0000000 51566 20743 37379  7886 52765 55066 19692  8011
-## 0000020 17824 47854 13118  4703 26907 39126 38323 35082
-## 0000040 26845 62415  9241 21587 53309 33421 34474 12415
-## 0000060 30569 25916  7730 43445 14953 60327 26056 13910
-## 0000100 34166 28105 36522 48102 44135 27830 31716 46269
-## 0000120 18994 51504 36802 14122  6645 47585 55603 32616
-## 0000140 61763 50629 33273 38663 41129 13247 46580  8772
-## 0000160   283 63232 56152 11240 21489 21999 37263  5863
-## 0000200  6866 25986 11650  8720 35360 53358 17094  1246
-## 0000220 32048 30904 43637 27073  9109  9709 43764 55051
+## 0000000 65311 20395 50337 21963 58148 18617 14317 39458
+## 0000020 41734  4612 22858 27412 11612  6649 20266 49042
+## 0000040 22352 21360 48068 60646 18598 42026 24459 19658
+## 0000060 64521 25040 34672  2046 41096 45365 57587 44056
+## 0000100 50737  1677 42788 57606  8090 24336 16186 61889
+## 0000120 48069  1227  2372 25529 33046 39162  7025 57900
+## 0000140  6067 20798 11600 42378 32419 22044 27727 25261
+## 0000160 29726 33943 62183 37708 55454 21767 41968  9894
+## 0000200 15215 41132 25540  4962 56964 18241 59300 36139
+## 0000220 24741  1935 29712 35194 27749   986 16194 39531
 ```
 
 The power of having these very specific commands which can act on a lot of different types of files is that Linux users can 
@@ -99,47 +99,42 @@ chain together these commands to efficiently solve a larger problem.
 
 To many people, the term 'Linux user' is analogous to 'computer wizard' or 'weirdo'. Unfortunately for you, future weirdo, 
 Linux is an incredibly helpful tool for scientific applications. I've already mentioned that SLiM doesn't run on Windows natively, 
-but that is far from the only scientific program that requires (or runs better on ) a Linux operating system. Although user-friendly, 
+but that is far from the only scientific program that requires (or runs better on) a Linux operating system. Although user-friendly, 
 both Windows and MacOS are extremely bloated, meaning that just running the operating system requires a massive amount of memory 
-and CPU resources that your other applications _cannot use_. Linux is a barebones system, with the idea being that the user can build 
+and CPU resources _that your other applications cannot use_. Linux is a barebones system, with the idea being that the user can build 
 the operating system how they want by installing only the features that they will use, saving memory and processor power for the 
-task/s at hand. Another reason for Linux's speed and low memory footprint is its way of storing files (as mentioned in Box 2.1.1), 
+tasks at hand. Another reason for Linux's speed and low memory footprint is its way of storing files (as mentioned in Box 2.1.1), 
 which is very different to Windows. It takes a bit of getting used to, but in the end you will save massive amounts of time using Linux 
-versus Windows or MacOS (but especially Windows). However, there are still programs that you might need to run in Windows. 
-Sometimes specialised software is only built for one operating system, being Windows or Linux/MacOS. There are three options here: 
-dual-boot by installing a Windows and Linux operating system on separate hard drives (or partitions on one hard drive), 
-use a traditional virtual machine such as VMware or VirtualBox, or use the Windows 10 Subsystem for Linux (WSL). 
+versus Windows or MacOS. However, there are still programs that you might need to run in Windows because there is no Linux or Mac version. 
+There are three options in this case:
+
+- Dual-boot by installing a Windows and Linux operating system on separate hard drives (or partitions on one hard drive), 
+- Use a traditional virtual machine such as VMware or VirtualBox, 
+- Use the Windows 10 Subsystem for Linux (WSL). 
+
 Dual-booting is great if you rarely use one of your installed operating systems, but generally a bit of a pain if you're constantly 
 wanting to switch between using Windows and Linux software (you can only run one OS at a time, so you need to reboot if you want to 
-use software in the other OS). VMware and VirtualBox are very resource-intensive, which negates the speed advantage you get from 
-running Linux over Windows. WSL, however, is much faster.
+use software in the other OS). VMware and VirtualBox tend to be very resource-intensive, which negates the speed advantage you get from 
+running Linux over Windows. WSL, however, is much faster, and simple to set up.
 
 ## The Windows Subsystem for Linux
 
-Windows 10 introduced a new way to emulate a Linux machine via a Windows operating system. Through illegal^\*^ computer trickery, 
-Microsoft managed to show everyone (through a feature in their own operating system) that a Linux machine running on a Windows 
-machine is faster than a Windows machine by itself. The advantage of this approach is accessing your data between operating systems 
-is very easy: your Windows files are visible in Linux, and you can save files to your Windows machine directly using Linux programs. 
-This way, you can use Linux commands such as sed and grep to filter output (extremely quickly) and directly save the output to files 
-that Windows programs can read! Hence, we can run SLiM simulations, storing the output wherever you want, and then use Windows to do 
-data analysis (although you could do that analysis in Linux also). Below, I'll provide some instructions for installing WSL 2, a 
-Linux distribution (Ubuntu 20.04), and some basics for getting started with Ubuntu.
+Windows 10 introduced a new way to emulate a Linux machine via a Windows operating system, WSL. The advantage of this approach is 
+accessing your data between operating systems is very easy: your Windows files are visible in Linux, and you can save files to your 
+Windows machine directly using Linux programs. This way, you can use Linux commands such as sed and grep to filter output 
+(extremely quickly) and directly save the output to files that Windows programs can read! Hence, we can run SLiM simulations, 
+storing the output wherever you want, and then use Windows to do data analysis (although you could do that analysis in Linux also). 
+Below, I'll provide some instructions for installing WSL 2, a Linux distribution (Ubuntu 20.04), and some basics for getting started with Ubuntu.
 
-^\*^: Probably not actually illegal, but I'm not a lawyer.
 
 ## Installing WSL
 
 There are two choices for running WSL: WSL 1 or WSL 2. Both are fairly similar in speed, however WSL 2 uses a real Linux kernel 
 and an extremely fast virtual machine (along with a virtual hard drive), whereas WSL 1 used a translation layer (instead of a native kernel) 
 to translate between windows and a linux distribution. Ultimately , the main difference is WSL 2 is slightly slower when it comes 
-to copying files between Windows and Linux, but faster nearly everywhere else. Although both versions run SLiM fine^\*^, I'll be opting for WSL 2.
+to copying files between Windows and Linux, but faster nearly everywhere else. Although both versions run SLiM fine[^fn2], I'll be opting for WSL 2.
 
 
-:::{.smallnote data-latex=""}
-^\*^One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 
-The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever 
-reason you use WSL 1, remember to turn off real-time protection during your SLiM runs and then _remember to turn it back on when the run is finished_.
-:::
 
 
 
@@ -203,6 +198,7 @@ to have a look at if you aren't happy with how GNOME looks or performs on your s
 are xfce4, Plasma, Unity, MATE, and Budgie. Window managers like dwm or i3 are also good for advanced users, however 
 they are barebones and will likely require more tinkering to get to a form you like.
 ::::
+
 
 The first two commands will update your base installation and packages; the third will install GNOME 
 (a Linux desktop environment) and relevant dependencies. 
@@ -303,7 +299,7 @@ wget -o - --quiet https://raw.githubusercontent.com/MesserLab/SLiM-Extras/master
 
 This will download and install SLiM, Eidos, and SLiMgui on your system.
 You should be able to find SLiMgui in your applications now, and you'll have something looking like this:
-![](images/chapter2/slimgui.PNG "SLiMgui")
+<a href="./images/chapter2/slimgui.PNG" target="_blank"><img src="./images/chapter2/slimgui.PNG" width="100%" /></a>
 
 ::::{.extrabox data-latex=""}
 :::{.center data-latex=""}
@@ -315,11 +311,11 @@ source code is available for download, which means that the user can download th
 application, while being able to poke around and make adjustments to the software if they want. What the SLiM 
 installer script does is run a series of commands to compile SLiM's source code into machine code (1s and 0s), 
 which are treated as an application. The applications you installed are the commands which are used to 
-install SLiM: build-essential includes a bunch of compilers to translate huamn-written code to binary, cmake is 
+install SLiM: build-essential includes a bunch of compilers to translate human-written code to binary, cmake is 
 a tool to generate makefiles (which are used to tell the compiler how to link certain parts of the code with others, 
 and generally make compiling possible on large projects), qt5 is a graphics framework for drawing windows 
 (such as the SLiMgui window), qmake is a makefile generator specifically for qt projects, and mesa-utils, libgl1-mesa-glx, 
-and x11-apps provide tools to test that x11 and video drivers are working properly.
+and x11-apps provide tools to test that X11 and video drivers are working properly.
 
 The concept of software compilation is fascinating, so I will leave a link [here](https://www.youtube.com/watch?v=9mZw6Rwz1vg) 
 for anyone interested in learning more. 
@@ -404,10 +400,10 @@ sudo dpkg -i code_*
 
 ```
 The `*` is a wildcard that means 'anything': so any file that starts with code_ will be selected 
-(which there should only be one of, the installer you just downloaded with wget) `dpkg -i` is a command 
+(which there should only be one of, the installer you just downloaded with wget). `dpkg -i` is a command 
 to extract and process a debian package, with -i meaning to install it to root (rather than just to the current folder).
 
-You can open VS Code without opening a file, you can use `code .`
+You can open VS Code without opening a file, using `code .`
 When you load VS Code from your WSL Ubuntu installation, you'll get a message warning you that you should 
 install it on Windows instead. It stills works perfectly fine on Linux, you just have to press Y to accept 
 the message that appears:
@@ -417,7 +413,7 @@ If you want to install VS Code on Windows and connect remotely to your Ubuntu di
 have access to the Terminal etc.), you can download the installer for Windows from the [Visual Studio website](https://code.visualstudio.com/) 
 and install as usual. From there, you can install the [Remote-WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl), 
 which will run the VS Code UI on Windows, but all the inner workings on Linux, giving you access to all of the 
-useful tools Linux provides (such as Clang and gcc if you are working with compilers).
+useful tools Linux provides (such as Clang and gcc if you are working with a compiled language).
 
 When you work with VS Code, it will automatically detect what language your code is based on the filename. 
 For example, if you save a file as .py, VS Code will ask if you want to install a language extension for Python, 
@@ -428,4 +424,9 @@ showing mutation frequency dynamics, which VS Code would lack.
 
 Congratulations! You now have a Linux desktop, SLiM, RStudio, VSCode and FileZilla installed and ready to go 
 for exploring polygenic adaptation using computer simulations!
-![](images/chapter2/desktopapps.PNG "GNOME, SLiM, RStudio (Server) and FileZilla")
+<a href="./images/chapter2/desktopapps.PNG" target="_blank"><img src="./images/chapter2/desktopapps.PNG" width="100%" /></a>
+
+## Footnotes
+[^fn2] One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 
+The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever 
+reason you use WSL 1, remember to turn off real-time protection during your SLiM runs and then _remember to turn it back on when the run is finished_.
