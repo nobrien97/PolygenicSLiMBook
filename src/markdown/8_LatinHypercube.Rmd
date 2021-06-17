@@ -28,20 +28,37 @@ To generate LHCs in R, you can use the ```DoE.wrapper``` package, which nicely w
 LHC methods from ```LHS``` into an easy and user-friendly interface.
 
 ```{r, eval = F}
+# Script to generate a Latin hypercube for two parameters
 library(DoE.wrapper)
 
-lhc <- lhs.design(nruns = 256,
-           nfactors = 2,
-           seed = 1312022408,
-           type = "maximin",
-           factor.names = list(
-             param1 = c(0.0001, 1), 
-             param2 = c(0.0, 1.0)
-           ))
+# Sample a random 32 bit int as a seed for the LHC generation
+lhc_seed <- sample(0:.Machine$integer.max, 1)
 
+# In the example in chapter 8, this is 1868057774
+
+lhc <- lhs.design(
+  nruns = 512,
+  nfactors = 2,
+  type = "maximin",
+  factor.names = list(
+    param1 = c(0.0, 1.0),
+    param2 = c(100, 20000)),
+  seed = lhc_seed
+)
+
+# Diagnostics
+
+# Plot param1 against param2 to visualise any obvious gaps in sampling and correlations
 plot(lhc)
-hist(lhc$param1)
+
+# Return a matrix of correlations between factors
 cor(lhc)
+
+# Plot the histograms to check uniformity
+hist(lhc$param1)
+hist(lhc$param2)
+
+# Save the output to file
 
 write.csv(lhc, "./LHC.csv")
 ```
@@ -50,18 +67,27 @@ The `lhs.design` function creates a Latin hypercube of `nruns` samples, with `nf
 You can choose a method for sampling your parameter combinations with `type`. I find that most of the time 
 `maximin` is best suited to generate LHCs with maximised spaced between samples and minimised correlations
 between factors. `factor.names` is used to specify a list of factor names, and the minimum and maximum values
-to sample from. For example, here `param1` will be sampled from 0.0001 to 1. 
+to sample from. For example, here `param1` will be sampled from 0 to 1. 
 The function will output a dataframe, which you can save as a file to load and reference later.
 It's a good idea to run some diagnostics on your hypercube when its done before you go to use it. You're looking for 
 even spacing between samples (no obvious large gaps in sampling) and very little correlation between parameters,
 to ensure you get a good sample of all parameters' effects on your model. To do this, you can `plot` the LHC,
 which will give you a pairwise matrix of parameter combinations, showing you the spread of samples in the whole
-parameter space. You can also create histograms of each parameter to check that they are uniformly distributed, and
-run `cor` to get the correlations between parameter pairs.
+parameter space, which should look something like this:
+(![](images/chapter8/lhc_plot.png))
+
+You can also create histograms of each parameter to check that they are uniformly distributed with `hist()`, and
+run `cor` to get the correlations between parameter pairs:
+![](images/chapter8/lhc_hist_param1.png)
+![](images/chapter8/lhc_hist_param2.png)
+![](images/chapter8/lhc_cor.png)
+
 
 If you are satisfied that your hypercube looks uniformly distributed, there are no big gaps you aren't sampling in any of your 
 parameter combinations, and there is little correlation between parameters, then you are all good to save the hypercube with
 `write.csv()`.
+
+
 
 ## Running SLiM with hypercube parameters
 
