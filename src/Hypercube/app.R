@@ -2,24 +2,7 @@
 
 library(shiny)
 library(DoE.wrapper)
-
-# Helper functions
-
-numericInputInline <-function(inputId, label, value = "") 
-{
-  div(type = "text/css",
-      style="display: inline-block;
-             padding-right: 40px;",
-      tags$label(label, `for` = inputId), 
-      tags$input(id = inputId, type = "numeric", value = value, class = ))
-}
-
-selectInputInline <- function(inputId, label)
-{
-  div(style="label.control-label, .selectize-control.single{ display: table-cell; text-align: center; vertical-align: middle; } .form-group { display: table-row;}",
-      tags$label(label, `for` = inputId),
-      tags$input(id = inputId, choices = ))
-}
+library(dplyr)
 
 
 # Define UI
@@ -29,6 +12,9 @@ ui <- fluidPage(
   
   sidebarLayout(
     sidebarPanel(
+      h2("Debug"),
+      textOutput("debugtext"),
+      
       h2("Options"),
       # Generate hypercube button
       fluidRow(
@@ -52,14 +38,14 @@ ui <- fluidPage(
       ),
       sliderInput("nfactors",
                    h3("Number of hypercube parameters"),
-                   min = 1, max = 20, step = 1, value = 1),
+                   min = 2, max = 20, step = 1, value = 2),
       
       # Number of runs and LHC type
       fluidRow(
         column(width = 6, inline = T,
         numericInput("nruns",
                     "Number of samples",
-                    value = 512, step = 1)),
+                    value = 64, step = 1)),
         column(width = 6, inline = T,
         selectInput("lhctype", 
                     "Sampling method",
@@ -76,7 +62,9 @@ ui <- fluidPage(
       
 
     ),
-    mainPanel()
+    mainPanel(
+      plotOutput("hypercubeplot")
+    )
   )
   
 )
@@ -92,16 +80,17 @@ server <- function(input, output, session) {
 
       # Inputs and factor name
       fluidRow(
-        column(width = 3, h3(paste("Factor", i), align = "left")),
+        column(width = 4, h3(paste("Factor", i), align = "left")),
         column(width = 4,
-        selectInput(inputId = paste0("fac_type", i), label = h4("Data type"),
-                    list("Integer" = 1,
-                         "Float" = 2))),
+          textInput(inputId = paste0("fac_name", i), label = "Name", 
+                    value = paste("Parameter", i)),
+          selectInput(inputId = paste0("fac_type", i), label = "Data type",
+                    list("Integer",
+                         "Float"))),
         column(width = 4,
-        numericInput(inputId = paste0("fac_min", i), label = h4("Minimum"),
-                  value = 0)),
-        column(width = 4,
-        numericInput(inputId = paste0("fac_max", i), label = h4("Maximum"),
+          numericInput(inputId = paste0("fac_min", i), label = "Minimum",
+                  value = 0),
+          numericInput(inputId = paste0("fac_max", i), label = "Maximum",
                   value = 1)),
         align = "center"
 )
@@ -110,26 +99,62 @@ server <- function(input, output, session) {
   
   # Generate hypercube
   
-  eventReactive(input$genButton, {
+  observeEvent(input$genButton, {
     # Sample a random 32 bit int as a seed for the LHC generation
     lhc_seed <- sample(0:.Machine$integer.max, 1)
     
+    # Store factor information to copy into properly formatted list
+    facinput <- list(
+      name = paste0("input$", grep(pattern = "fac_name+[[:digit:]]", x = names(input), value = TRUE)),
+      min = 1:as.integer(input$nfactors),
+      max = 1:as.integer(input$nfactors),
+      type = 1:as.integer(input$nfactors)
+    )
+    # Fill in min and max 
+    for (i in seq_along(facinput$name)) {
+      facinput$min[i] = eval(parse(text = paste0("input$", grep(pattern = paste0("fac_min", i), x = names(input), value = TRUE))))
+      facinput$max[i] = eval(parse(text = paste0("input$", grep(pattern = paste0("fac_max", i), x = names(input), value = TRUE))))
+      facinput$type[i] = eval(parse(text = paste0("input$", grep(pattern = paste0("fac_type", i), x = names(input), value = TRUE))))
+    }
+
+    # Factor information in proper format
+    facoutput <- as.list(facinput$name)
+    for (i in seq_along(facoutput)) {
+      if (facinput$type[i] == "integer")
+        facoutput[[i]] = c(as.integer(round(facinput$min[i])), as.integer(round(facinput$max[i])))
+      else
+        facoutput[[i]] = c(facinput$min[i], facinput$max[i])
+    }
+    
+    parnames <- grep(pattern = "fac_name+[[:digit:]]", x = names(input), value = TRUE)
+    parnames <- paste0("input$fac_name", 1:length(parnames))
+    output$debugtext <- renderText({parnames})
+    
+    
+  for (i in seq_along(parnames)) {
+    parnames[i] <- eval(parse(text = parnames[i]))
+  }
+    names(facoutput) <- parnames
+    
+
+    # Run the lhs
     lhc <- lhs.design(
       nruns = as.integer(trunc(input$nruns)),
       nfactors = as.integer(input$nfactors),
       type = input$lhctype,
-      factor.names = list(
-        param1 = c(0.0, 1.0),
-        param2 = c(100, 20000)),
+      factor.names = facoutput,
       seed = lhc_seed
     )
+    
+    output$hypercubeplot <- renderPlot({
+      plot(lhc)
+    })
     
   })
   
   # Save output
   
   eventReactive(input$saveButton, {
-    print("saved")
     write.csv(input$lhc, input$Filepath)
   })
   
