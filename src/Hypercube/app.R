@@ -1,19 +1,80 @@
 # Shiny app to generate hypercubes, display their information, and save them to file
 
 library(shiny)
+library(shinyjs)
 library(DoE.wrapper)
-library(dplyr)
+
+
+# Initialise variables for factor generation
+
+num_factors <- 2
+current_id <- 1
+
+# Helper function to prevent user idiocy (generating LHC before the factors are generated)
+buttonLocker <- function(buttons) {
+  for (button in buttons)
+    toggleState(button)
+} 
+buttons <- c("saveButton", "genButton")
+
+
+# Modules for factor generation: https://stackoverflow.com/questions/62811707/shiny-dynamic-ui-resetting-to-original-values
+
+modFacDraw <- function(id) {
+  ns <- NS(id)
+
+  # Inputs and factor name
+  fluidRow(
+    id = id,
+    column(width = 4, inline = T, id = "facNum",
+           h3(paste("Factor", current_id), align = "left")), 
+    column(width = 4, inline = T,
+           uiOutput(ns("facName")), 
+           uiOutput(ns("facType"))),
+    column(width = 4, inline = T,
+           uiOutput(ns("facMin")),
+           uiOutput(ns("facMax"))),
+                                      
+    align = "center"
+  )
+}
+
+modFacServ <- function(input, output, session, data) {
+  ns <- session$ns
+  
+  output$facName <- renderUI({
+              textInput(inputId = ns("fac_name"), label = "Name", 
+                        placeholder = paste("Parameter", current_id))
+  })
+    
+  output$facType <- renderUI({
+              selectInput(inputId = ns("fac_type"), label = "Data type",
+              list("Integer",
+                   "Float"))
+  })
+              
+  output$facMin <- renderUI({
+              numericInput(inputId = ns("fac_min"), label = "Minimum",
+                           value = 0)
+  })
+    
+  output$facMax <- renderUI({
+              numericInput(inputId = ns("fac_max"), label = "Maximum",
+                           value = 1)
+      })
+}
 
 
 # Define UI
 
 ui <- fluidPage(
+  useShinyjs(),
   titlePanel(h1("Latin hypercube generator and visualiser")),
   
   sidebarLayout(
     sidebarPanel(
-      h2("Debug"),
-      textOutput("debugtext"),
+#      h2("Debug"),
+#      textOutput("debugtext"),
       
       h2("Options"),
       # Generate hypercube button
@@ -58,65 +119,97 @@ ui <- fluidPage(
                     ), selected = "maximin")
       )),
     
-      uiOutput("factors"),
-      
+    tags$div(id = "facInsert")
 
     ),
     mainPanel(
-      plotOutput("hypercubeplot")
+      plotOutput("hypercubeplot"),
+      
+      tableOutput("hypercubecor")
     )
   )
   
 )
 
+
+
 # Define server
 
 server <- function(input, output, session) {
+  # Disable buttons while factors aren't generated: stops issues with trying to 
+  # generate LHC while factors are still generating
   
-  # Generate factors
-  output$factors <- renderUI({
-    numFactors <- as.integer(input$nfactors)
-    lapply(1:numFactors, function(i) {
-
-      # Inputs and factor name
-      fluidRow(
-        column(width = 4, h3(paste("Factor", i), align = "left")),
-        column(width = 4,
-          textInput(inputId = paste0("fac_name", i), label = "Name", 
-                    value = paste("Parameter", i)),
-          selectInput(inputId = paste0("fac_type", i), label = "Data type",
-                    list("Integer",
-                         "Float"))),
-        column(width = 4,
-          numericInput(inputId = paste0("fac_min", i), label = "Minimum",
-                  value = 0),
-          numericInput(inputId = paste0("fac_max", i), label = "Maximum",
-                  value = 1)),
-        align = "center"
-)
-    })
-  })
+  buttonLocker(buttons)
+  # Generate factors: on initial load
+  
+  for (i in seq_len(num_factors)) {
+    insertUI(selector = "#facInsert",
+             ui = modFacDraw(paste0("module_", current_id)))
+    
+    callModule(modFacServ, paste0("module_", current_id))
+    
+    current_id <<- current_id + 1
+  }
+  buttonLocker(buttons)
+  
+  
+  # Update factors, adding or removing UI elements row wise
+  observeEvent(input$nfactors, {
+    buttonLocker(buttons)
+    
+    if (input$nfactors > num_factors) {
+      for (i in seq_len(input$nfactors - num_factors)) {
+    
+        
+        insertUI(selector = "#facInsert",
+                 ui = modFacDraw(paste0("module_", current_id)))
+        
+        callModule(modFacServ, paste0("module_", current_id))
+        
+        current_id <<- current_id + 1
+      }
+    } else {
+      for (i in seq_len(num_factors - input$nfactors)) {
+        removeUI(selector = paste0("#module_", current_id - 1))
+        current_id <<- current_id - 1
+      }
+    }
+    num_factors <<- input$nfactors
+    
+    buttonLocker(buttons)
+    
+}, ignoreInit = T)
+  
+  
   
   # Generate hypercube
   
   observeEvent(input$genButton, {
+    buttonLocker(buttons)
+    
     # Sample a random 32 bit int as a seed for the LHC generation
     lhc_seed <- sample(0:.Machine$integer.max, 1)
     
     # Store factor information to copy into properly formatted list
     facinput <- list(
-      name = paste0("input$", grep(pattern = "fac_name+[[:digit:]]", x = names(input), value = TRUE)),
+      name = 1:as.integer(input$nfactors),
       min = 1:as.integer(input$nfactors),
       max = 1:as.integer(input$nfactors),
       type = 1:as.integer(input$nfactors)
     )
-    # Fill in min and max 
+    
+    
+    
+    # Fill in min, max, type, and fix names so they are in the correct order
     for (i in seq_along(facinput$name)) {
-      facinput$min[i] = eval(parse(text = paste0("input$", grep(pattern = paste0("fac_min", i), x = names(input), value = TRUE))))
-      facinput$max[i] = eval(parse(text = paste0("input$", grep(pattern = paste0("fac_max", i), x = names(input), value = TRUE))))
-      facinput$type[i] = eval(parse(text = paste0("input$", grep(pattern = paste0("fac_type", i), x = names(input), value = TRUE))))
+      facinput$name[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_name`")))
+      facinput$min[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_min`")))
+      facinput$max[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_max`")))
+      facinput$type[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_type`")))
     }
-
+    
+    # This puts min, max and type in the correct order
+    
     # Factor information in proper format
     facoutput <- as.list(facinput$name)
     for (i in seq_along(facoutput)) {
@@ -126,17 +219,10 @@ server <- function(input, output, session) {
         facoutput[[i]] = c(facinput$min[i], facinput$max[i])
     }
     
-    parnames <- grep(pattern = "fac_name+[[:digit:]]", x = names(input), value = TRUE)
-    parnames <- paste0("input$fac_name", 1:length(parnames))
-    output$debugtext <- renderText({parnames})
+    
+    names(facoutput) <- facinput$name
     
     
-  for (i in seq_along(parnames)) {
-    parnames[i] <- eval(parse(text = parnames[i]))
-  }
-    names(facoutput) <- parnames
-    
-
     # Run the lhs
     lhc <- lhs.design(
       nruns = as.integer(trunc(input$nruns)),
@@ -150,12 +236,20 @@ server <- function(input, output, session) {
       plot(lhc)
     })
     
+    output$hypercubecor <- renderTable({
+      cor(lhc)
+    })
+    buttonLocker(buttons)
+    
   })
   
   # Save output
   
   eventReactive(input$saveButton, {
+    disable("genButton")
     write.csv(input$lhc, input$Filepath)
+    enable("genButton")
+    
   })
   
 }
