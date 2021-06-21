@@ -2,16 +2,20 @@
 
 library(shiny)
 library(shinyjs)
+library(shinyalert)
 library(DoE.wrapper)
 library(ggplot2)
 library(GGally)
 
 
-# Initialise variables for factor generation
+# Initialise variables 
 
 num_factors <- 2 # keep track of the number of factors being added/removed at a time
 current_id <- 1 # current module ID for adding factors
 facCount <- 2 # current total count of factors, for plot width/height in ui()
+
+hasBeenPressed <- c(FALSE, FALSE) # Since dynamic elements aren't playing nicely with IgnoreInit and IgnoreNULL, we need
+                                  # to manually check if our generation buttons have been pressed yet or not
 
 # Helper function to prevent user idiocy (generating LHC before the factors are generated)
 buttonLocker <- function(buttons) {
@@ -74,6 +78,7 @@ modFacServ <- function(input, output, session, data) {
 
 ui <- fluidPage(
   useShinyjs(),
+  useShinyalert(),
   titlePanel(h1("Latin hypercube generator and visualiser")),
   
   sidebarLayout(
@@ -88,7 +93,9 @@ ui <- fluidPage(
                actionButton(inputId = "genButton",
                             label = "Generate hypercube!",
                             icon = icon("play")))
+
       ),
+      
       br(),
       # Save button and filepath entry
       fluidRow(style = "display:inline-block;",
@@ -116,21 +123,26 @@ ui <- fluidPage(
         selectInput("lhctype", 
                     "Sampling method",
                     choices = list(
-                                "genetic",
-                                "improved",
-                                "maximin",
-                                "optimum",
-                                "random"
-                    ), selected = "maximin")
+                                "Genetic Algorithm" = "genetic",
+                                "Euclidean Distance" = "improved",
+                                "Maximise Minimum Distance" = "maximin",
+                                "Columnwise Pairwise" = "optimum",
+                                "Random" = "random"
+                    ), selected = "maximin"),
+        helpText(tags$a(href="https://cran.r-project.org/web/packages/lhs/lhs.pdf", target="_blank", 
+                        "Information on each option can be found in the docs for LHS")),
+        
       )),
     
     tags$div(id = "facInsert")
 
     ),
     mainPanel(
+      h2("Diagnostics"),
       column(width = 12,
              tags$div(id = "plotInsert")),
       div(),
+
       
     )
   )
@@ -192,6 +204,13 @@ server <- function(input, output, session) {
   # Generate hypercube
   
   observeEvent(input$genButton, {
+    
+    if (input$genButton == TRUE)
+      hasBeenPressed[1] <<- TRUE
+    
+    if (!hasBeenPressed[1])
+      return()
+    
     buttonLocker(buttons)
     
     
@@ -246,44 +265,70 @@ server <- function(input, output, session) {
     
     # If we've run this before, we need to remove the existing plot for the cor table to draw properly
     removeUI(selector = "#hcPlotCor", immediate = T)
+
     
 
     insertUI(selector = "#plotInsert",
              ui = tags$div(id = "hcPlotCor",
+                           h3("Hypercube distribution and correlations"),
                            plotOutput("hypercubeplot", width = 250*input$nfactors, height = 250*input$nfactors),
-                           tableOutput("hcCorTable")
+                           h4(paste0("Seed: ", as.character(lhc_seed))),
+                           br(),
+                           h3("Correlation matrix"),
+                           fluidRow(
+                             column(width = 6, 
+                              tableOutput("hcCorTable")
+                           )
              )
-    )
+    ))
+    
+    
+    # Render output figures
     
     output$hypercubeplot <- renderPlot(
       width = 250*input$nfactors,
       height = 250*input$nfactors,
       {
         ggpairs(lhc, progress = F,
-          lower = list(continuous = wrap("points", size = 0.1))) +
+          lower = list(continuous = wrap("points", size = 0.1)),
+          upper = list(continuous = wrap("cor", size=10))) +
           theme_classic() +
           theme(text = element_text(size = 22, face = "bold"),
-                panel.spacing = unit(1, "lines")
+                panel.spacing = unit(1.5, "lines")
           )
       })
-    
     
     output$hcCorTable <- renderTable({
       cor(lhc)
     })
     
-    
 
     buttonLocker(buttons)
+
+    # return lhc for saving
+    lhcFile <<- lhc
+    
     
   })
   
   # Save output
   
-  eventReactive(input$saveButton, {
-    disable("genButton")
-    write.csv(input$lhc, input$Filepath)
-    enable("genButton")
+  observeEvent(input$saveButton, {
+    if (input$saveButton == TRUE)
+      hasBeenPressed[2] <<- TRUE
+    
+    if (!hasBeenPressed[2])
+      return()
+    
+    buttonLocker(buttons)
+    savePath <- input$saveText
+    if (!exists("lhcFile")) {
+      shinyalert("Error", "To save a hypercube, you must first generate a hypercube. Such is the way of our linear understanding of time.", type = "error")
+    } else if (!exists("savePath")) {
+      shinyalert("Error", "Enter a filepath to save your hypercube to.")
+    } else
+        write.csv(lhcFile, savePath)
+    buttonLocker(buttons)
     
   })
   
