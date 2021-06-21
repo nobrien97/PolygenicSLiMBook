@@ -80,7 +80,9 @@ ui <- fluidPage(
   useShinyjs(),
   useShinyalert(),
   titlePanel(h1("Latin hypercube generator and visualiser")),
-  
+  renderImage({
+    image
+  }),
   sidebarLayout(
     sidebarPanel(
 #      h2("Debug"),
@@ -134,7 +136,12 @@ ui <- fluidPage(
         
       )),
     
-    tags$div(id = "facInsert")
+    tags$div(id = "facInsert"),
+    
+    br(),
+    h6("© OB Lab, 2021"),
+    h6(tags$a(href="https://github.com/nobrien97", target="_blank", 
+              "Author: Nick O'Brien"))
 
     ),
     mainPanel(
