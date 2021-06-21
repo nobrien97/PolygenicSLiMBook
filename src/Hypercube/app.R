@@ -3,12 +3,15 @@
 library(shiny)
 library(shinyjs)
 library(DoE.wrapper)
+library(ggplot2)
+library(GGally)
 
 
 # Initialise variables for factor generation
 
-num_factors <- 2
-current_id <- 1
+num_factors <- 2 # keep track of the number of factors being added/removed at a time
+current_id <- 1 # current module ID for adding factors
+facCount <- 2 # current total count of factors, for plot width/height in ui()
 
 # Helper function to prevent user idiocy (generating LHC before the factors are generated)
 buttonLocker <- function(buttons) {
@@ -39,13 +42,14 @@ modFacDraw <- function(id) {
   )
 }
 
+
 modFacServ <- function(input, output, session, data) {
   ns <- session$ns
   
   output$facName <- renderUI({
               textInput(inputId = ns("fac_name"), label = "Name", 
-                        placeholder = paste("Parameter", current_id))
-  })
+                        placeholder = paste("Parameter", substr(ns(NULL), 8, nchar(ns(NULL))))) # forgive me
+  })                                                    # id is module_x, we need x, so substring it
     
   output$facType <- renderUI({
               selectInput(inputId = ns("fac_type"), label = "Data type",
@@ -63,6 +67,7 @@ modFacServ <- function(input, output, session, data) {
                            value = 1)
       })
 }
+
 
 
 # Define UI
@@ -123,9 +128,10 @@ ui <- fluidPage(
 
     ),
     mainPanel(
-      plotOutput("hypercubeplot"),
+      column(width = 12,
+             tags$div(id = "plotInsert")),
+      div(),
       
-      tableOutput("hypercubecor")
     )
   )
   
@@ -176,6 +182,7 @@ server <- function(input, output, session) {
     }
     num_factors <<- input$nfactors
     
+    
     buttonLocker(buttons)
     
 }, ignoreInit = T)
@@ -186,6 +193,7 @@ server <- function(input, output, session) {
   
   observeEvent(input$genButton, {
     buttonLocker(buttons)
+    
     
     # Sample a random 32 bit int as a seed for the LHC generation
     lhc_seed <- sample(0:.Machine$integer.max, 1)
@@ -203,10 +211,14 @@ server <- function(input, output, session) {
     # Fill in min, max, type, and fix names so they are in the correct order
     for (i in seq_along(facinput$name)) {
       facinput$name[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_name`")))
+      if (facinput$name[i] == "")
+        facinput$name[i] = paste("Parameter", i)
       facinput$min[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_min`")))
       facinput$max[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_max`")))
       facinput$type[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_type`")))
     }
+    
+
     
     # This puts min, max and type in the correct order
     
@@ -230,15 +242,38 @@ server <- function(input, output, session) {
       type = input$lhctype,
       factor.names = facoutput,
       seed = lhc_seed
+    ) 
+    
+    # If we've run this before, we need to remove the existing plot for the cor table to draw properly
+    removeUI(selector = "#hcPlotCor", immediate = T)
+    
+
+    insertUI(selector = "#plotInsert",
+             ui = tags$div(id = "hcPlotCor",
+                           plotOutput("hypercubeplot", width = 250*input$nfactors, height = 250*input$nfactors),
+                           tableOutput("hcCorTable")
+             )
     )
     
-    output$hypercubeplot <- renderPlot({
-      plot(lhc)
-    })
+    output$hypercubeplot <- renderPlot(
+      width = 250*input$nfactors,
+      height = 250*input$nfactors,
+      {
+        ggpairs(lhc, progress = F,
+          lower = list(continuous = wrap("points", size = 0.1))) +
+          theme_classic() +
+          theme(text = element_text(size = 22, face = "bold"),
+                panel.spacing = unit(1, "lines")
+          )
+      })
     
-    output$hypercubecor <- renderTable({
+    
+    output$hcCorTable <- renderTable({
       cor(lhc)
     })
+    
+    
+
     buttonLocker(buttons)
     
   })
