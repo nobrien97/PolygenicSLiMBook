@@ -24,7 +24,7 @@
 <meta name="author" content="Nick O’Brien" />
 
 
-<meta name="date" content="2021-06-17" />
+<meta name="date" content="2021-06-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -223,6 +223,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.3" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#generating-hypercubes-in-r"><i class="fa fa-check"></i><b>8.3</b> Generating hypercubes in R</a></li>
 <li class="chapter" data-level="8.4" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#running-slim-with-hypercube-parameters"><i class="fa fa-check"></i><b>8.4</b> Running SLiM with hypercube parameters</a></li>
 <li class="chapter" data-level="8.5" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#considerations"><i class="fa fa-check"></i><b>8.5</b> Considerations</a></li>
+<li class="chapter" data-level="8.6" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#app"><i class="fa fa-check"></i><b>8.6</b> App</a></li>
 </ul></li>
 </ul>
 
@@ -334,6 +335,11 @@ Hence, they are better suited to be analysed as a whole rather than in sections.
 combinations by creating levels from ranges of values. For example, the first third of your parameter range could be assigned ‘Low’,
 the middle third being ‘Medium’ and the top third being ‘High’. However, it’s usually not necessary to do this unless you are missing
 combinations of particular parameters, which can occur if you do not have enough samples (<code>nruns</code> in <code>lhs.design()</code>).</p>
+</div>
+<div id="app" class="section level2" number="8.6">
+<h2><span class="header-section-number">8.6</span> App</h2>
+<p>I’ve written a little Shiny app to generate your hypercubes for you: it will show you all the diagnostic plots I have explained above,
+and allow you to save the file to an arbitrary location. You can run it yourself from <a href="https://github.com/nobrien97/PolygenicSLiMBook/blob/main/src/Hypercube/app.R"><code>Hypercube/app.R</code></a></p>
 
 </div>
 </div>

@@ -24,3 +24,9 @@ body {
 .smallnote {
   font-size: 14px;
 }
+
+.fullwidth {
+  .book .book-body .page-wrapper .page-inner {
+  max-width: 90%;
+  }
+}

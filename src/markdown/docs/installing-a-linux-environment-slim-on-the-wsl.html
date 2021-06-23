@@ -24,7 +24,7 @@
 <meta name="author" content="Nick O’Brien" />
 
 
-<meta name="date" content="2021-06-17" />
+<meta name="date" content="2021-06-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -223,6 +223,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.3" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#generating-hypercubes-in-r"><i class="fa fa-check"></i><b>8.3</b> Generating hypercubes in R</a></li>
 <li class="chapter" data-level="8.4" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#running-slim-with-hypercube-parameters"><i class="fa fa-check"></i><b>8.4</b> Running SLiM with hypercube parameters</a></li>
 <li class="chapter" data-level="8.5" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#considerations"><i class="fa fa-check"></i><b>8.5</b> Considerations</a></li>
+<li class="chapter" data-level="8.6" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html#app"><i class="fa fa-check"></i><b>8.6</b> App</a></li>
 </ul></li>
 </ul>
 
@@ -272,7 +273,7 @@ they are a .txt or something, but they are exposed to the filesystem in the same
 to /dev/null will silence the output so it isn’t displayed in the terminal:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim # With output</span></code></pre></div>
 <pre><code>## // Initial random seed:
-## 1682804588459
+## 1679918223841
 ## 
 ## // RunInitializeCallbacks():
 ## initializeMutationRate(1e-07);
@@ -288,16 +289,16 @@ to /dev/null will silence the output so it isn’t displayed in the terminal:</p
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim <span class="op">&gt;</span> /dev/null # Output nullified</span></code></pre></div>
 <p>/dev/urandom will generate pseudorandom numbers:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">od</span> -d /dev/urandom <span class="kw">|</span> <span class="fu">head</span> <span class="co"># Generate random decimal integers</span></span></code></pre></div>
-<pre><code>## 0000000 65311 20395 50337 21963 58148 18617 14317 39458
-## 0000020 41734  4612 22858 27412 11612  6649 20266 49042
-## 0000040 22352 21360 48068 60646 18598 42026 24459 19658
-## 0000060 64521 25040 34672  2046 41096 45365 57587 44056
-## 0000100 50737  1677 42788 57606  8090 24336 16186 61889
-## 0000120 48069  1227  2372 25529 33046 39162  7025 57900
-## 0000140  6067 20798 11600 42378 32419 22044 27727 25261
-## 0000160 29726 33943 62183 37708 55454 21767 41968  9894
-## 0000200 15215 41132 25540  4962 56964 18241 59300 36139
-## 0000220 24741  1935 29712 35194 27749   986 16194 39531</code></pre>
+<pre><code>## 0000000 49473 62642 39162 60354 43415 28262 34637 43272
+## 0000020 37287 51740 23403 61073  4744 34036 16526 27691
+## 0000040 47015 55830 35768 37312 54908 46203 32997   194
+## 0000060 12568 65266 51873 59737 19103 34751 44872 28857
+## 0000100 58749  4642 20148 36156 19422 21029 63516 24848
+## 0000120 19337 34192 16090 20969 53637 26150 30036 21375
+## 0000140 61601 15296 46010  9991 22598 63648 12359 56733
+## 0000160 16250  4098 64641 18452  7074 35670 14319  8846
+## 0000200  2198 34358 56998 58000 47939 50078 11273 14324
+## 0000220 62497 47386 58999  5452 35665 64885 23154 18975</code></pre>
 <p>The power of having these very specific commands which can act on a lot of different types of files is that Linux users can
 chain together these commands to efficiently solve a larger problem.</p>
 </div>

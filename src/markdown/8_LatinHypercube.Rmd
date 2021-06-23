@@ -1,4 +1,3 @@
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -107,3 +106,9 @@ Hence, they are better suited to be analysed as a whole rather than in sections.
 combinations by creating levels from ranges of values. For example, the first third of your parameter range could be assigned 'Low',
 the middle third being 'Medium' and the top third being 'High'. However, it's usually not necessary to do this unless you are missing 
 combinations of particular parameters, which can occur if you do not have enough samples (`nruns` in `lhs.design()`). 
+
+
+## App 
+
+I've written a little Shiny app to generate your hypercubes for you: it will show you all the diagnostic plots I have explained above,
+and allow you to save the file to an arbitrary location. You can run it yourself from [`Hypercube/app.R`](https://github.com/nobrien97/PolygenicSLiMBook/blob/main/src/Hypercube/app.R)

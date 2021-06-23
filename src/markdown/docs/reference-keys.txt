@@ -65,3 +65,4 @@ what-is-latin-hypercube-sampling
 generating-hypercubes-in-r
 running-slim-with-hypercube-parameters
 considerations
+app
