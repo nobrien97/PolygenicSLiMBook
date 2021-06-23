@@ -11,7 +11,8 @@ rmd_files: [
 	"5_polygenicSlim.Rmd",
 	"6_slimInParallel.Rmd",
 	"7_slimOnHPC.Rmd",
-	"8_LatinHypercube.Rmd"
+	"8_LatinHypercube.Rmd",
+	"9_slimData"
 
 ]
 
