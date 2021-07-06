@@ -7,12 +7,12 @@ rmd_files: [
 	"1_introduction.rmd",
 	"2_installation.Rmd",
 	"3_terminal.Rmd",
-	"dummy",
+	"dummy.Rmd",
 	"5_polygenicSlim.Rmd",
 	"6_slimInParallel.Rmd",
 	"7_slimOnHPC.Rmd",
 	"8_LatinHypercube.Rmd",
-	"9_slimData"
+	"9_slimData.Rmd"
 
 ]
 

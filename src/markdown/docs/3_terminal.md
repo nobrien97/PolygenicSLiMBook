@@ -105,12 +105,7 @@ cowsay "I don't think, therefore I don't am."
 ```
 
 ```
-## Q:	What did Tarzan say when he saw the elephants coming over the hill?
-## A:	"The elephants are coming over the hill."
-## 
-## Q:	What did he say when saw them coming over the hill wearing
-## 		sunglasses?
-## A:	Nothing, for he didn't recognize them.
+## Stay the curse.
 ##  ______________________________________
 ## < I don't think, therefore I don't am. >
 ##  --------------------------------------
@@ -202,8 +197,13 @@ fortune | cowsay
 
 ```
 ##  _________________________________________
-## / You have a strong appeal for members of \
-## \ your own sex.                           /
+## / "I understand this is your first dead   \
+## | client," Sabian was saying. The         |
+## | absurdity of the statement made me want |
+## | to laugh but they don't call me Deadpan |
+## | Allie and lie.                          |
+## |                                         |
+## \ -- Pat Cadigan, "Mindplayers"           /
 ##  -----------------------------------------
 ##         \   ^__^
 ##          \  (oo)\_______

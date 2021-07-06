@@ -1,6 +1,3 @@
----
-runtime: shiny
----
 
 
 # Latin Hypercube Sampling
