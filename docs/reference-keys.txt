@@ -35,6 +35,7 @@ width
 printh
 samplerate
 modelindex
+footnotes-1
 running-slim-in-parallel
 overview-4
 slim-at-the-command-line
@@ -45,7 +46,7 @@ running-slim-via-a-c-program
 writing-slim-code-with-parallelism-in-mind
 single-file-output
 multiple-file-output
-footnotes-1
+footnotes-2
 running-slim-on-a-hpc-cluster
 overview-5
 connecting-to-tinaroo-and-set-up
@@ -55,7 +56,7 @@ job-array-slim-jobs
 embedded-nimrod-slim-jobs
 estimating-simulation-time
 other-considerations
-footnotes-2
+footnotes-3
 latin-hypercube-sampling
 overview-6
 what-is-latin-hypercube-sampling
@@ -67,4 +68,4 @@ working-with-slim-data
 overview-7
 an-example-of-saving-space-in-custom-slim-output
 compression
-footnotes-3
+footnotes-4

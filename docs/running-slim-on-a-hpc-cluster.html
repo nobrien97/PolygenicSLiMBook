@@ -181,6 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3.9" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#samplerate"><i class="fa fa-check"></i><b>5.3.9</b> samplerate</a></li>
 <li class="chapter" data-level="5.3.10" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#modelindex"><i class="fa fa-check"></i><b>5.3.10</b> modelindex</a></li>
 </ul></li>
+<li class="chapter" data-level="5.4" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#footnotes-1"><i class="fa fa-check"></i><b>5.4</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html"><i class="fa fa-check"></i><b>6</b> Running SLiM in Parallel</a>
 <ul>
@@ -195,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
 <li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
 </ul></li>
-<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-1"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-2"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
 <ul>
@@ -209,7 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
-<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-3"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -225,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-4"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -280,7 +281,7 @@ so scripts on your HPC system may look slightly different to the examples given.
 24 cores and 120GB of RAM for a total of 4 hours. Tinaroo’s nodes contain 2 12 core processors (for 24 cores total), and 128GB of RAM,
 with 8GB reserved for system memory. Hence, we are asking for all of the available resources of a single node for 4 hours.
 The <code>-I</code> flag indicates the job is interactive, and the <code>-X</code> enables X-Forwarding, so if you would like to use RStudio,
-the RStudio window will appear for you on your home machine, instead of disappearing into the cybervoid<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
+the RStudio window will appear for you on your home machine, instead of disappearing into the cybervoid<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>.</p>
 <p>You’ll be put into a queue for a brief period (maybe not-so-brief, depending on load), and then you will be connected to a compute node.
 Now we can get to work. You’ll want to make a new directory for your SLiM installation (<code>mkdir ~/SLiM</code>), and download and build SLiM.
 You will have to build SLiM manually as per the instructions in the SLiM manual, as the installation script will not work without
@@ -726,15 +727,15 @@ data, copying this across can still be slow. Unfortunately, since most of the da
 Nonetheless, using tools such as <code>gzip</code>, <code>tar</code> and <code>zip</code> can help with reducing the size of your output for easier transfer from the HPC’s network
 to your more permanent storage facility (either a local drive or another cloud storage service).</p>
 </div>
-<div id="footnotes-2" class="section level2" number="7.7">
+<div id="footnotes-3" class="section level2" number="7.7">
 <h2><span class="header-section-number">7.7</span> Footnotes</h2>
 
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="7">
-<li id="fn7"><p>Technical term.<a href="running-slim-on-a-hpc-cluster.html#fnref7" class="footnote-back">↩︎</a></p></li>
+<ol start="8">
+<li id="fn8"><p>Technical term.<a href="running-slim-on-a-hpc-cluster.html#fnref8" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

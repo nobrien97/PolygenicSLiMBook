@@ -18,11 +18,8 @@ or which parts can be removed if you don't need them and want to maximise your s
 
 The first example we'll go over models a single polygenic trait evolving through either drift, stabilising selection, or directional selection. 
 This template has been built to be very broad, with a large array of parameters. These parameters are defined at the top of the file - 
-any line beginning with ```SetCfgParam()``` is a different parameter you may adjust$^*$. The defaults are set based on realistic values, with sources 
+any line beginning with ```SetCfgParam()``` is a different parameter you may adjust[^fn10]. The defaults are set based on realistic values, with sources 
 cited in comments. See Box 5.2.1 for information on each of these parameters.
-
-$^*$ : ```SetCfgParam()``` is based on the SLiM function ```defineConstant()```, but works for both command line and SLiMgui so no changes are
-       necessary to switch between the two.
 
 The model begins with a specified number of generations of burn-in (given via the parameter ```burnTime```). 
 This burn-in period involves mutations subject to neutral drift, which yields standing genetic variation for selection to act on when a fitness function 
@@ -163,6 +160,9 @@ one column to identify the parameters which led to a result rather than a column
 input with regards to mutation output, which grows to potentially 100s of gigabytes in size.
 
 
+## Footnotes
 
+[^fn10]: ```SetCfgParam()``` is based on the SLiM function ```defineConstant()```, but works for both command line and SLiMgui so no changes are 
+necessary to switch between the two.
 
 

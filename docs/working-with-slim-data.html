@@ -181,6 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3.9" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#samplerate"><i class="fa fa-check"></i><b>5.3.9</b> samplerate</a></li>
 <li class="chapter" data-level="5.3.10" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#modelindex"><i class="fa fa-check"></i><b>5.3.10</b> modelindex</a></li>
 </ul></li>
+<li class="chapter" data-level="5.4" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#footnotes-1"><i class="fa fa-check"></i><b>5.4</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html"><i class="fa fa-check"></i><b>6</b> Running SLiM in Parallel</a>
 <ul>
@@ -195,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
 <li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
 </ul></li>
-<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-1"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-2"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
 <ul>
@@ -209,7 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
-<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-3"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -225,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-4"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -295,14 +296,14 @@ less often than the other output (line 420), to ensure the simulation is fast, a
 <p>Another option is to compress your output. SLiM does have an option to compress custom output (via the <code>writeFile(compress = T)</code> argument),
 however keep in mind this will raise the memory footprint of your model. As the documentation says, "If the compress option is used in conjunction
 with append==T, Eidos will buffer data to append and flush it to the file in a delayed fashion (for performance reasons), and so appended data
-may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example)."<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></p>
+may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example)."<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></p>
 <p>In English, that means that SLiM holds onto the data that would be written to the file until it has time to decompress the file, add the new output line/s,
 and recompress the file. This probably won’t happen until the end of the simulation, however you can force this process to happen using the
 function <code>flushFile()</code>, which will stick all the ‘waiting-to-be-written’ lines of output onto the file and clear the queue. For example, if you are
 appending output to a file every 50 generations, and you wanted to compress this output, you could use <code>flushFile()</code> to keep your RAM usage under control
 by calling <code>flushFile()</code> every 500 generations or so.</p>
 </div>
-<div id="footnotes-3" class="section level2" number="9.4">
+<div id="footnotes-4" class="section level2" number="9.4">
 <h2><span class="header-section-number">9.4</span> Footnotes</h2>
 
 </div>
@@ -322,10 +323,12 @@ by calling <code>flushFile()</code> every 500 generations or so.</p>
 
 
 
+
+
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: <a href="http://benhaller.com/slim/Eidos_Manual.pdf" class="uri">http://benhaller.com/slim/Eidos_Manual.pdf</a><a href="working-with-slim-data.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<ol start="9">
+<li id="fn9"><p>Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: <a href="http://benhaller.com/slim/Eidos_Manual.pdf" class="uri">http://benhaller.com/slim/Eidos_Manual.pdf</a><a href="working-with-slim-data.html#fnref9" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

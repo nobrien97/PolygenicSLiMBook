@@ -181,6 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3.9" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#samplerate"><i class="fa fa-check"></i><b>5.3.9</b> samplerate</a></li>
 <li class="chapter" data-level="5.3.10" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#modelindex"><i class="fa fa-check"></i><b>5.3.10</b> modelindex</a></li>
 </ul></li>
+<li class="chapter" data-level="5.4" data-path="polygenic-adaptation-in-slim.html"><a href="polygenic-adaptation-in-slim.html#footnotes-1"><i class="fa fa-check"></i><b>5.4</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html"><i class="fa fa-check"></i><b>6</b> Running SLiM in Parallel</a>
 <ul>
@@ -195,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.7.1" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#single-file-output"><i class="fa fa-check"></i><b>6.7.1</b> Single file output</a></li>
 <li class="chapter" data-level="6.7.2" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#multiple-file-output"><i class="fa fa-check"></i><b>6.7.2</b> Multiple file output</a></li>
 </ul></li>
-<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-1"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
+<li class="chapter" data-level="6.8" data-path="running-slim-in-parallel.html"><a href="running-slim-in-parallel.html#footnotes-2"><i class="fa fa-check"></i><b>6.8</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html"><i class="fa fa-check"></i><b>7</b> Running SLiM on a HPC Cluster</a>
 <ul>
@@ -209,7 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
-<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-3"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -225,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-4"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -257,10 +258,8 @@ or which parts can be removed if you don’t need them and want to maximise your
 <h2><span class="header-section-number">5.2</span> A Single Polygenic Trait (Chp5-1_1T.slim)</h2>
 <p>The first example we’ll go over models a single polygenic trait evolving through either drift, stabilising selection, or directional selection.
 This template has been built to be very broad, with a large array of parameters. These parameters are defined at the top of the file -
-any line beginning with <code>SetCfgParam()</code> is a different parameter you may adjust<span class="math inline">\(^*\)</span>. The defaults are set based on realistic values, with sources
+any line beginning with <code>SetCfgParam()</code> is a different parameter you may adjust<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. The defaults are set based on realistic values, with sources
 cited in comments. See Box 5.2.1 for information on each of these parameters.</p>
-<p><span class="math inline">\(^*\)</span> : <code>SetCfgParam()</code> is based on the SLiM function <code>defineConstant()</code>, but works for both command line and SLiMgui so no changes are
-necessary to switch between the two.</p>
 <p>The model begins with a specified number of generations of burn-in (given via the parameter <code>burnTime</code>).
 This burn-in period involves mutations subject to neutral drift, which yields standing genetic variation for selection to act on when a fitness function
 is applied. The idea is for the population to be at mutation-drift equilibrium by the time the selection regime is applied.
@@ -458,9 +457,19 @@ identify those models. This is more useful when combined with interactions betwe
 used as a proxy for all of your variables, saving considerable space when storing output. For example, you will only need
 one column to identify the parameters which led to a result rather than a column for each parameter. This is particularly
 input with regards to mutation output, which grows to potentially 100s of gigabytes in size.</p>
+</div>
+</div>
+<div id="footnotes-1" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Footnotes</h2>
 
 </div>
 </div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p><code>SetCfgParam()</code> is based on the SLiM function <code>defineConstant()</code>, but works for both command line and SLiMgui so no changes are
+necessary to switch between the two.<a href="polygenic-adaptation-in-slim.html#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
