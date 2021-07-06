@@ -7,7 +7,7 @@ rmd_files: [
 	"1_introduction.rmd",
 	"2_installation.Rmd",
 	"3_terminal.Rmd",
-	"4_polygenicAdaptation.Rmd",
+	"dummy",
 	"5_polygenicSlim.Rmd",
 	"6_slimInParallel.Rmd",
 	"7_slimOnHPC.Rmd",

@@ -6,7 +6,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # A Brief Overview of Polygenic Adaptation
 
+TODO: Finish this section
 ## Overview
+
+
 
 Before you simulate anything it's important that you have a clear view of what's you are trying to achieve with your model. 
 This makes it considerably easier to find and fix bugs/unintended behaviour within your model, as well as making it easier 
@@ -34,7 +37,7 @@ rather than genes as the focal point, look at the traits instead.
 
 ## Fisher's Geometrical model of adaptation
 
-In 1930, Ronald Fisher published a seminal paper which revolutionised the way biologists thought about adaptation[^fn3]. 
+In 1930, Ronald Fisher published a seminal paper (really a book) which revolutionised the way biologists thought about adaptation[^fn3]. 
 In this paper, Fisher described his geometric model of adaptation (FGM), where traits evolve by mutations which have a 
 given effect on the trait. If a phenotypic optimum exists, and a population's mean phenotype starts some distance away 
 from that optimum, then mutations that move a population's mean closer to that optimum phenotype are beneficial. 
