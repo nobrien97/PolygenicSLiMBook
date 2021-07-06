@@ -53,7 +53,7 @@ slim ~/PolygenicSLiM/box2.1.slim # With output
 
 ```
 ## // Initial random seed:
-## 1728467477080
+## 1731297617719
 ## 
 ## // RunInitializeCallbacks():
 ## initializeMutationRate(1e-07);
@@ -79,16 +79,16 @@ od -d /dev/urandom | head # Generate random decimal integers
 ```
 
 ```
-## 0000000 45881 21358 23755 43260 37003 63826 28758 54547
-## 0000020 26026 21181 57201 28952 14777 39685 63239 42006
-## 0000040 36879 41281 14304 18888  5188 48286  4841 65143
-## 0000060 38513  7227 31979 61791 17303  2540 42492  5552
-## 0000100 43620 45287 56485 30795  6343 28781 10671 17975
-## 0000120 16343 40795 20643 33099 36547 59233  2730 16878
-## 0000140 65486  9856 14515 12518 18479 52619 25981 61300
-## 0000160  8766 16707 17097 45748 11046 60244 65371 30874
-## 0000200  1177 14823 12320 37116 44791 21899 20414 53885
-## 0000220 63657 24207  7292 51891  3919 16833 59650 32314
+## 0000000 53834 37313 28164 22638 24519 10509 38065 61564
+## 0000020 28346  9348 52215 47305 11700 58358 46452 41526
+## 0000040 45192 17575  7585 46722 63502 61507 39532 53990
+## 0000060 64752 53704 64565 59033 31105 17965 55951 38873
+## 0000100 34664 40136 58661 50656 52096 37816 64025 36371
+## 0000120 42212  9542 44779 54050 55853 31035  3587 32137
+## 0000140  9468 38228 46581 64876 14483 40201 56641  8433
+## 0000160 49357 36056 28690 18730 22040  4395 56142 58091
+## 0000200 23829 24847 12993 44904 12243  4640 64583 40971
+## 0000220 13596 24421   975 47525 40801 59115 30932 46945
 ```
 
 The power of having these very specific commands which can act on a lot of different types of files is that Linux users can 
@@ -427,6 +427,6 @@ for exploring polygenic adaptation using computer simulations!
 <a href="./images/chapter2/desktopapps.PNG" target="_blank"><img src="./images/chapter2/desktopapps.PNG" width="100%" /></a>
 
 ## Footnotes
-[^fn2] One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 
+[^fn2]: One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 
 The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever 
 reason you use WSL 1, remember to turn off real-time protection during your SLiM runs and then _remember to turn it back on when the run is finished_.

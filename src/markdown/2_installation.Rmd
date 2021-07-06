@@ -380,6 +380,6 @@ knitr::include_graphics('./images/chapter2/desktopapps.PNG')
 ```
 
 ## Footnotes
-[^fn2] One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 
+[^fn2]: One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious. 
 The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever 
 reason you use WSL 1, remember to turn off real-time protection during your SLiM runs and then _remember to turn it back on when the run is finished_.

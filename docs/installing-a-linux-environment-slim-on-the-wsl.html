@@ -275,7 +275,7 @@ they are a .txt or something, but they are exposed to the filesystem in the same
 to /dev/null will silence the output so it isn’t displayed in the terminal:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim # With output</span></code></pre></div>
 <pre><code>## // Initial random seed:
-## 1728467477080
+## 1731297617719
 ## 
 ## // RunInitializeCallbacks():
 ## initializeMutationRate(1e-07);
@@ -291,16 +291,16 @@ to /dev/null will silence the output so it isn’t displayed in the terminal:</p
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim <span class="op">&gt;</span> /dev/null # Output nullified</span></code></pre></div>
 <p>/dev/urandom will generate pseudorandom numbers:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">od</span> -d /dev/urandom <span class="kw">|</span> <span class="fu">head</span> <span class="co"># Generate random decimal integers</span></span></code></pre></div>
-<pre><code>## 0000000 45881 21358 23755 43260 37003 63826 28758 54547
-## 0000020 26026 21181 57201 28952 14777 39685 63239 42006
-## 0000040 36879 41281 14304 18888  5188 48286  4841 65143
-## 0000060 38513  7227 31979 61791 17303  2540 42492  5552
-## 0000100 43620 45287 56485 30795  6343 28781 10671 17975
-## 0000120 16343 40795 20643 33099 36547 59233  2730 16878
-## 0000140 65486  9856 14515 12518 18479 52619 25981 61300
-## 0000160  8766 16707 17097 45748 11046 60244 65371 30874
-## 0000200  1177 14823 12320 37116 44791 21899 20414 53885
-## 0000220 63657 24207  7292 51891  3919 16833 59650 32314</code></pre>
+<pre><code>## 0000000 53834 37313 28164 22638 24519 10509 38065 61564
+## 0000020 28346  9348 52215 47305 11700 58358 46452 41526
+## 0000040 45192 17575  7585 46722 63502 61507 39532 53990
+## 0000060 64752 53704 64565 59033 31105 17965 55951 38873
+## 0000100 34664 40136 58661 50656 52096 37816 64025 36371
+## 0000120 42212  9542 44779 54050 55853 31035  3587 32137
+## 0000140  9468 38228 46581 64876 14483 40201 56641  8433
+## 0000160 49357 36056 28690 18730 22040  4395 56142 58091
+## 0000200 23829 24847 12993 44904 12243  4640 64583 40971
+## 0000220 13596 24421   975 47525 40801 59115 30932 46945</code></pre>
 <p>The power of having these very specific commands which can act on a lot of different types of files is that Linux users can
 chain together these commands to efficiently solve a larger problem.</p>
 </div>
@@ -341,7 +341,7 @@ Below, I’ll provide some instructions for installing WSL 2, a Linux distributi
 <p>There are two choices for running WSL: WSL 1 or WSL 2. Both are fairly similar in speed, however WSL 2 uses a real Linux kernel
 and an extremely fast virtual machine (along with a virtual hard drive), whereas WSL 1 used a translation layer (instead of a native kernel)
 to translate between windows and a linux distribution. Ultimately , the main difference is WSL 2 is slightly slower when it comes
-to copying files between Windows and Linux, but faster nearly everywhere else. Although both versions run SLiM fine[^fn2], I’ll be opting for WSL 2.</p>
+to copying files between Windows and Linux, but faster nearly everywhere else. Although both versions run SLiM fine<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, I’ll be opting for WSL 2.</p>
 <p>To install WSL, you’ll need to be on Windows 10 version 1903 (build 18362) or newer. To check your version number, run winver.exe.
 This will tell you the version and build number (build number being in brackets).</p>
 <p>Instructions for installing WSL 2 can be found on the <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Microsoft website here</a>.
@@ -532,11 +532,16 @@ for exploring polygenic adaptation using computer simulations!
 </div>
 <div id="footnotes" class="section level2" number="2.8">
 <h2><span class="header-section-number">2.8</span> Footnotes</h2>
-<p>[^fn2] One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious.
-The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever
-reason you use WSL 1, remember to turn off real-time protection during your SLiM runs and then <em>remember to turn it back on when the run is finished</em>.</p>
 
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="2">
+<li id="fn2"><p>One bug I did find with WSL 1 was that Windows Security seems to treat a few programs running on Linux as something suspicious.
+The result is that Windows Security uses 50% or more CPU while those programs are running. SLiM is included in this, so if for whatever
+reason you use WSL 1, remember to turn off real-time protection during your SLiM runs and then <em>remember to turn it back on when the run is finished</em>.<a href="installing-a-linux-environment-slim-on-the-wsl.html#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
