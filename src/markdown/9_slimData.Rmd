@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 A lot of the power of SLiM (and simulations in general) is that it is relatively cheap to keep track
 of a lot of data, which would be impossible in the field. SLiM's output is extremely customisable,
 so anything that you keep track of during a simulation, you can output to a file. But should you?
-One problem with this is file size. With more frequent sampling and more data, you'll end up with
+Outputting everything you are modelling as text will result in huge files which are difficult to 
+work with, and contain irrelevant data. With more frequent sampling and more data, you'll end up with
 huge plaintext files that R or Python will have a hard time reading. You could upload this to a 
 database, but this will incur large speed penalties when trying to analyse your results. In large
 experiments, it is important that you only keep track of what you need to, and sample as little 
@@ -61,5 +62,16 @@ less often than the other output (line 420), to ensure the simulation is fast, a
 
 ## Compression
 
-Another option is to compress your output. SLiM does have an option to save as binary
+Another option is to compress your output. SLiM does have an option to compress custom output (via the `writeFile(compress = T)` argument),
+however keep in mind this will raise the memory footprint of your model. As the documentation says, \"If the compress option is used in conjunction 
+with append==T, Eidos will buffer data to append and flush it to the file in a delayed fashion (for performance reasons), and so appended data 
+may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example).\"[^fn8]
 
+In English, that means that SLiM holds onto the data that would be written to the file until it has time to decompress the file, add the new output line/s,
+and recompress the file. This probably won't happen until the end of the simulation, however you can force this process to happen using the 
+function `flushFile()`, which will stick all the 'waiting-to-be-written' lines of output onto the file and clear the queue. For example, if you are
+appending output to a file every 50 generations, and you wanted to compress this output, you could use `flushFile()` to keep your RAM usage under control
+by calling `flushFile()` every 500 generations or so.
+
+## Footnotes
+[^fn8]: Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: http://benhaller.com/slim/Eidos_Manual.pdf 
