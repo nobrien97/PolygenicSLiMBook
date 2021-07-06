@@ -11,7 +11,8 @@ To answer a question, we need multiple simulations with different variable input
 The problem here is that the more simulations you need to do, the longer the time required if you were to run them sequentially.
 Luckily, SLiM is designed with parallelism in mind. That is, you can have many SLiM simulations going at once, each running on a separate CPU core. 
 This can all be done in whatever programming language you like, as long as it has a function to invoke system operating system commands 
-(like `system()` in R), and ssupport for multicore processing.
+(like `system()` in R), and support for multicore processing. For more on parallelism, I'd recommend reading [this crass, but entertaining guide](http://librestats.com/RparallelGuide/), 
+particularly the first few sections. This will get you up to speed on the strengths and limitations of parallel processing.
 
 In this section, I'll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them. 
 I even provide a C++ implementation which is overkill and not necessary at all, but it was fun[^fn4] to program! 

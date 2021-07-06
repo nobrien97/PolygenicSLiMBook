@@ -209,6 +209,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -224,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-2"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -252,12 +253,15 @@ on your PC or laptop. As such, even with all cores going at once, you’ll still
 to wait to get any data back. Luckily, high-performance computing (HPC) clusters exist which allow you
 to use hundreds or thousands of cores concurrently. Using the same methods as the previous chapter,
 we can extend our parallelism to much larger systems. In this chapter, I’ll be providing some examples of
-how to use the University of Queensland’s <a href="https://rcc.uq.edu.au/tinaroo">Tinaroo</a> system. Most universities
+how to use the University of Queensland’s (UQ’s) <a href="https://rcc.uq.edu.au/tinaroo">Tinaroo</a> system. Most universities
 will have access to a similar system, and although there may be some differences in the syntax of some scripts,
 the concepts remain the same.</p>
 </div>
 <div id="connecting-to-tinaroo-and-set-up" class="section level2" number="7.2">
 <h2><span class="header-section-number">7.2</span> Connecting to Tinaroo and Set-up</h2>
+<p>This section is mainly written for UQ students/staff wanting to access the UQ system. Readers who aren’t enrolled/employed
+by UQ unfortunately won’t be able to access Tinaroo. For you, I’d suggest looking into your own organisation’s HPC, and following
+their directions.</p>
 <p>To connect to Tinaroo, after having <a href="https://rcc.uq.edu.au/tinaroo">gained access</a>, use the ssh command with your
 username:</p>
 <p><code>ssh &lt;username&gt;@tinaroo.rcc.uq.edu.au</code>.</p>
@@ -265,17 +269,18 @@ username:</p>
 of Tinaroo’s login nodes. This is a terminal just like anywhere else, and you will find yourself in your user’s home
 directory, which will be empty. On the login node (effectively a computer: HPCs are made of many nodes/PCs networked together),
 you are able to navigate directories, make files and folders, write scripts, and queue jobs. The first thing to do
-is install SLiM and the necessary R packages to run SLiM in parallel.
-To do this, we’ll start an interactive job. This will connect us to a compute node, designed to run computations, and allow
-us to build SLiM without disturbing other users on the login node:</p>
+is install SLiM and the necessary R packages to run SLiM in parallel. Of course, you can also install the appropriate python
+scripts, or download necessary C++ header libraries to use if you are planning on running SLiM via those methods.</p>
+<p>To do this, we’ll start an interactive job. This will connect us to a compute node, and allow us to build SLiM without disturbing
+other users on the login node:</p>
 <p><code>qsub -I -X -A &lt;account-string-given-to-you&gt; -l select=1:ncpus=24:mem=120GB -l walltime=4:00:00</code></p>
 <p><code>qsub</code> is the command that queues a job to the HPC system. Tinaroo uses PBS, a job scheduler that ensures that everyone using
-the system is able to fairly access appropriate resources for an appropriate amount of time. Other scehdulers also exist elsewhere,
+the system is able to fairly access HPC resources for an appropriate amount of time. Other schedulers exist on other systems,
 so scripts on your HPC system may look slightly different to the examples given. Here we are selecting one node, with
 24 cores and 120GB of RAM for a total of 4 hours. Tinaroo’s nodes contain 2 12 core processors (for 24 cores total), and 128GB of RAM,
 with 8GB reserved for system memory. Hence, we are asking for all of the available resources of a single node for 4 hours.
 The <code>-I</code> flag indicates the job is interactive, and the <code>-X</code> enables X-Forwarding, so if you would like to use RStudio,
-the RStudio window will appear for you on your home machine.</p>
+the RStudio window will appear for you on your home machine, instead of disappearing into the cybervoid<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
 <p>You’ll be put into a queue for a brief period (maybe not-so-brief, depending on load), and then you will be connected to a compute node.
 Now we can get to work. You’ll want to make a new directory for your SLiM installation (<code>mkdir ~/SLiM</code>), and download and build SLiM.
 You will have to build SLiM manually as per the instructions in the SLiM manual, as the installation script will not work without
@@ -292,10 +297,13 @@ in the manual. Note that you will not need to install SLiMgui. Some basic instru
 <span id="cb52-9"><a href="running-slim-on-a-hpc-cluster.html#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-10"><a href="running-slim-on-a-hpc-cluster.html#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> -testEidos</span>
 <span id="cb52-11"><a href="running-slim-on-a-hpc-cluster.html#cb52-11" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> -testSLiM</span></code></pre></div>
+<p>You’ll be left with <code>slim</code> and <code>eidos</code> executables in your <code>build</code> directory, which you can copy/move anywhere you like in your home directory.</p>
 <p>Having built SLiM, you’ll now want to install the parallel libraries you are using to run SLiM in parallel. Tinaroo has multiple R
 versions available, and it is up to you to load the one you would like. To see the list enter <code>module spider R</code>.
 Load the appropriate R version with <code>module load R/version.number</code>. Then, when you enter the R command, you will load a command line
 R interface for you to use. If this doesn’t happen, and you load into a ‘Singularity’ container, type R again and it will launch.
+Note that this Singularity container can affect your non-interactive jobs, so if you load a version of R with this container in your
+non-interactive script, you’ll need to remember to enter R a second time in your job script to launch the program properly (more on that soon).
 From here, install all the packages you need for your R scripts. For example:</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="running-slim-on-a-hpc-cluster.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;future&quot;</span>,</span>
 <span id="cb53-2"><a href="running-slim-on-a-hpc-cluster.html#cb53-2" aria-hidden="true" tabindex="-1"></a>                 <span class="st">&quot;doParallel&quot;</span>,</span>
@@ -364,42 +372,55 @@ I’d rather use R, so let’s do that:</p>
 <span id="cb56-13"><a href="running-slim-on-a-hpc-cluster.html#cb56-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb56-14"><a href="running-slim-on-a-hpc-cluster.html#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
 <p>Here, we do the same as before, except we load a version of R, run it with a certain file, and use that R script to handle running SLiM.
-Let’s have a look at how that script looks:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="running-slim-on-a-hpc-cluster.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
-<span id="cb57-2"><a href="running-slim-on-a-hpc-cluster.html#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Run SLiM in parallel</span></span>
-<span id="cb57-3"><a href="running-slim-on-a-hpc-cluster.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+Note that on Tinaroo (at time of writing) R version 3.5.0 does not have a Singularity container, so I only have to enter R once in my
+job script. If I was loading a version that was encapsulated by such a container, I’d need to have something like this:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb57-1"><a href="running-slim-on-a-hpc-cluster.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
+<span id="cb57-2"><a href="running-slim-on-a-hpc-cluster.html#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
+<span id="cb57-3"><a href="running-slim-on-a-hpc-cluster.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$TMPDIR</span></span>
 <span id="cb57-4"><a href="running-slim-on-a-hpc-cluster.html#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-5"><a href="running-slim-on-a-hpc-cluster.html#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Parallel script modified from SLiM-Extras example R script, info at</span></span>
-<span id="cb57-6"><a href="running-slim-on-a-hpc-cluster.html#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.</span></span>
-<span id="cb57-7"><a href="running-slim-on-a-hpc-cluster.html#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-8"><a href="running-slim-on-a-hpc-cluster.html#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment variables</span></span>
-<span id="cb57-9"><a href="running-slim-on-a-hpc-cluster.html#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-10"><a href="running-slim-on-a-hpc-cluster.html#cb57-10" aria-hidden="true" tabindex="-1"></a>USER <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&#39;USER&#39;</span>)</span>
-<span id="cb57-11"><a href="running-slim-on-a-hpc-cluster.html#cb57-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-12"><a href="running-slim-on-a-hpc-cluster.html#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Parallelisation libraries </span></span>
-<span id="cb57-13"><a href="running-slim-on-a-hpc-cluster.html#cb57-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-14"><a href="running-slim-on-a-hpc-cluster.html#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
-<span id="cb57-15"><a href="running-slim-on-a-hpc-cluster.html#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
-<span id="cb57-16"><a href="running-slim-on-a-hpc-cluster.html#cb57-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
-<span id="cb57-17"><a href="running-slim-on-a-hpc-cluster.html#cb57-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-18"><a href="running-slim-on-a-hpc-cluster.html#cb57-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-19"><a href="running-slim-on-a-hpc-cluster.html#cb57-19" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/seeds.csv&quot;</span>), <span class="at">header =</span> T)</span>
-<span id="cb57-20"><a href="running-slim-on-a-hpc-cluster.html#cb57-20" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/combos.csv&quot;</span>), <span class="at">header =</span> T)</span>
-<span id="cb57-21"><a href="running-slim-on-a-hpc-cluster.html#cb57-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-22"><a href="running-slim-on-a-hpc-cluster.html#cb57-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-23"><a href="running-slim-on-a-hpc-cluster.html#cb57-23" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(future<span class="sc">::</span><span class="fu">availableCores</span>())</span>
-<span id="cb57-24"><a href="running-slim-on-a-hpc-cluster.html#cb57-24" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
-<span id="cb57-25"><a href="running-slim-on-a-hpc-cluster.html#cb57-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-26"><a href="running-slim-on-a-hpc-cluster.html#cb57-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
-<span id="cb57-27"><a href="running-slim-on-a-hpc-cluster.html#cb57-27" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(combos)) <span class="sc">%:%</span></span>
-<span id="cb57-28"><a href="running-slim-on-a-hpc-cluster.html#cb57-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span>(<span class="at">j=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
-<span id="cb57-29"><a href="running-slim-on-a-hpc-cluster.html#cb57-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use string manipulation functions to configure the command line args, feeding from a data frame of seeds</span></span>
-<span id="cb57-30"><a href="running-slim-on-a-hpc-cluster.html#cb57-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then run SLiM with system(),</span></span>
-<span id="cb57-31"><a href="running-slim-on-a-hpc-cluster.html#cb57-31" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim&quot;</span>, </span>
-<span id="cb57-32"><a href="running-slim-on-a-hpc-cluster.html#cb57-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.character</span>(j), combos[i,]<span class="sc">$</span>param1, combos[i,]<span class="sc">$</span>param2, i, <span class="at">intern=</span>T))</span>
-<span id="cb57-33"><a href="running-slim-on-a-hpc-cluster.html#cb57-33" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb57-34"><a href="running-slim-on-a-hpc-cluster.html#cb57-34" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
-<p>This should be pretty familiar to those who read Chapter 6.4. The only real difference is we get an environment variable from
+<span id="cb57-5"><a href="running-slim-on-a-hpc-cluster.html#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/3.5.0</span>
+<span id="cb57-6"><a href="running-slim-on-a-hpc-cluster.html#cb57-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-7"><a href="running-slim-on-a-hpc-cluster.html#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="co"># First R command loads the Singularity container, the second runs the script</span></span>
+<span id="cb57-8"><a href="running-slim-on-a-hpc-cluster.html#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span>
+<span id="cb57-9"><a href="running-slim-on-a-hpc-cluster.html#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> --file=/home/<span class="va">$USER</span>/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R</span>
+<span id="cb57-10"><a href="running-slim-on-a-hpc-cluster.html#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span>
+<span id="cb57-11"><a href="running-slim-on-a-hpc-cluster.html#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span></code></pre></div>
+<p>Let’s have a look at how that script looks:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="running-slim-on-a-hpc-cluster.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+<span id="cb58-2"><a href="running-slim-on-a-hpc-cluster.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Run SLiM in parallel</span></span>
+<span id="cb58-3"><a href="running-slim-on-a-hpc-cluster.html#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+<span id="cb58-4"><a href="running-slim-on-a-hpc-cluster.html#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="running-slim-on-a-hpc-cluster.html#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Parallel script modified from SLiM-Extras example R script, info at</span></span>
+<span id="cb58-6"><a href="running-slim-on-a-hpc-cluster.html#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.</span></span>
+<span id="cb58-7"><a href="running-slim-on-a-hpc-cluster.html#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-8"><a href="running-slim-on-a-hpc-cluster.html#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment variables</span></span>
+<span id="cb58-9"><a href="running-slim-on-a-hpc-cluster.html#cb58-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-10"><a href="running-slim-on-a-hpc-cluster.html#cb58-10" aria-hidden="true" tabindex="-1"></a>USER <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&#39;USER&#39;</span>)</span>
+<span id="cb58-11"><a href="running-slim-on-a-hpc-cluster.html#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="running-slim-on-a-hpc-cluster.html#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Parallelisation libraries </span></span>
+<span id="cb58-13"><a href="running-slim-on-a-hpc-cluster.html#cb58-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-14"><a href="running-slim-on-a-hpc-cluster.html#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb58-15"><a href="running-slim-on-a-hpc-cluster.html#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb58-16"><a href="running-slim-on-a-hpc-cluster.html#cb58-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb58-17"><a href="running-slim-on-a-hpc-cluster.html#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-18"><a href="running-slim-on-a-hpc-cluster.html#cb58-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-19"><a href="running-slim-on-a-hpc-cluster.html#cb58-19" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/seeds.csv&quot;</span>), <span class="at">header =</span> T)</span>
+<span id="cb58-20"><a href="running-slim-on-a-hpc-cluster.html#cb58-20" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/combos.csv&quot;</span>), <span class="at">header =</span> T)</span>
+<span id="cb58-21"><a href="running-slim-on-a-hpc-cluster.html#cb58-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-22"><a href="running-slim-on-a-hpc-cluster.html#cb58-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-23"><a href="running-slim-on-a-hpc-cluster.html#cb58-23" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(future<span class="sc">::</span><span class="fu">availableCores</span>())</span>
+<span id="cb58-24"><a href="running-slim-on-a-hpc-cluster.html#cb58-24" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb58-25"><a href="running-slim-on-a-hpc-cluster.html#cb58-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-26"><a href="running-slim-on-a-hpc-cluster.html#cb58-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
+<span id="cb58-27"><a href="running-slim-on-a-hpc-cluster.html#cb58-27" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(combos)) <span class="sc">%:%</span></span>
+<span id="cb58-28"><a href="running-slim-on-a-hpc-cluster.html#cb58-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span>(<span class="at">j=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
+<span id="cb58-29"><a href="running-slim-on-a-hpc-cluster.html#cb58-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use string manipulation functions to configure the command line args, feeding from a data frame of seeds</span></span>
+<span id="cb58-30"><a href="running-slim-on-a-hpc-cluster.html#cb58-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then run SLiM with system(),</span></span>
+<span id="cb58-31"><a href="running-slim-on-a-hpc-cluster.html#cb58-31" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim&quot;</span>, </span>
+<span id="cb58-32"><a href="running-slim-on-a-hpc-cluster.html#cb58-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.character</span>(j), combos[i,]<span class="sc">$</span>param1, combos[i,]<span class="sc">$</span>param2, i, <span class="at">intern=</span>T))</span>
+<span id="cb58-33"><a href="running-slim-on-a-hpc-cluster.html#cb58-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb58-34"><a href="running-slim-on-a-hpc-cluster.html#cb58-34" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
+<p>This should be pretty familiar to those who read <a href="running-slim-in-parallel.html#running-slim-via-r">Chapter 6.4</a>. The only real difference is we get an environment variable from
 the HPC, <code>$USER</code>, which we use to access some HPC directories. You may notice however, that we haven’t copied across the .csv files from which
 our seeds and combos are taken! To do this, open up FileZilla:</p>
 <p><img src="images/chapter7/filezilla.png" /></p>
@@ -430,68 +451,68 @@ This is much more powerful for large jobs, where the amount of wasted time betwe
 <div id="job-array-slim-jobs" class="section level3" number="7.4.1">
 <h3><span class="header-section-number">7.4.1</span> Job array SLiM jobs</h3>
 <p>Job array jobs are very simple to set-up. A single line has to be added to the PBS Script:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb58-1"><a href="running-slim-on-a-hpc-cluster.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash -l</span></span>
-<span id="cb58-2"><a href="running-slim-on-a-hpc-cluster.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q workq</span></span>
-<span id="cb58-3"><a href="running-slim-on-a-hpc-cluster.html#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -A qris-uq</span></span>
-<span id="cb58-4"><a href="running-slim-on-a-hpc-cluster.html#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -N slim_eg</span></span>
-<span id="cb58-5"><a href="running-slim-on-a-hpc-cluster.html#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -J 1-4</span></span>
-<span id="cb58-6"><a href="running-slim-on-a-hpc-cluster.html#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=24:00:00</span></span>
-<span id="cb58-7"><a href="running-slim-on-a-hpc-cluster.html#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=1:ncpus=24:mem=120G</span></span>
-<span id="cb58-8"><a href="running-slim-on-a-hpc-cluster.html#cb58-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-9"><a href="running-slim-on-a-hpc-cluster.html#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$TMPDIR</span></span>
-<span id="cb58-10"><a href="running-slim-on-a-hpc-cluster.html#cb58-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-11"><a href="running-slim-on-a-hpc-cluster.html#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/3.5.0</span>
-<span id="cb58-12"><a href="running-slim-on-a-hpc-cluster.html#cb58-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-13"><a href="running-slim-on-a-hpc-cluster.html#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> --file=/home/<span class="va">$USER</span>/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R</span>
-<span id="cb58-14"><a href="running-slim-on-a-hpc-cluster.html#cb58-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-15"><a href="running-slim-on-a-hpc-cluster.html#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb59-1"><a href="running-slim-on-a-hpc-cluster.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash -l</span></span>
+<span id="cb59-2"><a href="running-slim-on-a-hpc-cluster.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q workq</span></span>
+<span id="cb59-3"><a href="running-slim-on-a-hpc-cluster.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -A qris-uq</span></span>
+<span id="cb59-4"><a href="running-slim-on-a-hpc-cluster.html#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -N slim_eg</span></span>
+<span id="cb59-5"><a href="running-slim-on-a-hpc-cluster.html#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -J 1-4</span></span>
+<span id="cb59-6"><a href="running-slim-on-a-hpc-cluster.html#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=24:00:00</span></span>
+<span id="cb59-7"><a href="running-slim-on-a-hpc-cluster.html#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=1:ncpus=24:mem=120G</span></span>
+<span id="cb59-8"><a href="running-slim-on-a-hpc-cluster.html#cb59-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-9"><a href="running-slim-on-a-hpc-cluster.html#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$TMPDIR</span></span>
+<span id="cb59-10"><a href="running-slim-on-a-hpc-cluster.html#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-11"><a href="running-slim-on-a-hpc-cluster.html#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/3.5.0</span>
+<span id="cb59-12"><a href="running-slim-on-a-hpc-cluster.html#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-13"><a href="running-slim-on-a-hpc-cluster.html#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> --file=/home/<span class="va">$USER</span>/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R</span>
+<span id="cb59-14"><a href="running-slim-on-a-hpc-cluster.html#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-15"><a href="running-slim-on-a-hpc-cluster.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
 <p><code>#PBS -J 1-4</code> Is the key line here, where <code>-J</code> signifies a job array, and <code>1-4</code> is a vector of identifiers for each sub-job in the
 array. These identifiers provide a new environment variable, <code>$PBS_ARRAY_INDEX</code>, which can be used to identify which node is in charge
 of the current script. This can be loaded into R:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="running-slim-on-a-hpc-cluster.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
-<span id="cb59-2"><a href="running-slim-on-a-hpc-cluster.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Run SLiM in parallel</span></span>
-<span id="cb59-3"><a href="running-slim-on-a-hpc-cluster.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
-<span id="cb59-4"><a href="running-slim-on-a-hpc-cluster.html#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-5"><a href="running-slim-on-a-hpc-cluster.html#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Parallel script modified from SLiM-Extras example R script, info at</span></span>
-<span id="cb59-6"><a href="running-slim-on-a-hpc-cluster.html#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.</span></span>
-<span id="cb59-7"><a href="running-slim-on-a-hpc-cluster.html#cb59-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-8"><a href="running-slim-on-a-hpc-cluster.html#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment variables</span></span>
-<span id="cb59-9"><a href="running-slim-on-a-hpc-cluster.html#cb59-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-10"><a href="running-slim-on-a-hpc-cluster.html#cb59-10" aria-hidden="true" tabindex="-1"></a>USER <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&#39;USER&#39;</span>)</span>
-<span id="cb59-11"><a href="running-slim-on-a-hpc-cluster.html#cb59-11" aria-hidden="true" tabindex="-1"></a>ARRAY_INDEX <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">Sys.getenv</span>(<span class="st">&#39;PBS_ARRAY_INDEX&#39;</span>))</span>
-<span id="cb59-12"><a href="running-slim-on-a-hpc-cluster.html#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-13"><a href="running-slim-on-a-hpc-cluster.html#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Parallelisation libraries </span></span>
-<span id="cb59-14"><a href="running-slim-on-a-hpc-cluster.html#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-15"><a href="running-slim-on-a-hpc-cluster.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
-<span id="cb59-16"><a href="running-slim-on-a-hpc-cluster.html#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
-<span id="cb59-17"><a href="running-slim-on-a-hpc-cluster.html#cb59-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
-<span id="cb59-18"><a href="running-slim-on-a-hpc-cluster.html#cb59-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-19"><a href="running-slim-on-a-hpc-cluster.html#cb59-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-20"><a href="running-slim-on-a-hpc-cluster.html#cb59-20" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/seeds.csv&quot;</span>), <span class="at">header =</span> T)</span>
-<span id="cb59-21"><a href="running-slim-on-a-hpc-cluster.html#cb59-21" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/combos.csv&quot;</span>), <span class="at">header =</span> T)</span>
-<span id="cb59-22"><a href="running-slim-on-a-hpc-cluster.html#cb59-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-23"><a href="running-slim-on-a-hpc-cluster.html#cb59-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Set which runs to do according to node</span></span>
-<span id="cb59-24"><a href="running-slim-on-a-hpc-cluster.html#cb59-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-25"><a href="running-slim-on-a-hpc-cluster.html#cb59-25" aria-hidden="true" tabindex="-1"></a><span class="cf">switch</span> (ARR_INDEX,</span>
-<span id="cb59-26"><a href="running-slim-on-a-hpc-cluster.html#cb59-26" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,] },</span>
-<span id="cb59-27"><a href="running-slim-on-a-hpc-cluster.html#cb59-27" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">6</span><span class="sc">:</span><span class="dv">9</span>,] },</span>
-<span id="cb59-28"><a href="running-slim-on-a-hpc-cluster.html#cb59-28" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">10</span><span class="sc">:</span><span class="dv">13</span>,] },</span>
-<span id="cb59-29"><a href="running-slim-on-a-hpc-cluster.html#cb59-29" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">14</span><span class="sc">:</span><span class="dv">18</span>,] }</span>
-<span id="cb59-30"><a href="running-slim-on-a-hpc-cluster.html#cb59-30" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb59-31"><a href="running-slim-on-a-hpc-cluster.html#cb59-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-32"><a href="running-slim-on-a-hpc-cluster.html#cb59-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-33"><a href="running-slim-on-a-hpc-cluster.html#cb59-33" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(future<span class="sc">::</span><span class="fu">availableCores</span>())</span>
-<span id="cb59-34"><a href="running-slim-on-a-hpc-cluster.html#cb59-34" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
-<span id="cb59-35"><a href="running-slim-on-a-hpc-cluster.html#cb59-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-36"><a href="running-slim-on-a-hpc-cluster.html#cb59-36" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
-<span id="cb59-37"><a href="running-slim-on-a-hpc-cluster.html#cb59-37" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(combos)) <span class="sc">%:%</span></span>
-<span id="cb59-38"><a href="running-slim-on-a-hpc-cluster.html#cb59-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span>(<span class="at">j=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
-<span id="cb59-39"><a href="running-slim-on-a-hpc-cluster.html#cb59-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use string manipulation functions to configure the command line args, feeding from a data frame of seeds</span></span>
-<span id="cb59-40"><a href="running-slim-on-a-hpc-cluster.html#cb59-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then run SLiM with system(),</span></span>
-<span id="cb59-41"><a href="running-slim-on-a-hpc-cluster.html#cb59-41" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim&quot;</span>, </span>
-<span id="cb59-42"><a href="running-slim-on-a-hpc-cluster.html#cb59-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.character</span>(j), combos[i,]<span class="sc">$</span>param1, combos[i,]<span class="sc">$</span>param2, i, <span class="at">intern=</span>T))</span>
-<span id="cb59-43"><a href="running-slim-on-a-hpc-cluster.html#cb59-43" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb59-44"><a href="running-slim-on-a-hpc-cluster.html#cb59-44" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="running-slim-on-a-hpc-cluster.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+<span id="cb60-2"><a href="running-slim-on-a-hpc-cluster.html#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Run SLiM in parallel</span></span>
+<span id="cb60-3"><a href="running-slim-on-a-hpc-cluster.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+<span id="cb60-4"><a href="running-slim-on-a-hpc-cluster.html#cb60-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-5"><a href="running-slim-on-a-hpc-cluster.html#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Parallel script modified from SLiM-Extras example R script, info at</span></span>
+<span id="cb60-6"><a href="running-slim-on-a-hpc-cluster.html#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.</span></span>
+<span id="cb60-7"><a href="running-slim-on-a-hpc-cluster.html#cb60-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-8"><a href="running-slim-on-a-hpc-cluster.html#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment variables</span></span>
+<span id="cb60-9"><a href="running-slim-on-a-hpc-cluster.html#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-10"><a href="running-slim-on-a-hpc-cluster.html#cb60-10" aria-hidden="true" tabindex="-1"></a>USER <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&#39;USER&#39;</span>)</span>
+<span id="cb60-11"><a href="running-slim-on-a-hpc-cluster.html#cb60-11" aria-hidden="true" tabindex="-1"></a>ARRAY_INDEX <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">Sys.getenv</span>(<span class="st">&#39;PBS_ARRAY_INDEX&#39;</span>))</span>
+<span id="cb60-12"><a href="running-slim-on-a-hpc-cluster.html#cb60-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-13"><a href="running-slim-on-a-hpc-cluster.html#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Parallelisation libraries </span></span>
+<span id="cb60-14"><a href="running-slim-on-a-hpc-cluster.html#cb60-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-15"><a href="running-slim-on-a-hpc-cluster.html#cb60-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb60-16"><a href="running-slim-on-a-hpc-cluster.html#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb60-17"><a href="running-slim-on-a-hpc-cluster.html#cb60-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb60-18"><a href="running-slim-on-a-hpc-cluster.html#cb60-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-19"><a href="running-slim-on-a-hpc-cluster.html#cb60-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-20"><a href="running-slim-on-a-hpc-cluster.html#cb60-20" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/seeds.csv&quot;</span>), <span class="at">header =</span> T)</span>
+<span id="cb60-21"><a href="running-slim-on-a-hpc-cluster.html#cb60-21" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/combos.csv&quot;</span>), <span class="at">header =</span> T)</span>
+<span id="cb60-22"><a href="running-slim-on-a-hpc-cluster.html#cb60-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-23"><a href="running-slim-on-a-hpc-cluster.html#cb60-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Set which runs to do according to node</span></span>
+<span id="cb60-24"><a href="running-slim-on-a-hpc-cluster.html#cb60-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-25"><a href="running-slim-on-a-hpc-cluster.html#cb60-25" aria-hidden="true" tabindex="-1"></a><span class="cf">switch</span> (ARR_INDEX,</span>
+<span id="cb60-26"><a href="running-slim-on-a-hpc-cluster.html#cb60-26" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,] },</span>
+<span id="cb60-27"><a href="running-slim-on-a-hpc-cluster.html#cb60-27" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">6</span><span class="sc">:</span><span class="dv">9</span>,] },</span>
+<span id="cb60-28"><a href="running-slim-on-a-hpc-cluster.html#cb60-28" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">10</span><span class="sc">:</span><span class="dv">13</span>,] },</span>
+<span id="cb60-29"><a href="running-slim-on-a-hpc-cluster.html#cb60-29" aria-hidden="true" tabindex="-1"></a>  { combos <span class="ot">&lt;-</span> combos[<span class="dv">14</span><span class="sc">:</span><span class="dv">18</span>,] }</span>
+<span id="cb60-30"><a href="running-slim-on-a-hpc-cluster.html#cb60-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb60-31"><a href="running-slim-on-a-hpc-cluster.html#cb60-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-32"><a href="running-slim-on-a-hpc-cluster.html#cb60-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-33"><a href="running-slim-on-a-hpc-cluster.html#cb60-33" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(future<span class="sc">::</span><span class="fu">availableCores</span>())</span>
+<span id="cb60-34"><a href="running-slim-on-a-hpc-cluster.html#cb60-34" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb60-35"><a href="running-slim-on-a-hpc-cluster.html#cb60-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-36"><a href="running-slim-on-a-hpc-cluster.html#cb60-36" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM</span></span>
+<span id="cb60-37"><a href="running-slim-on-a-hpc-cluster.html#cb60-37" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(combos)) <span class="sc">%:%</span></span>
+<span id="cb60-38"><a href="running-slim-on-a-hpc-cluster.html#cb60-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span>(<span class="at">j=</span>seeds<span class="sc">$</span>Seed) <span class="sc">%dopar%</span> {</span>
+<span id="cb60-39"><a href="running-slim-on-a-hpc-cluster.html#cb60-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use string manipulation functions to configure the command line args, feeding from a data frame of seeds</span></span>
+<span id="cb60-40"><a href="running-slim-on-a-hpc-cluster.html#cb60-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then run SLiM with system(),</span></span>
+<span id="cb60-41"><a href="running-slim-on-a-hpc-cluster.html#cb60-41" aria-hidden="true" tabindex="-1"></a>        slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim&quot;</span>, </span>
+<span id="cb60-42"><a href="running-slim-on-a-hpc-cluster.html#cb60-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.character</span>(j), combos[i,]<span class="sc">$</span>param1, combos[i,]<span class="sc">$</span>param2, i, <span class="at">intern=</span>T))</span>
+<span id="cb60-43"><a href="running-slim-on-a-hpc-cluster.html#cb60-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb60-44"><a href="running-slim-on-a-hpc-cluster.html#cb60-44" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
 <p>The R script loads in the array index, and uses that value in a switch statement to choose a certain number of rows.
 This way, the load of parameter combinations is spread across the nodes.</p>
 <p>The job array method is good for smaller numbers of jobs, but there is some inefficiency with queueing a lot of subjobs.
@@ -502,86 +523,86 @@ device for running a process on.</p>
 <h3><span class="header-section-number">7.4.2</span> Embedded Nimrod SLiM jobs</h3>
 <p>To use Embedded Nimrod, we need to make some changes to both our R script and PBS script. In fact, our PBS isn’t even a .pbs
 anymore: it’s a .nsh.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb60-1"><a href="running-slim-on-a-hpc-cluster.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/sw7/RCC/NimrodG/embedded-1.9.0/bin/nimexec</span></span>
-<span id="cb60-2"><a href="running-slim-on-a-hpc-cluster.html#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="running-slim-on-a-hpc-cluster.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modified from original script by david.green@uq.edu.au</span></span>
-<span id="cb60-4"><a href="running-slim-on-a-hpc-cluster.html#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># More information at: https://github.com/UQ-RCC/nimrod-embedded</span></span>
-<span id="cb60-5"><a href="running-slim-on-a-hpc-cluster.html#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb60-6"><a href="running-slim-on-a-hpc-cluster.html#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Submit this script as a PBS job script using the PBSPro qsub command.</span></span>
-<span id="cb60-7"><a href="running-slim-on-a-hpc-cluster.html#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The nimexec command will parse it into what is required.</span></span>
-<span id="cb60-8"><a href="running-slim-on-a-hpc-cluster.html#cb60-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-9"><a href="running-slim-on-a-hpc-cluster.html#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix up Account String</span></span>
-<span id="cb60-10"><a href="running-slim-on-a-hpc-cluster.html#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -A &lt;your-account-string-here&gt;</span></span>
-<span id="cb60-11"><a href="running-slim-on-a-hpc-cluster.html#cb60-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb60-12"><a href="running-slim-on-a-hpc-cluster.html#cb60-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Define resources: In this case, 40 nodes, 24 cores, 120GB per node</span></span>
-<span id="cb60-13"><a href="running-slim-on-a-hpc-cluster.html#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=40:ncpus=24:mem=120GB:ompthreads=1 </span></span>
-<span id="cb60-14"><a href="running-slim-on-a-hpc-cluster.html#cb60-14" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=336:00:00</span></span>
-<span id="cb60-15"><a href="running-slim-on-a-hpc-cluster.html#cb60-15" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb60-16"><a href="running-slim-on-a-hpc-cluster.html#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Job name for ease of recognition</span></span>
-<span id="cb60-17"><a href="running-slim-on-a-hpc-cluster.html#cb60-17" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -N Nim_SLiMeg</span></span>
-<span id="cb60-18"><a href="running-slim-on-a-hpc-cluster.html#cb60-18" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb60-19"><a href="running-slim-on-a-hpc-cluster.html#cb60-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Queue</span></span>
-<span id="cb60-20"><a href="running-slim-on-a-hpc-cluster.html#cb60-20" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q workq</span></span>
-<span id="cb60-21"><a href="running-slim-on-a-hpc-cluster.html#cb60-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-22"><a href="running-slim-on-a-hpc-cluster.html#cb60-22" aria-hidden="true" tabindex="-1"></a><span class="co"># There are additional directives for Nimrod to interpret with #NIM at the start of each line.</span></span>
-<span id="cb60-23"><a href="running-slim-on-a-hpc-cluster.html#cb60-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Tell Nimrod to use this as the shell for the job proper when it has parsed this file.</span></span>
-<span id="cb60-24"><a href="running-slim-on-a-hpc-cluster.html#cb60-24" aria-hidden="true" tabindex="-1"></a><span class="co">#NIM shebang /bin/bash</span></span>
-<span id="cb60-25"><a href="running-slim-on-a-hpc-cluster.html#cb60-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-26"><a href="running-slim-on-a-hpc-cluster.html#cb60-26" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
-<span id="cb60-27"><a href="running-slim-on-a-hpc-cluster.html#cb60-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Tell Nimrod what range of parameter values you want to use &quot;1 to 1638 step 1&quot; </span></span>
-<span id="cb60-28"><a href="running-slim-on-a-hpc-cluster.html#cb60-28" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
-<span id="cb60-29"><a href="running-slim-on-a-hpc-cluster.html#cb60-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-30"><a href="running-slim-on-a-hpc-cluster.html#cb60-30" aria-hidden="true" tabindex="-1"></a><span class="co"># The parameters for the 100 parameter combinations are rows in the input file.</span></span>
-<span id="cb60-31"><a href="running-slim-on-a-hpc-cluster.html#cb60-31" aria-hidden="true" tabindex="-1"></a><span class="co">#NIM parameter PAR integer range from 1 to 100 step 1</span></span>
-<span id="cb60-32"><a href="running-slim-on-a-hpc-cluster.html#cb60-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-33"><a href="running-slim-on-a-hpc-cluster.html#cb60-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Repeat 50 times for each combination with a different SEED value</span></span>
-<span id="cb60-34"><a href="running-slim-on-a-hpc-cluster.html#cb60-34" aria-hidden="true" tabindex="-1"></a><span class="co">#NIM parameter SEED integer range from 1 to 50 step 1</span></span>
-<span id="cb60-35"><a href="running-slim-on-a-hpc-cluster.html#cb60-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-36"><a href="running-slim-on-a-hpc-cluster.html#cb60-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-37"><a href="running-slim-on-a-hpc-cluster.html#cb60-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Just checking that something did not go wrong with assignment of the J values.</span></span>
-<span id="cb60-38"><a href="running-slim-on-a-hpc-cluster.html#cb60-38" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${NIMROD_VAR_PAR}</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
-<span id="cb60-39"><a href="running-slim-on-a-hpc-cluster.html#cb60-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">NIMROD_VAR_PAR isn&#39;t set, cannot continue...&quot;</span> </span>
-<span id="cb60-40"><a href="running-slim-on-a-hpc-cluster.html#cb60-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">exit</span> 2</span>
-<span id="cb60-41"><a href="running-slim-on-a-hpc-cluster.html#cb60-41" aria-hidden="true" tabindex="-1"></a><span class="kw">fi</span></span>
-<span id="cb60-42"><a href="running-slim-on-a-hpc-cluster.html#cb60-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-43"><a href="running-slim-on-a-hpc-cluster.html#cb60-43" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${NIMROD_VAR_SEED}</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
-<span id="cb60-44"><a href="running-slim-on-a-hpc-cluster.html#cb60-44" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">NIMROD_VAR_SEED isn&#39;t set, cannot continue...&quot;</span> </span>
-<span id="cb60-45"><a href="running-slim-on-a-hpc-cluster.html#cb60-45" aria-hidden="true" tabindex="-1"></a>        <span class="bu">exit</span> 2</span>
-<span id="cb60-46"><a href="running-slim-on-a-hpc-cluster.html#cb60-46" aria-hidden="true" tabindex="-1"></a><span class="kw">fi</span></span>
-<span id="cb60-47"><a href="running-slim-on-a-hpc-cluster.html#cb60-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-48"><a href="running-slim-on-a-hpc-cluster.html#cb60-48" aria-hidden="true" tabindex="-1"></a><span class="co">#Where you submit this job from will be the value of $PBS_O_WORKDIR</span></span>
-<span id="cb60-49"><a href="running-slim-on-a-hpc-cluster.html#cb60-49" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;PBS_O_WORKDIR is </span><span class="va">${PBS_O_WORKDIR}</span><span class="st">&quot;</span> </span>
-<span id="cb60-50"><a href="running-slim-on-a-hpc-cluster.html#cb60-50" aria-hidden="true" tabindex="-1"></a><span class="co">#Everything you need should be located relative to PBS_O_WORKDIR, or else a full path</span></span>
-<span id="cb60-51"><a href="running-slim-on-a-hpc-cluster.html#cb60-51" aria-hidden="true" tabindex="-1"></a><span class="co">#Set the cd to TMPDIR for writing SLiM output</span></span>
-<span id="cb60-52"><a href="running-slim-on-a-hpc-cluster.html#cb60-52" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${TMPDIR}</span></span>
-<span id="cb60-53"><a href="running-slim-on-a-hpc-cluster.html#cb60-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-54"><a href="running-slim-on-a-hpc-cluster.html#cb60-54" aria-hidden="true" tabindex="-1"></a><span class="co">#=====================</span></span>
-<span id="cb60-55"><a href="running-slim-on-a-hpc-cluster.html#cb60-55" aria-hidden="true" tabindex="-1"></a><span class="co">#Modify these to suit.</span></span>
-<span id="cb60-56"><a href="running-slim-on-a-hpc-cluster.html#cb60-56" aria-hidden="true" tabindex="-1"></a><span class="co">#=====================</span></span>
-<span id="cb60-57"><a href="running-slim-on-a-hpc-cluster.html#cb60-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-58"><a href="running-slim-on-a-hpc-cluster.html#cb60-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Always run the entire parameter range cause nimrod can do them in any order.</span></span>
-<span id="cb60-59"><a href="running-slim-on-a-hpc-cluster.html#cb60-59" aria-hidden="true" tabindex="-1"></a><span class="co"># See the -f test below about skipping the ones we have already done.</span></span>
-<span id="cb60-60"><a href="running-slim-on-a-hpc-cluster.html#cb60-60" aria-hidden="true" tabindex="-1"></a><span class="va">RUNNAME=</span><span class="st">&quot;nim_sublauncher&quot;</span> </span>
-<span id="cb60-61"><a href="running-slim-on-a-hpc-cluster.html#cb60-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-62"><a href="running-slim-on-a-hpc-cluster.html#cb60-62" aria-hidden="true" tabindex="-1"></a><span class="va">OUTFILE=</span><span class="st">&quot;</span><span class="va">${PBS_O_WORKDIR}</span><span class="st">/Outputs/TEST_</span><span class="va">${NIMROD_VAR_PAR}</span><span class="st">_</span><span class="va">${NIMROD_VAR_SEED}</span><span class="st">.txt&quot;</span> </span>
-<span id="cb60-63"><a href="running-slim-on-a-hpc-cluster.html#cb60-63" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> <span class="st">&quot;</span><span class="va">${OUTFILE}</span><span class="st">&quot;</span> </span>
-<span id="cb60-64"><a href="running-slim-on-a-hpc-cluster.html#cb60-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-65"><a href="running-slim-on-a-hpc-cluster.html#cb60-65" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span><span class="bu"> [</span> <span class="ot">-f</span> <span class="va">${OUTFILE}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
-<span id="cb60-66"><a href="running-slim-on-a-hpc-cluster.html#cb60-66" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">&quot;Output file </span><span class="va">${OUTFILE}</span><span class="st"> already exists. Skipping this index value </span><span class="va">${NIMROD_VAR_LS}</span><span class="st"> </span><span class="va">${NIMROD_VAR_SEED}</span><span class="st">&quot;</span> </span>
-<span id="cb60-67"><a href="running-slim-on-a-hpc-cluster.html#cb60-67" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 0</span>
-<span id="cb60-68"><a href="running-slim-on-a-hpc-cluster.html#cb60-68" aria-hidden="true" tabindex="-1"></a><span class="kw">fi</span></span>
-<span id="cb60-69"><a href="running-slim-on-a-hpc-cluster.html#cb60-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-70"><a href="running-slim-on-a-hpc-cluster.html#cb60-70" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> -p ./matrices/model<span class="va">${NIMROD_VAR_LS}</span></span>
-<span id="cb60-71"><a href="running-slim-on-a-hpc-cluster.html#cb60-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-72"><a href="running-slim-on-a-hpc-cluster.html#cb60-72" aria-hidden="true" tabindex="-1"></a><span class="va">RSCRIPTNAME=</span><span class="st">&quot;</span><span class="va">${PBS_O_WORKDIR}</span><span class="st">/R/</span><span class="va">${RUNNAME}</span><span class="st">.R&quot;</span> </span>
-<span id="cb60-73"><a href="running-slim-on-a-hpc-cluster.html#cb60-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-74"><a href="running-slim-on-a-hpc-cluster.html#cb60-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Get rid of any residually loaded modules and load R</span></span>
-<span id="cb60-75"><a href="running-slim-on-a-hpc-cluster.html#cb60-75" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge </span>
-<span id="cb60-76"><a href="running-slim-on-a-hpc-cluster.html#cb60-76" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/3.5.0-gnu</span>
-<span id="cb60-77"><a href="running-slim-on-a-hpc-cluster.html#cb60-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-78"><a href="running-slim-on-a-hpc-cluster.html#cb60-78" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> <span class="va">$RSCRIPTNAME</span> <span class="va">${NIMROD_VAR_SEED}</span> <span class="va">${NIMROD_VAR_PAR}</span></span>
-<span id="cb60-79"><a href="running-slim-on-a-hpc-cluster.html#cb60-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-80"><a href="running-slim-on-a-hpc-cluster.html#cb60-80" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">${TMPDIR}</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">${USER}</span>/slim_output.csv</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb61-1"><a href="running-slim-on-a-hpc-cluster.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/sw7/RCC/NimrodG/embedded-1.9.0/bin/nimexec</span></span>
+<span id="cb61-2"><a href="running-slim-on-a-hpc-cluster.html#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="running-slim-on-a-hpc-cluster.html#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modified from original script by david.green@uq.edu.au</span></span>
+<span id="cb61-4"><a href="running-slim-on-a-hpc-cluster.html#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co"># More information at: https://github.com/UQ-RCC/nimrod-embedded</span></span>
+<span id="cb61-5"><a href="running-slim-on-a-hpc-cluster.html#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb61-6"><a href="running-slim-on-a-hpc-cluster.html#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Submit this script as a PBS job script using the PBSPro qsub command.</span></span>
+<span id="cb61-7"><a href="running-slim-on-a-hpc-cluster.html#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The nimexec command will parse it into what is required.</span></span>
+<span id="cb61-8"><a href="running-slim-on-a-hpc-cluster.html#cb61-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-9"><a href="running-slim-on-a-hpc-cluster.html#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix up Account String</span></span>
+<span id="cb61-10"><a href="running-slim-on-a-hpc-cluster.html#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -A &lt;your-account-string-here&gt;</span></span>
+<span id="cb61-11"><a href="running-slim-on-a-hpc-cluster.html#cb61-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb61-12"><a href="running-slim-on-a-hpc-cluster.html#cb61-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Define resources: In this case, 40 nodes, 24 cores, 120GB per node</span></span>
+<span id="cb61-13"><a href="running-slim-on-a-hpc-cluster.html#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l select=40:ncpus=24:mem=120GB:ompthreads=1 </span></span>
+<span id="cb61-14"><a href="running-slim-on-a-hpc-cluster.html#cb61-14" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -l walltime=336:00:00</span></span>
+<span id="cb61-15"><a href="running-slim-on-a-hpc-cluster.html#cb61-15" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb61-16"><a href="running-slim-on-a-hpc-cluster.html#cb61-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Job name for ease of recognition</span></span>
+<span id="cb61-17"><a href="running-slim-on-a-hpc-cluster.html#cb61-17" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -N Nim_SLiMeg</span></span>
+<span id="cb61-18"><a href="running-slim-on-a-hpc-cluster.html#cb61-18" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb61-19"><a href="running-slim-on-a-hpc-cluster.html#cb61-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Queue</span></span>
+<span id="cb61-20"><a href="running-slim-on-a-hpc-cluster.html#cb61-20" aria-hidden="true" tabindex="-1"></a><span class="co">#PBS -q workq</span></span>
+<span id="cb61-21"><a href="running-slim-on-a-hpc-cluster.html#cb61-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-22"><a href="running-slim-on-a-hpc-cluster.html#cb61-22" aria-hidden="true" tabindex="-1"></a><span class="co"># There are additional directives for Nimrod to interpret with #NIM at the start of each line.</span></span>
+<span id="cb61-23"><a href="running-slim-on-a-hpc-cluster.html#cb61-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Tell Nimrod to use this as the shell for the job proper when it has parsed this file.</span></span>
+<span id="cb61-24"><a href="running-slim-on-a-hpc-cluster.html#cb61-24" aria-hidden="true" tabindex="-1"></a><span class="co">#NIM shebang /bin/bash</span></span>
+<span id="cb61-25"><a href="running-slim-on-a-hpc-cluster.html#cb61-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-26"><a href="running-slim-on-a-hpc-cluster.html#cb61-26" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb61-27"><a href="running-slim-on-a-hpc-cluster.html#cb61-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Tell Nimrod what range of parameter values you want to use &quot;1 to 1638 step 1&quot; </span></span>
+<span id="cb61-28"><a href="running-slim-on-a-hpc-cluster.html#cb61-28" aria-hidden="true" tabindex="-1"></a><span class="co"># =============================================================================</span></span>
+<span id="cb61-29"><a href="running-slim-on-a-hpc-cluster.html#cb61-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-30"><a href="running-slim-on-a-hpc-cluster.html#cb61-30" aria-hidden="true" tabindex="-1"></a><span class="co"># The parameters for the 100 parameter combinations are rows in the input file.</span></span>
+<span id="cb61-31"><a href="running-slim-on-a-hpc-cluster.html#cb61-31" aria-hidden="true" tabindex="-1"></a><span class="co">#NIM parameter PAR integer range from 1 to 100 step 1</span></span>
+<span id="cb61-32"><a href="running-slim-on-a-hpc-cluster.html#cb61-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-33"><a href="running-slim-on-a-hpc-cluster.html#cb61-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Repeat 50 times for each combination with a different SEED value</span></span>
+<span id="cb61-34"><a href="running-slim-on-a-hpc-cluster.html#cb61-34" aria-hidden="true" tabindex="-1"></a><span class="co">#NIM parameter SEED integer range from 1 to 50 step 1</span></span>
+<span id="cb61-35"><a href="running-slim-on-a-hpc-cluster.html#cb61-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-36"><a href="running-slim-on-a-hpc-cluster.html#cb61-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-37"><a href="running-slim-on-a-hpc-cluster.html#cb61-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Just checking that something did not go wrong with assignment of the J values.</span></span>
+<span id="cb61-38"><a href="running-slim-on-a-hpc-cluster.html#cb61-38" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${NIMROD_VAR_PAR}</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="cb61-39"><a href="running-slim-on-a-hpc-cluster.html#cb61-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">NIMROD_VAR_PAR isn&#39;t set, cannot continue...&quot;</span> </span>
+<span id="cb61-40"><a href="running-slim-on-a-hpc-cluster.html#cb61-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">exit</span> 2</span>
+<span id="cb61-41"><a href="running-slim-on-a-hpc-cluster.html#cb61-41" aria-hidden="true" tabindex="-1"></a><span class="kw">fi</span></span>
+<span id="cb61-42"><a href="running-slim-on-a-hpc-cluster.html#cb61-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-43"><a href="running-slim-on-a-hpc-cluster.html#cb61-43" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span><span class="bu"> [</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">${NIMROD_VAR_SEED}</span><span class="st">&quot;</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="cb61-44"><a href="running-slim-on-a-hpc-cluster.html#cb61-44" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">&quot;</span><span class="dt">\$</span><span class="st">NIMROD_VAR_SEED isn&#39;t set, cannot continue...&quot;</span> </span>
+<span id="cb61-45"><a href="running-slim-on-a-hpc-cluster.html#cb61-45" aria-hidden="true" tabindex="-1"></a>        <span class="bu">exit</span> 2</span>
+<span id="cb61-46"><a href="running-slim-on-a-hpc-cluster.html#cb61-46" aria-hidden="true" tabindex="-1"></a><span class="kw">fi</span></span>
+<span id="cb61-47"><a href="running-slim-on-a-hpc-cluster.html#cb61-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-48"><a href="running-slim-on-a-hpc-cluster.html#cb61-48" aria-hidden="true" tabindex="-1"></a><span class="co">#Where you submit this job from will be the value of $PBS_O_WORKDIR</span></span>
+<span id="cb61-49"><a href="running-slim-on-a-hpc-cluster.html#cb61-49" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;PBS_O_WORKDIR is </span><span class="va">${PBS_O_WORKDIR}</span><span class="st">&quot;</span> </span>
+<span id="cb61-50"><a href="running-slim-on-a-hpc-cluster.html#cb61-50" aria-hidden="true" tabindex="-1"></a><span class="co">#Everything you need should be located relative to PBS_O_WORKDIR, or else a full path</span></span>
+<span id="cb61-51"><a href="running-slim-on-a-hpc-cluster.html#cb61-51" aria-hidden="true" tabindex="-1"></a><span class="co">#Set the cd to TMPDIR for writing SLiM output</span></span>
+<span id="cb61-52"><a href="running-slim-on-a-hpc-cluster.html#cb61-52" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${TMPDIR}</span></span>
+<span id="cb61-53"><a href="running-slim-on-a-hpc-cluster.html#cb61-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-54"><a href="running-slim-on-a-hpc-cluster.html#cb61-54" aria-hidden="true" tabindex="-1"></a><span class="co">#=====================</span></span>
+<span id="cb61-55"><a href="running-slim-on-a-hpc-cluster.html#cb61-55" aria-hidden="true" tabindex="-1"></a><span class="co">#Modify these to suit.</span></span>
+<span id="cb61-56"><a href="running-slim-on-a-hpc-cluster.html#cb61-56" aria-hidden="true" tabindex="-1"></a><span class="co">#=====================</span></span>
+<span id="cb61-57"><a href="running-slim-on-a-hpc-cluster.html#cb61-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-58"><a href="running-slim-on-a-hpc-cluster.html#cb61-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Always run the entire parameter range cause nimrod can do them in any order.</span></span>
+<span id="cb61-59"><a href="running-slim-on-a-hpc-cluster.html#cb61-59" aria-hidden="true" tabindex="-1"></a><span class="co"># See the -f test below about skipping the ones we have already done.</span></span>
+<span id="cb61-60"><a href="running-slim-on-a-hpc-cluster.html#cb61-60" aria-hidden="true" tabindex="-1"></a><span class="va">RUNNAME=</span><span class="st">&quot;nim_sublauncher&quot;</span> </span>
+<span id="cb61-61"><a href="running-slim-on-a-hpc-cluster.html#cb61-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-62"><a href="running-slim-on-a-hpc-cluster.html#cb61-62" aria-hidden="true" tabindex="-1"></a><span class="va">OUTFILE=</span><span class="st">&quot;</span><span class="va">${PBS_O_WORKDIR}</span><span class="st">/Outputs/TEST_</span><span class="va">${NIMROD_VAR_PAR}</span><span class="st">_</span><span class="va">${NIMROD_VAR_SEED}</span><span class="st">.txt&quot;</span> </span>
+<span id="cb61-63"><a href="running-slim-on-a-hpc-cluster.html#cb61-63" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> <span class="st">&quot;</span><span class="va">${OUTFILE}</span><span class="st">&quot;</span> </span>
+<span id="cb61-64"><a href="running-slim-on-a-hpc-cluster.html#cb61-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-65"><a href="running-slim-on-a-hpc-cluster.html#cb61-65" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span><span class="bu"> [</span> <span class="ot">-f</span> <span class="va">${OUTFILE}</span><span class="bu"> ]</span>; <span class="kw">then</span></span>
+<span id="cb61-66"><a href="running-slim-on-a-hpc-cluster.html#cb61-66" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">&quot;Output file </span><span class="va">${OUTFILE}</span><span class="st"> already exists. Skipping this index value </span><span class="va">${NIMROD_VAR_LS}</span><span class="st"> </span><span class="va">${NIMROD_VAR_SEED}</span><span class="st">&quot;</span> </span>
+<span id="cb61-67"><a href="running-slim-on-a-hpc-cluster.html#cb61-67" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 0</span>
+<span id="cb61-68"><a href="running-slim-on-a-hpc-cluster.html#cb61-68" aria-hidden="true" tabindex="-1"></a><span class="kw">fi</span></span>
+<span id="cb61-69"><a href="running-slim-on-a-hpc-cluster.html#cb61-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-70"><a href="running-slim-on-a-hpc-cluster.html#cb61-70" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> -p ./matrices/model<span class="va">${NIMROD_VAR_LS}</span></span>
+<span id="cb61-71"><a href="running-slim-on-a-hpc-cluster.html#cb61-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-72"><a href="running-slim-on-a-hpc-cluster.html#cb61-72" aria-hidden="true" tabindex="-1"></a><span class="va">RSCRIPTNAME=</span><span class="st">&quot;</span><span class="va">${PBS_O_WORKDIR}</span><span class="st">/R/</span><span class="va">${RUNNAME}</span><span class="st">.R&quot;</span> </span>
+<span id="cb61-73"><a href="running-slim-on-a-hpc-cluster.html#cb61-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-74"><a href="running-slim-on-a-hpc-cluster.html#cb61-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Get rid of any residually loaded modules and load R</span></span>
+<span id="cb61-75"><a href="running-slim-on-a-hpc-cluster.html#cb61-75" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge </span>
+<span id="cb61-76"><a href="running-slim-on-a-hpc-cluster.html#cb61-76" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/3.5.0-gnu</span>
+<span id="cb61-77"><a href="running-slim-on-a-hpc-cluster.html#cb61-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-78"><a href="running-slim-on-a-hpc-cluster.html#cb61-78" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> <span class="va">$RSCRIPTNAME</span> <span class="va">${NIMROD_VAR_SEED}</span> <span class="va">${NIMROD_VAR_PAR}</span></span>
+<span id="cb61-79"><a href="running-slim-on-a-hpc-cluster.html#cb61-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-80"><a href="running-slim-on-a-hpc-cluster.html#cb61-80" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">${TMPDIR}</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">${USER}</span>/slim_output.csv</span></code></pre></div>
 <p>Obviously a bit more involved, so let’s go through it:</p>
 <p>The start of the script is pretty similar to a regular PBS script: you specify how many resources you want, give a job name, etc.
 The only difference is the addition of an <code>ompthreads</code> parameter in your list of resources. <code>ompthreads</code> is a specifier
@@ -601,45 +622,42 @@ For example, <code>RSCRIPTNAME="${PBS_O_WORKDIR}/R/${RUNNAME}.R"</code> is essen
 Here, instead of <code>R file=...</code>, we run <code>Rscript</code>, which allows us to feed in environment variables directly: we can use these variables
 to tell R which parameter combination and seed to run for. This Rscript will run for each and every run that happens, with a different
 combination of <code>NIMROD_VAR_SEED</code> AND <code>NIMROD_VAR_PAR</code>. Lets have a look at how the R script works:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="running-slim-on-a-hpc-cluster.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
-<span id="cb61-2"><a href="running-slim-on-a-hpc-cluster.html#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Example SLiM sublauncher in R, using Tinaroo&#39;s Embedded Nimrod system                                     #</span></span>
-<span id="cb61-3"><a href="running-slim-on-a-hpc-cluster.html#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
-<span id="cb61-4"><a href="running-slim-on-a-hpc-cluster.html#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-5"><a href="running-slim-on-a-hpc-cluster.html#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Parallel script modified from SLiM-Extras example R script, info at</span></span>
-<span id="cb61-6"><a href="running-slim-on-a-hpc-cluster.html#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.</span></span>
-<span id="cb61-7"><a href="running-slim-on-a-hpc-cluster.html#cb61-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-8"><a href="running-slim-on-a-hpc-cluster.html#cb61-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Thanks to David Green (david.green@uq.edu.au) for getting this to work on Nimrod</span></span>
-<span id="cb61-9"><a href="running-slim-on-a-hpc-cluster.html#cb61-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-10"><a href="running-slim-on-a-hpc-cluster.html#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="co"># NEED TO PROCESS 2 PARAMETERS PASSED IN REPEAT(i.e. SEED) and COMBOS ROW NUMBER</span></span>
-<span id="cb61-11"><a href="running-slim-on-a-hpc-cluster.html#cb61-11" aria-hidden="true" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">commandArgs</span>(<span class="at">trailingOnly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb61-12"><a href="running-slim-on-a-hpc-cluster.html#cb61-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ( <span class="fu">length</span>(args) <span class="sc">&lt;</span> <span class="dv">2</span> ) {</span>
-<span id="cb61-13"><a href="running-slim-on-a-hpc-cluster.html#cb61-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Need 2 command line parameters i.e. SEED, PAR</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb61-14"><a href="running-slim-on-a-hpc-cluster.html#cb61-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">q</span>()</span>
-<span id="cb61-15"><a href="running-slim-on-a-hpc-cluster.html#cb61-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb61-16"><a href="running-slim-on-a-hpc-cluster.html#cb61-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-17"><a href="running-slim-on-a-hpc-cluster.html#cb61-17" aria-hidden="true" tabindex="-1"></a>row_seed     <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(args[<span class="dv">1</span>])</span>
-<span id="cb61-18"><a href="running-slim-on-a-hpc-cluster.html#cb61-18" aria-hidden="true" tabindex="-1"></a>row_combo    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(args[<span class="dv">2</span>])</span>
-<span id="cb61-19"><a href="running-slim-on-a-hpc-cluster.html#cb61-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-20"><a href="running-slim-on-a-hpc-cluster.html#cb61-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment variables</span></span>
-<span id="cb61-21"><a href="running-slim-on-a-hpc-cluster.html#cb61-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-22"><a href="running-slim-on-a-hpc-cluster.html#cb61-22" aria-hidden="true" tabindex="-1"></a>USER <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&#39;USER&#39;</span>)</span>
-<span id="cb61-23"><a href="running-slim-on-a-hpc-cluster.html#cb61-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-24"><a href="running-slim-on-a-hpc-cluster.html#cb61-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-25"><a href="running-slim-on-a-hpc-cluster.html#cb61-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Load LHS samples - Production run is 100 samples, 50 seeds</span></span>
-<span id="cb61-26"><a href="running-slim-on-a-hpc-cluster.html#cb61-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-27"><a href="running-slim-on-a-hpc-cluster.html#cb61-27" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/seeds.csv&quot;</span>), <span class="at">header =</span> T)</span>
-<span id="cb61-28"><a href="running-slim-on-a-hpc-cluster.html#cb61-28" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/combos.csv&quot;</span>), <span class="at">header =</span> T)</span>
-<span id="cb61-29"><a href="running-slim-on-a-hpc-cluster.html#cb61-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-30"><a href="running-slim-on-a-hpc-cluster.html#cb61-30" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM, defining parameter sets according to LHC samples in command line</span></span>
-<span id="cb61-31"><a href="running-slim-on-a-hpc-cluster.html#cb61-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-32"><a href="running-slim-on-a-hpc-cluster.html#cb61-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 8 Parameters for Aim 1 and 2, 9 for Aim 3 (wsd):</span></span>
-<span id="cb61-33"><a href="running-slim-on-a-hpc-cluster.html#cb61-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Ne, rwide, pleio_cov, pleiorate, delmu, nloci, locisigma, delchr, wsd</span></span>
-<span id="cb61-34"><a href="running-slim-on-a-hpc-cluster.html#cb61-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-35"><a href="running-slim-on-a-hpc-cluster.html#cb61-35" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> row_seed</span>
-<span id="cb61-36"><a href="running-slim-on-a-hpc-cluster.html#cb61-36" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> row_combo</span>
-<span id="cb61-37"><a href="running-slim-on-a-hpc-cluster.html#cb61-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-38"><a href="running-slim-on-a-hpc-cluster.html#cb61-38" aria-hidden="true" tabindex="-1"></a>slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim&quot;</span>, </span>
-<span id="cb61-39"><a href="running-slim-on-a-hpc-cluster.html#cb61-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.character</span>(seeds<span class="sc">$</span>Seed[i]), combos[j,]<span class="sc">$</span>param1, combos[j,]<span class="sc">$</span>param2, j, <span class="at">intern=</span>T))</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="running-slim-on-a-hpc-cluster.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+<span id="cb62-2"><a href="running-slim-on-a-hpc-cluster.html#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Example SLiM sublauncher in R, using Tinaroo&#39;s Embedded Nimrod system                                     #</span></span>
+<span id="cb62-3"><a href="running-slim-on-a-hpc-cluster.html#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="do">##############################################################################################################</span></span>
+<span id="cb62-4"><a href="running-slim-on-a-hpc-cluster.html#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="running-slim-on-a-hpc-cluster.html#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Parallel script modified from SLiM-Extras example R script, info at</span></span>
+<span id="cb62-6"><a href="running-slim-on-a-hpc-cluster.html#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.</span></span>
+<span id="cb62-7"><a href="running-slim-on-a-hpc-cluster.html#cb62-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-8"><a href="running-slim-on-a-hpc-cluster.html#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Thanks to David Green (david.green@uq.edu.au) for getting this to work on Nimrod</span></span>
+<span id="cb62-9"><a href="running-slim-on-a-hpc-cluster.html#cb62-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-10"><a href="running-slim-on-a-hpc-cluster.html#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="co"># NEED TO PROCESS 2 PARAMETERS PASSED IN REPEAT(i.e. SEED) and COMBOS ROW NUMBER</span></span>
+<span id="cb62-11"><a href="running-slim-on-a-hpc-cluster.html#cb62-11" aria-hidden="true" tabindex="-1"></a>args <span class="ot">&lt;-</span> <span class="fu">commandArgs</span>(<span class="at">trailingOnly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb62-12"><a href="running-slim-on-a-hpc-cluster.html#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ( <span class="fu">length</span>(args) <span class="sc">&lt;</span> <span class="dv">2</span> ) {</span>
+<span id="cb62-13"><a href="running-slim-on-a-hpc-cluster.html#cb62-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Need 2 command line parameters i.e. SEED, PAR</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb62-14"><a href="running-slim-on-a-hpc-cluster.html#cb62-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">q</span>()</span>
+<span id="cb62-15"><a href="running-slim-on-a-hpc-cluster.html#cb62-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb62-16"><a href="running-slim-on-a-hpc-cluster.html#cb62-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-17"><a href="running-slim-on-a-hpc-cluster.html#cb62-17" aria-hidden="true" tabindex="-1"></a>row_seed     <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(args[<span class="dv">1</span>])</span>
+<span id="cb62-18"><a href="running-slim-on-a-hpc-cluster.html#cb62-18" aria-hidden="true" tabindex="-1"></a>row_combo    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(args[<span class="dv">2</span>])</span>
+<span id="cb62-19"><a href="running-slim-on-a-hpc-cluster.html#cb62-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-20"><a href="running-slim-on-a-hpc-cluster.html#cb62-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Environment variables</span></span>
+<span id="cb62-21"><a href="running-slim-on-a-hpc-cluster.html#cb62-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-22"><a href="running-slim-on-a-hpc-cluster.html#cb62-22" aria-hidden="true" tabindex="-1"></a>USER <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&#39;USER&#39;</span>)</span>
+<span id="cb62-23"><a href="running-slim-on-a-hpc-cluster.html#cb62-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-24"><a href="running-slim-on-a-hpc-cluster.html#cb62-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-25"><a href="running-slim-on-a-hpc-cluster.html#cb62-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Load LHS samples - Production run is 100 samples, 50 seeds</span></span>
+<span id="cb62-26"><a href="running-slim-on-a-hpc-cluster.html#cb62-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-27"><a href="running-slim-on-a-hpc-cluster.html#cb62-27" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/seeds.csv&quot;</span>), <span class="at">header =</span> T)</span>
+<span id="cb62-28"><a href="running-slim-on-a-hpc-cluster.html#cb62-28" aria-hidden="true" tabindex="-1"></a>combos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">paste0</span>(<span class="st">&quot;/home/&quot;</span>,USER,<span class="st">&quot;/SLiM/Scripts/Tests/Example/R/combos.csv&quot;</span>), <span class="at">header =</span> T)</span>
+<span id="cb62-29"><a href="running-slim-on-a-hpc-cluster.html#cb62-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-30"><a href="running-slim-on-a-hpc-cluster.html#cb62-30" aria-hidden="true" tabindex="-1"></a><span class="co">#Run SLiM, defining parameter sets according to LHC samples in command line</span></span>
+<span id="cb62-31"><a href="running-slim-on-a-hpc-cluster.html#cb62-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-32"><a href="running-slim-on-a-hpc-cluster.html#cb62-32" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> row_seed</span>
+<span id="cb62-33"><a href="running-slim-on-a-hpc-cluster.html#cb62-33" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> row_combo</span>
+<span id="cb62-34"><a href="running-slim-on-a-hpc-cluster.html#cb62-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-35"><a href="running-slim-on-a-hpc-cluster.html#cb62-35" aria-hidden="true" tabindex="-1"></a>slim_out <span class="ot">&lt;-</span> <span class="fu">system</span>(<span class="fu">sprintf</span>(<span class="st">&quot;/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim&quot;</span>, </span>
+<span id="cb62-36"><a href="running-slim-on-a-hpc-cluster.html#cb62-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as.character</span>(seeds<span class="sc">$</span>Seed[i]), combos[j,]<span class="sc">$</span>param1, combos[j,]<span class="sc">$</span>param2, j, <span class="at">intern=</span>T))</span></code></pre></div>
 <p>Very familiar, but there’s no for loop. R isn’t handling any parallelism in Nimrod. Each SLiM job will run its own
 one of these R scripts, with its own unique combination of seeds and combos.</p>
 </div>
@@ -647,10 +665,10 @@ one of these R scripts, with its own unique combination of seeds and combos.</p>
 <div id="estimating-simulation-time" class="section level2" number="7.5">
 <h2><span class="header-section-number">7.5</span> Estimating Simulation Time</h2>
 <p>When you scale up your simulations, you might notice that your job gets stuck in queue for a while. Such is the cost of
-shared resources, comrades. It’s important to have a look at the maximum resource allocations for your HPC and queue to
+shared resources, comrade. It’s important to have a look at the maximum resource allocations for your HPC and queue to
 make sure you aren’t stuck in an indefinite queue which will never end. On Tinaroo, the maximum wall time is 336 hours,
 for instance. This information can typically be found in your HPC’s user guide.</p>
-<p>A way to reduce your queue time is to more accurately estimate how much time your simulations will take to run. This way,
+<p>A way to reduce your queue time is to estimate how much time your simulations will take to run. This way,
 you will have a better idea of how much walltime to request, and whether you need a large number of cores and nodes, or if
 you can afford to scale it back. To measure this, you need a per-simulation worst-case scenario running time. Choose the
 parameter values that will lead to the slowest simulation in your experiment: for example, the greatest population size in
@@ -667,7 +685,7 @@ to stdout.</p>
 <p>The reason we choose the worst-case scenario rather than the average case is because typically the average can be misleading when
 the longest-running and shortest-running simulations are very different in time taken. In fact, in most computer experiments,
 the worst-case scenario is closer to the time it will take to run. If it isn’t, it is better to over-compensate than under-compensate,
-as the former won’t result in the job being prematurely terminated, meaning you would have to run it from scratch.
+as the former won’t result in the job being prematurely terminated.
 We also account for Murphy’s law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
 by your total number of runs:</p>
 <div class="center">
@@ -681,16 +699,16 @@ Let’s do a worked example:</p>
 <p>Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter combinations with 50 replicates each.
 Hence, my sequential walltime would be:</p>
 <div class="center">
-<p><span class="math inline">\(8 \times (256 \times 100) = 102400\)</span> hours.</p>
+<p><span class="math inline">\(8 \times (256 \times 50) = 102400\)</span> hours.</p>
 </div>
 <p>Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
 Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
-your worst-case time, since you can’t have half of a core. So in actuality, this example’s walltime would be <span class="math inline">\(213 + 8 = 221\)</span> hours.</p>
+one of your worst-case time, since you can’t have half of a core. So in actuality, this example’s walltime would be <span class="math inline">\(213 + 8 = 221\)</span> hours.</p>
 <p>If you suspect your RAM or storage might be an issue, you can do a similar exercise to calculate the maximum RAM used per simulation
 and the amount of storage space (although this can also be done per sample rather than per simulation to save time, assuming your samples
-are of equal/close to equal size for each time they are taken).</p>
+are of equal/close to equal size for each time point).</p>
 <p>From this information, you’ll be better equipped to figure out how many nodes and cores you need to request, and also how much time the
-simulation will take to run.</p>
+simulation will take to run. By reducing how much you’re asking for, your queue times should diminish.</p>
 </div>
 <div id="other-considerations" class="section level2" number="7.6">
 <h2><span class="header-section-number">7.6</span> Other Considerations</h2>
@@ -707,8 +725,17 @@ you are using per node so each running simulation has access to more memory.</p>
 data, copying this across can still be slow. Unfortunately, since most of the data is stored in plaintext, it is difficult to compress as well.
 Nonetheless, using tools such as <code>gzip</code>, <code>tar</code> and <code>zip</code> can help with reducing the size of your output for easier transfer from the HPC’s network
 to your more permanent storage facility (either a local drive or another cloud storage service).</p>
+</div>
+<div id="footnotes-2" class="section level2" number="7.7">
+<h2><span class="header-section-number">7.7</span> Footnotes</h2>
 
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="6">
+<li id="fn6"><p>Technical term.<a href="running-slim-on-a-hpc-cluster.html#fnref6" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 

@@ -55,6 +55,7 @@ job-array-slim-jobs
 embedded-nimrod-slim-jobs
 estimating-simulation-time
 other-considerations
+footnotes-2
 latin-hypercube-sampling
 overview-6
 what-is-latin-hypercube-sampling
@@ -66,4 +67,4 @@ working-with-slim-data
 overview-7
 an-example-of-saving-space-in-custom-slim-output
 compression
-footnotes-2
+footnotes-3

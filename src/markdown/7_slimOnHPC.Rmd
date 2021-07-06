@@ -13,12 +13,16 @@ on your PC or laptop. As such, even with all cores going at once, you'll still b
 to wait to get any data back. Luckily, high-performance computing (HPC) clusters exist which allow you
 to use hundreds or thousands of cores concurrently. Using the same methods as the previous chapter, 
 we can extend our parallelism to much larger systems. In this chapter, I'll be providing some examples of
-how to use the University of Queensland's [Tinaroo](https://rcc.uq.edu.au/tinaroo) system. Most universities
+how to use the University of Queensland's (UQ's) [Tinaroo](https://rcc.uq.edu.au/tinaroo) system. Most universities
 will have access to a similar system, and although there may be some differences in the syntax of some scripts,
 the concepts remain the same.
 
 
 ## Connecting to Tinaroo and Set-up
+
+This section is mainly written for UQ students/staff wanting to access the UQ system. Readers who aren't enrolled/employed
+by UQ unfortunately won't be able to access Tinaroo. For you, I'd suggest looking into your own organisation's HPC, and following
+their directions.
 
 To connect to Tinaroo, after having [gained access](https://rcc.uq.edu.au/tinaroo), use the ssh command with your
 username: 
@@ -29,19 +33,21 @@ You'll be asked to confirm you trust the connection and to enter your password, 
 of Tinaroo's login nodes. This is a terminal just like anywhere else, and you will find yourself in your user's home
 directory, which will be empty. On the login node (effectively a computer: HPCs are made of many nodes/PCs networked together), 
 you are able to navigate directories, make files and folders, write scripts, and queue jobs. The first thing to do
-is install SLiM and the necessary R packages to run SLiM in parallel.
-To do this, we'll start an interactive job. This will connect us to a compute node, designed to run computations, and allow
-us to build SLiM without disturbing other users on the login node:
+is install SLiM and the necessary R packages to run SLiM in parallel. Of course, you can also install the appropriate python
+scripts, or download necessary C++ header libraries to use if you are planning on running SLiM via those methods.
+
+To do this, we'll start an interactive job. This will connect us to a compute node, and allow us to build SLiM without disturbing 
+other users on the login node:
 
 `qsub -I -X -A <account-string-given-to-you> -l select=1:ncpus=24:mem=120GB -l walltime=4:00:00`
 
 `qsub` is the command that queues a job to the HPC system. Tinaroo uses PBS, a job scheduler that ensures that everyone using
-the system is able to fairly access appropriate resources for an appropriate amount of time. Other scehdulers also exist elsewhere,
+the system is able to fairly access HPC resources for an appropriate amount of time. Other schedulers exist on other systems,
 so scripts on your HPC system may look slightly different to the examples given. Here we are selecting one node, with 
 24 cores and 120GB of RAM for a total of 4 hours. Tinaroo's nodes contain 2 12 core processors (for 24 cores total), and 128GB of RAM,
 with 8GB reserved for system memory. Hence, we are asking for all of the available resources of a single node for 4 hours.
 The `-I` flag indicates the job is interactive, and the `-X` enables X-Forwarding, so if you would like to use RStudio, 
-the RStudio window will appear for you on your home machine.
+the RStudio window will appear for you on your home machine, instead of disappearing into the cybervoid[^fn8].
 
 You'll be put into a queue for a brief period (maybe not-so-brief, depending on load), and then you will be connected to a compute node.
 Now we can get to work. You'll want to make a new directory for your SLiM installation (`mkdir ~/SLiM`), and download and build SLiM.
@@ -63,11 +69,14 @@ slim -testEidos
 slim -testSLiM
 ```
 
+You'll be left with `slim` and `eidos` executables in your `build` directory, which you can copy/move anywhere you like in your home directory.
 
 Having built SLiM, you'll now want to install the parallel libraries you are using to run SLiM in parallel. Tinaroo has multiple R
 versions available, and it is up to you to load the one you would like. To see the list enter `module spider R`.
 Load the appropriate R version with `module load R/version.number`. Then, when you enter the R command, you will load a command line
 R interface for you to use. If this doesn't happen, and you load into a 'Singularity' container, type R again and it will launch.
+Note that this Singularity container can affect your non-interactive jobs, so if you load a version of R with this container in your
+non-interactive script, you'll need to remember to enter R a second time in your job script to launch the program properly (more on that soon).
 From here, install all the packages you need for your R scripts. For example:
 ```{R install_dependencies, eval = F}
 install.packages("future",
@@ -157,6 +166,22 @@ cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
 ```
 
 Here, we do the same as before, except we load a version of R, run it with a certain file, and use that R script to handle running SLiM.
+Note that on Tinaroo (at time of writing) R version 3.5.0 does not have a Singularity container, so I only have to enter R once in my 
+job script. If I was loading a version that was encapsulated by such a container, I'd need to have something like this:
+```{bash PBS_singularity, eval = F}
+...
+...
+cd $TMPDIR
+
+module load R/3.5.0
+
+# First R command loads the Singularity container, the second runs the script
+R
+R --file=/home/$USER/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R
+...
+...
+```
+
 Let's have a look at how that script looks:
 
 ```{R PBS_Reg1, eval = F}
@@ -196,7 +221,7 @@ foreach(i=1:nrow(combos)) %:%
 stopCluster(cl)
 ```
 
-This should be pretty familiar to those who read Chapter 6.4. The only real difference is we get an environment variable from
+This should be pretty familiar to those who read [Chapter 6.4](#running-slim-via-r). The only real difference is we get an environment variable from
 the HPC, `$USER`, which we use to access some HPC directories. You may notice however, that we haven't copied across the .csv files from which
 our seeds and combos are taken! To do this, open up FileZilla:
 
@@ -455,9 +480,6 @@ combos <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/combos.cs
 
 #Run SLiM, defining parameter sets according to LHC samples in command line
 
-# 8 Parameters for Aim 1 and 2, 9 for Aim 3 (wsd):
-# Ne, rwide, pleio_cov, pleiorate, delmu, nloci, locisigma, delchr, wsd
-
 i <- row_seed
 j <- row_combo
 
@@ -472,11 +494,11 @@ one of these R scripts, with its own unique combination of seeds and combos.
 ## Estimating Simulation Time 
 
 When you scale up your simulations, you might notice that your job gets stuck in queue for a while. Such is the cost of
-shared resources, comrades. It's important to have a look at the maximum resource allocations for your HPC and queue to
+shared resources, comrade. It's important to have a look at the maximum resource allocations for your HPC and queue to
 make sure you aren't stuck in an indefinite queue which will never end. On Tinaroo, the maximum wall time is 336 hours,
 for instance. This information can typically be found in your HPC's user guide.
 
-A way to reduce your queue time is to more accurately estimate how much time your simulations will take to run. This way,
+A way to reduce your queue time is to estimate how much time your simulations will take to run. This way,
 you will have a better idea of how much walltime to request, and whether you need a large number of cores and nodes, or if
 you can afford to scale it back. To measure this, you need a per-simulation worst-case scenario running time. Choose the
 parameter values that will lead to the slowest simulation in your experiment: for example, the greatest population size in
@@ -498,7 +520,7 @@ to stdout.
 The reason we choose the worst-case scenario rather than the average case is because typically the average can be misleading when 
 the longest-running and shortest-running simulations are very different in time taken. In fact, in most computer experiments, 
 the worst-case scenario is closer to the time it will take to run. If it isn't, it is better to over-compensate than under-compensate, 
-as the former won't result in the job being prematurely terminated, meaning you would have to run it from scratch. 
+as the former won't result in the job being prematurely terminated. 
 We also account for Murphy's law this way. Once you have a reasonable estimate of your per-run worst-case scenario, you can multiply this
 by your total number of runs:
 
@@ -516,19 +538,19 @@ Say I have calculated a worst-case time of 8 hours. I need to do 256 parameter c
 Hence, my sequential walltime would be: 
 
 :::: {.center data-latex=""}
-$8 \times (256 \times 100) = 102400$ hours.
+$8 \times (256 \times 50) = 102400$ hours.
 ::::
 
 Now say I want to use 20 nodes with 24 cores each. I can divide 102400 by 480 to get 213.33 hours, about 9 days.
 Keep in mind that if your sequential walltime does not evenly divide into your number of cores, you will be underestimating by
-your worst-case time, since you can't have half of a core. So in actuality, this example's walltime would be $213 + 8 = 221$ hours.
+one of your worst-case time, since you can't have half of a core. So in actuality, this example's walltime would be $213 + 8 = 221$ hours.
 
 If you suspect your RAM or storage might be an issue, you can do a similar exercise to calculate the maximum RAM used per simulation
 and the amount of storage space (although this can also be done per sample rather than per simulation to save time, assuming your samples
-are of equal/close to equal size for each time they are taken). 
+are of equal/close to equal size for each time point). 
 
 From this information, you'll be better equipped to figure out how many nodes and cores you need to request, and also how much time the 
-simulation will take to run.
+simulation will take to run. By reducing how much you're asking for, your queue times should diminish.
 
 ## Other Considerations
 
@@ -546,3 +568,7 @@ Another problem is in the form of getting data out: in large simulations the SLi
 data, copying this across can still be slow. Unfortunately, since most of the data is stored in plaintext, it is difficult to compress as well. 
 Nonetheless, using tools such as `gzip`, `tar` and `zip` can help with reducing the size of your output for easier transfer from the HPC's network
 to your more permanent storage facility (either a local drive or another cloud storage service).
+
+
+## Footnotes
+[^fn8]: Technical term.

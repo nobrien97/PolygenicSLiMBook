@@ -209,6 +209,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -224,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-2"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -252,7 +253,8 @@ To answer a question, we need multiple simulations with different variable input
 The problem here is that the more simulations you need to do, the longer the time required if you were to run them sequentially.
 Luckily, SLiM is designed with parallelism in mind. That is, you can have many SLiM simulations going at once, each running on a separate CPU core.
 This can all be done in whatever programming language you like, as long as it has a function to invoke system operating system commands
-(like <code>system()</code> in R), and ssupport for multicore processing.</p>
+(like <code>system()</code> in R), and support for multicore processing. For more on parallelism, I’d recommend reading <a href="http://librestats.com/RparallelGuide/">this crass, but entertaining guide</a>,
+particularly the first few sections. This will get you up to speed on the strengths and limitations of parallel processing.</p>
 <p>In this section, I’ll go over how to run SLiM at the command line in a number of languages, and how to parallelise in each of them.
 I even provide a C++ implementation which is overkill and not necessary at all, but it was fun<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> to program!</p>
 <p>Note that more information (and indeed some of the scripts you will see below are based upon these) is available at the

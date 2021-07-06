@@ -209,6 +209,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -224,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-2"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -266,35 +267,35 @@ correlations between sampled variables (so as to avoid collinearity between fact
 <h2><span class="header-section-number">8.3</span> Generating hypercubes in R</h2>
 <p>To generate LHCs in R, you can use the <code>DoE.wrapper</code> package, which nicely wraps a bunch of
 LHC methods from <code>LHS</code> into an easy and user-friendly interface.</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="latin-hypercube-sampling.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Script to generate a Latin hypercube for two parameters</span></span>
-<span id="cb63-2"><a href="latin-hypercube-sampling.html#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoE.wrapper)</span>
-<span id="cb63-3"><a href="latin-hypercube-sampling.html#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-4"><a href="latin-hypercube-sampling.html#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample a random 32 bit int as a seed for the LHC generation</span></span>
-<span id="cb63-5"><a href="latin-hypercube-sampling.html#cb63-5" aria-hidden="true" tabindex="-1"></a>lhc_seed <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>.Machine<span class="sc">$</span>integer.max, <span class="dv">1</span>)</span>
-<span id="cb63-6"><a href="latin-hypercube-sampling.html#cb63-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-7"><a href="latin-hypercube-sampling.html#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co"># In the example in chapter 8, this is 1868057774</span></span>
-<span id="cb63-8"><a href="latin-hypercube-sampling.html#cb63-8" aria-hidden="true" tabindex="-1"></a>lhc <span class="ot">&lt;-</span> <span class="fu">lhs.design</span>(</span>
-<span id="cb63-9"><a href="latin-hypercube-sampling.html#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nruns =</span> <span class="dv">512</span>,</span>
-<span id="cb63-10"><a href="latin-hypercube-sampling.html#cb63-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
-<span id="cb63-11"><a href="latin-hypercube-sampling.html#cb63-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;maximin&quot;</span>,</span>
-<span id="cb63-12"><a href="latin-hypercube-sampling.html#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">factor.names =</span> <span class="fu">list</span>(</span>
-<span id="cb63-13"><a href="latin-hypercube-sampling.html#cb63-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">param1 =</span> <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>),</span>
-<span id="cb63-14"><a href="latin-hypercube-sampling.html#cb63-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">param2 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">20000</span>)),</span>
-<span id="cb63-15"><a href="latin-hypercube-sampling.html#cb63-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> lhc_seed</span>
-<span id="cb63-16"><a href="latin-hypercube-sampling.html#cb63-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb63-17"><a href="latin-hypercube-sampling.html#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostics</span></span>
-<span id="cb63-18"><a href="latin-hypercube-sampling.html#cb63-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot param1 against param2 to visualise any obvious gaps in sampling and correlations</span></span>
-<span id="cb63-19"><a href="latin-hypercube-sampling.html#cb63-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lhc)</span>
-<span id="cb63-20"><a href="latin-hypercube-sampling.html#cb63-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-21"><a href="latin-hypercube-sampling.html#cb63-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a matrix of correlations between factors</span></span>
-<span id="cb63-22"><a href="latin-hypercube-sampling.html#cb63-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(lhc)</span>
-<span id="cb63-23"><a href="latin-hypercube-sampling.html#cb63-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-24"><a href="latin-hypercube-sampling.html#cb63-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histograms to check uniformity</span></span>
-<span id="cb63-25"><a href="latin-hypercube-sampling.html#cb63-25" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lhc<span class="sc">$</span>param1)</span>
-<span id="cb63-26"><a href="latin-hypercube-sampling.html#cb63-26" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lhc<span class="sc">$</span>param2)</span>
-<span id="cb63-27"><a href="latin-hypercube-sampling.html#cb63-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-28"><a href="latin-hypercube-sampling.html#cb63-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the output to file</span></span>
-<span id="cb63-29"><a href="latin-hypercube-sampling.html#cb63-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lhc, <span class="st">&quot;./LHC.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="latin-hypercube-sampling.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Script to generate a Latin hypercube for two parameters</span></span>
+<span id="cb64-2"><a href="latin-hypercube-sampling.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoE.wrapper)</span>
+<span id="cb64-3"><a href="latin-hypercube-sampling.html#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="latin-hypercube-sampling.html#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample a random 32 bit int as a seed for the LHC generation</span></span>
+<span id="cb64-5"><a href="latin-hypercube-sampling.html#cb64-5" aria-hidden="true" tabindex="-1"></a>lhc_seed <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span>.Machine<span class="sc">$</span>integer.max, <span class="dv">1</span>)</span>
+<span id="cb64-6"><a href="latin-hypercube-sampling.html#cb64-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-7"><a href="latin-hypercube-sampling.html#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co"># In the example in chapter 8, this is 1868057774</span></span>
+<span id="cb64-8"><a href="latin-hypercube-sampling.html#cb64-8" aria-hidden="true" tabindex="-1"></a>lhc <span class="ot">&lt;-</span> <span class="fu">lhs.design</span>(</span>
+<span id="cb64-9"><a href="latin-hypercube-sampling.html#cb64-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">nruns =</span> <span class="dv">512</span>,</span>
+<span id="cb64-10"><a href="latin-hypercube-sampling.html#cb64-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfactors =</span> <span class="dv">2</span>,</span>
+<span id="cb64-11"><a href="latin-hypercube-sampling.html#cb64-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;maximin&quot;</span>,</span>
+<span id="cb64-12"><a href="latin-hypercube-sampling.html#cb64-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">factor.names =</span> <span class="fu">list</span>(</span>
+<span id="cb64-13"><a href="latin-hypercube-sampling.html#cb64-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">param1 =</span> <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>),</span>
+<span id="cb64-14"><a href="latin-hypercube-sampling.html#cb64-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">param2 =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">20000</span>)),</span>
+<span id="cb64-15"><a href="latin-hypercube-sampling.html#cb64-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> lhc_seed</span>
+<span id="cb64-16"><a href="latin-hypercube-sampling.html#cb64-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb64-17"><a href="latin-hypercube-sampling.html#cb64-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostics</span></span>
+<span id="cb64-18"><a href="latin-hypercube-sampling.html#cb64-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot param1 against param2 to visualise any obvious gaps in sampling and correlations</span></span>
+<span id="cb64-19"><a href="latin-hypercube-sampling.html#cb64-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lhc)</span>
+<span id="cb64-20"><a href="latin-hypercube-sampling.html#cb64-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-21"><a href="latin-hypercube-sampling.html#cb64-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a matrix of correlations between factors</span></span>
+<span id="cb64-22"><a href="latin-hypercube-sampling.html#cb64-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(lhc)</span>
+<span id="cb64-23"><a href="latin-hypercube-sampling.html#cb64-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-24"><a href="latin-hypercube-sampling.html#cb64-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histograms to check uniformity</span></span>
+<span id="cb64-25"><a href="latin-hypercube-sampling.html#cb64-25" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lhc<span class="sc">$</span>param1)</span>
+<span id="cb64-26"><a href="latin-hypercube-sampling.html#cb64-26" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lhc<span class="sc">$</span>param2)</span>
+<span id="cb64-27"><a href="latin-hypercube-sampling.html#cb64-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-28"><a href="latin-hypercube-sampling.html#cb64-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the output to file</span></span>
+<span id="cb64-29"><a href="latin-hypercube-sampling.html#cb64-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lhc, <span class="st">&quot;./LHC.csv&quot;</span>)</span></code></pre></div>
 <p>The <code>lhs.design</code> function creates a Latin hypercube of <code>nruns</code> samples, with <code>nfactors</code> factors/columns.
 You can choose a method for sampling your parameter combinations with <code>type</code>. I find that most of the time
 <code>maximin</code> is best suited to generate LHCs with maximised spaced between samples and minimised correlations

@@ -65,7 +65,7 @@ less often than the other output (line 420), to ensure the simulation is fast, a
 Another option is to compress your output. SLiM does have an option to compress custom output (via the `writeFile(compress = T)` argument),
 however keep in mind this will raise the memory footprint of your model. As the documentation says, \"If the compress option is used in conjunction 
 with append==T, Eidos will buffer data to append and flush it to the file in a delayed fashion (for performance reasons), and so appended data 
-may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example).\"[^fn8]
+may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example).\"[^fn9]
 
 In English, that means that SLiM holds onto the data that would be written to the file until it has time to decompress the file, add the new output line/s,
 and recompress the file. This probably won't happen until the end of the simulation, however you can force this process to happen using the 
@@ -74,4 +74,4 @@ appending output to a file every 50 generations, and you wanted to compress this
 by calling `flushFile()` every 500 generations or so.
 
 ## Footnotes
-[^fn8]: Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: http://benhaller.com/slim/Eidos_Manual.pdf 
+[^fn9]: Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: http://benhaller.com/slim/Eidos_Manual.pdf 

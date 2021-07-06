@@ -105,7 +105,7 @@ cowsay "I don't think, therefore I don't am."
 ```
 
 ```
-## You are a fluke of the universe; you have no right to be here.
+## You love peace.
 ##  ______________________________________
 ## < I don't think, therefore I don't am. >
 ##  --------------------------------------
@@ -196,9 +196,10 @@ fortune | cowsay
 ```
 
 ```
-##  _________________________________
-## < There was a phone call for you. >
-##  ---------------------------------
+##  ________________________________
+## / Your business will assume vast \
+## \ proportions.                   /
+##  --------------------------------
 ##         \   ^__^
 ##          \  (oo)\_______
 ##             (__)\       )\/\

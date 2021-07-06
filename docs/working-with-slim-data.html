@@ -209,6 +209,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#estimating-simulation-time"><i class="fa fa-check"></i><b>7.5</b> Estimating Simulation Time</a></li>
 <li class="chapter" data-level="7.6" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#other-considerations"><i class="fa fa-check"></i><b>7.6</b> Other Considerations</a></li>
+<li class="chapter" data-level="7.7" data-path="running-slim-on-a-hpc-cluster.html"><a href="running-slim-on-a-hpc-cluster.html#footnotes-2"><i class="fa fa-check"></i><b>7.7</b> Footnotes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="latin-hypercube-sampling.html"><a href="latin-hypercube-sampling.html"><i class="fa fa-check"></i><b>8</b> Latin Hypercube Sampling</a>
 <ul>
@@ -224,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#overview-7"><i class="fa fa-check"></i><b>9.1</b> Overview</a></li>
 <li class="chapter" data-level="9.2" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#an-example-of-saving-space-in-custom-slim-output"><i class="fa fa-check"></i><b>9.2</b> An example of saving space in custom SLiM output</a></li>
 <li class="chapter" data-level="9.3" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#compression"><i class="fa fa-check"></i><b>9.3</b> Compression</a></li>
-<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-2"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
+<li class="chapter" data-level="9.4" data-path="working-with-slim-data.html"><a href="working-with-slim-data.html#footnotes-3"><i class="fa fa-check"></i><b>9.4</b> Footnotes</a></li>
 </ul></li>
 </ul>
 
@@ -294,14 +295,14 @@ less often than the other output (line 420), to ensure the simulation is fast, a
 <p>Another option is to compress your output. SLiM does have an option to compress custom output (via the <code>writeFile(compress = T)</code> argument),
 however keep in mind this will raise the memory footprint of your model. As the documentation says, "If the compress option is used in conjunction
 with append==T, Eidos will buffer data to append and flush it to the file in a delayed fashion (for performance reasons), and so appended data
-may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example)."<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+may not be visible in the file until later – potentially not until the process ends (i.e., the end of the SLiM simulation, for example)."<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
 <p>In English, that means that SLiM holds onto the data that would be written to the file until it has time to decompress the file, add the new output line/s,
 and recompress the file. This probably won’t happen until the end of the simulation, however you can force this process to happen using the
 function <code>flushFile()</code>, which will stick all the ‘waiting-to-be-written’ lines of output onto the file and clear the queue. For example, if you are
 appending output to a file every 50 generations, and you wanted to compress this output, you could use <code>flushFile()</code> to keep your RAM usage under control
 by calling <code>flushFile()</code> every 500 generations or so.</p>
 </div>
-<div id="footnotes-2" class="section level2" number="9.4">
+<div id="footnotes-3" class="section level2" number="9.4">
 <h2><span class="header-section-number">9.4</span> Footnotes</h2>
 
 </div>
@@ -317,10 +318,11 @@ by calling <code>flushFile()</code> every 500 generations or so.</p>
 
 
 
+
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: <a href="http://benhaller.com/slim/Eidos_Manual.pdf" class="uri">http://benhaller.com/slim/Eidos_Manual.pdf</a><a href="working-with-slim-data.html#fnref6" class="footnote-back">↩︎</a></p></li>
+<ol start="7">
+<li id="fn7"><p>Haller, B.C. (2021) Eidos: A Simple Scripting Language, Version 3.6, pp. 71, URL: <a href="http://benhaller.com/slim/Eidos_Manual.pdf" class="uri">http://benhaller.com/slim/Eidos_Manual.pdf</a><a href="working-with-slim-data.html#fnref7" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
