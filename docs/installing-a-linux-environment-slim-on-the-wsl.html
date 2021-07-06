@@ -274,7 +274,7 @@ they are a .txt or something, but they are exposed to the filesystem in the same
 to /dev/null will silence the output so it isn’t displayed in the terminal:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim # With output</span></code></pre></div>
 <pre><code>## // Initial random seed:
-## 1698722294479
+## 1703243462155
 ## 
 ## // RunInitializeCallbacks():
 ## initializeMutationRate(1e-07);
@@ -290,16 +290,16 @@ to /dev/null will silence the output so it isn’t displayed in the terminal:</p
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">slim</span> ~/PolygenicSLiM/box2.1.slim <span class="op">&gt;</span> /dev/null # Output nullified</span></code></pre></div>
 <p>/dev/urandom will generate pseudorandom numbers:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="installing-a-linux-environment-slim-on-the-wsl.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">od</span> -d /dev/urandom <span class="kw">|</span> <span class="fu">head</span> <span class="co"># Generate random decimal integers</span></span></code></pre></div>
-<pre><code>## 0000000 48603 24706 21097 36709 41315 41966 47984 15482
-## 0000020 60065 57651 20598 33758   370 40125 37019 10349
-## 0000040 17031 36927 32569 46115 61330 57832 56674 37068
-## 0000060 60443 64474 52054  9994  3547 48047 31676 58931
-## 0000100  2659 57633 15414 60404 55362 17506 33520 33819
-## 0000120  3343 18075 46777 34982 48889 37907 49327  7183
-## 0000140 43405 24789 29225 53357 14581 17236 19847 37137
-## 0000160 49038 31997 26336 15198   508 58367 31667   268
-## 0000200 22561  4885 24088  2877 13728 60191 39805 46753
-## 0000220 26594 31136 43056 63483 12889 65138 21573 11621</code></pre>
+<pre><code>## 0000000 39078 36321 64213 57950 36335 26664 17958 65074
+## 0000020  5965 57462 55814 24519 58739 42051 63045  5133
+## 0000040 13711  2691 65526 32165 34490 56049 63124 17262
+## 0000060 59858 42115 22459 11359 47546 61990 36959  3686
+## 0000100 24749 54073  5735 51739 11504 48603 19803 30369
+## 0000120 24443 14149  1091 53591 33754 26369 58714 53590
+## 0000140 30543 46639 34362 20475 15029 53802 15548  9911
+## 0000160 49172  2699  6060 11221 41554 35477 57763 61159
+## 0000200 17234 13392 56335 45459 59027 22235 57088 28691
+## 0000220 46437 29438 42663 25262  6860 54112 24391 64971</code></pre>
 <p>The power of having these very specific commands which can act on a lot of different types of files is that Linux users can
 chain together these commands to efficiently solve a larger problem.</p>
 </div>

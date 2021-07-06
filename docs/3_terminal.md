@@ -105,7 +105,7 @@ cowsay "I don't think, therefore I don't am."
 ```
 
 ```
-## Stay the curse.
+## You are a fluke of the universe; you have no right to be here.
 ##  ______________________________________
 ## < I don't think, therefore I don't am. >
 ##  --------------------------------------
@@ -196,15 +196,9 @@ fortune | cowsay
 ```
 
 ```
-##  _________________________________________
-## / "I understand this is your first dead   \
-## | client," Sabian was saying. The         |
-## | absurdity of the statement made me want |
-## | to laugh but they don't call me Deadpan |
-## | Allie and lie.                          |
-## |                                         |
-## \ -- Pat Cadigan, "Mindplayers"           /
-##  -----------------------------------------
+##  _________________________________
+## < There was a phone call for you. >
+##  ---------------------------------
 ##         \   ^__^
 ##          \  (oo)\_______
 ##             (__)\       )\/\
