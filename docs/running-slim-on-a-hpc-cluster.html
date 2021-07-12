@@ -24,7 +24,7 @@
 <meta name="author" content="Nick O’Brien" />
 
 
-<meta name="date" content="2021-07-06" />
+<meta name="date" content="2021-07-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -329,7 +329,7 @@ Here is an example of how you might run just one SLiM run from a PBS script alon
 <span id="cb54-9"><a href="running-slim-on-a-hpc-cluster.html#cb54-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb54-10"><a href="running-slim-on-a-hpc-cluster.html#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="ex">~/SLiM/slim</span> ~/SLiM/Scripts/Tests/Example/SLiM/slim_example.slim</span>
 <span id="cb54-11"><a href="running-slim-on-a-hpc-cluster.html#cb54-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-12"><a href="running-slim-on-a-hpc-cluster.html#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
+<span id="cb54-12"><a href="running-slim-on-a-hpc-cluster.html#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /scratch/user/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
 <p>As you can see, the script is split into two sections: the instructions for the scheduler, and the script/job itself.
 <code>-q</code> defines the queue you want your job put into. On Tinaroo, workq is the default, however this will be different on
 other systems. Generally, keeping it as the default is fine, but information on when to change your queue can be found
@@ -371,7 +371,7 @@ I’d rather use R, so let’s do that:</p>
 <span id="cb56-11"><a href="running-slim-on-a-hpc-cluster.html#cb56-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb56-12"><a href="running-slim-on-a-hpc-cluster.html#cb56-12" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> --file=/home/<span class="va">$USER</span>/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R</span>
 <span id="cb56-13"><a href="running-slim-on-a-hpc-cluster.html#cb56-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-14"><a href="running-slim-on-a-hpc-cluster.html#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
+<span id="cb56-14"><a href="running-slim-on-a-hpc-cluster.html#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /scratch/user/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
 <p>Here, we do the same as before, except we load a version of R, run it with a certain file, and use that R script to handle running SLiM.
 Note that on Tinaroo (at time of writing) R version 3.5.0 does not have a Singularity container, so I only have to enter R once in my
 job script. If I was loading a version that was encapsulated by such a container, I’d need to have something like this:</p>
@@ -466,7 +466,7 @@ This is much more powerful for large jobs, where the amount of wasted time betwe
 <span id="cb59-12"><a href="running-slim-on-a-hpc-cluster.html#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-13"><a href="running-slim-on-a-hpc-cluster.html#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> --file=/home/<span class="va">$USER</span>/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R</span>
 <span id="cb59-14"><a href="running-slim-on-a-hpc-cluster.html#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-15"><a href="running-slim-on-a-hpc-cluster.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
+<span id="cb59-15"><a href="running-slim-on-a-hpc-cluster.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">$TMPDIR</span>/slim_output.csv <span class="op">&gt;&gt;</span> /scratch/user/<span class="va">$USER</span>/slim_output.csv</span></code></pre></div>
 <p><code>#PBS -J 1-4</code> Is the key line here, where <code>-J</code> signifies a job array, and <code>1-4</code> is a vector of identifiers for each sub-job in the
 array. These identifiers provide a new environment variable, <code>$PBS_ARRAY_INDEX</code>, which can be used to identify which node is in charge
 of the current script. This can be loaded into R:</p>
@@ -603,7 +603,7 @@ anymore: it’s a .nsh.</p>
 <span id="cb61-77"><a href="running-slim-on-a-hpc-cluster.html#cb61-77" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-78"><a href="running-slim-on-a-hpc-cluster.html#cb61-78" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> <span class="va">$RSCRIPTNAME</span> <span class="va">${NIMROD_VAR_SEED}</span> <span class="va">${NIMROD_VAR_PAR}</span></span>
 <span id="cb61-79"><a href="running-slim-on-a-hpc-cluster.html#cb61-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-80"><a href="running-slim-on-a-hpc-cluster.html#cb61-80" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">${TMPDIR}</span>/slim_output.csv <span class="op">&gt;&gt;</span> /30days/<span class="va">${USER}</span>/slim_output.csv</span></code></pre></div>
+<span id="cb61-80"><a href="running-slim-on-a-hpc-cluster.html#cb61-80" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /<span class="va">${TMPDIR}</span>/slim_output.csv <span class="op">&gt;&gt;</span> /scratch/user/<span class="va">${USER}</span>/slim_output.csv</span></code></pre></div>
 <p>Obviously a bit more involved, so let’s go through it:</p>
 <p>The start of the script is pretty similar to a regular PBS script: you specify how many resources you want, give a job name, etc.
 The only difference is the addition of an <code>ompthreads</code> parameter in your list of resources. <code>ompthreads</code> is a specifier

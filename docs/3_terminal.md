@@ -105,7 +105,9 @@ cowsay "I don't think, therefore I don't am."
 ```
 
 ```
-## You like to form new friendships and make new acquaintances.
+## A classic is something that everyone wants to have read
+## and nobody wants to read.
+## 		-- Mark Twain, "The Disappearance of Literature"
 ##  ______________________________________
 ## < I don't think, therefore I don't am. >
 ##  --------------------------------------
@@ -196,10 +198,10 @@ fortune | cowsay
 ```
 
 ```
-##  _________________________________
-## / Domestic happiness and faithful \
-## \ friends.                        /
-##  ---------------------------------
+##  ________________________________________
+## / You will always have good luck in your \
+## \ personal affairs.                      /
+##  ----------------------------------------
 ##         \   ^__^
 ##          \  (oo)\_______
 ##             (__)\       )\/\

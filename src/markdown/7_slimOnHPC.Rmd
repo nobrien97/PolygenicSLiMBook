@@ -107,7 +107,7 @@ cd $TMPDIR
 
 ~/SLiM/slim ~/SLiM/Scripts/Tests/Example/SLiM/slim_example.slim
 
-cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
+cat /$TMPDIR/slim_output.csv >> /scratch/user/$USER/slim_output.csv
 
 ```
 
@@ -161,7 +161,7 @@ module load R/3.5.0
 
 R --file=/home/$USER/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R
 
-cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
+cat /$TMPDIR/slim_output.csv >> /scratch/user/$USER/slim_output.csv
 
 ```
 
@@ -273,7 +273,7 @@ module load R/3.5.0
 
 R --file=/home/$USER/SLiM/Scripts/Tests/Example/R/slim_sublauncher.R
 
-cat /$TMPDIR/slim_output.csv >> /30days/$USER/slim_output.csv
+cat /$TMPDIR/slim_output.csv >> /scratch/user/$USER/slim_output.csv
 
 ```
 
@@ -421,7 +421,7 @@ module load R/3.5.0-gnu
 
 Rscript $RSCRIPTNAME ${NIMROD_VAR_SEED} ${NIMROD_VAR_PAR}
 
-cat /${TMPDIR}/slim_output.csv >> /30days/${USER}/slim_output.csv
+cat /${TMPDIR}/slim_output.csv >> /scratch/user/${USER}/slim_output.csv
 
 ```
 
