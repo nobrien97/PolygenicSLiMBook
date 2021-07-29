@@ -503,6 +503,107 @@ The main problem with this method is writing to many different files creates ove
 to overload the filesystem. This can cause problems for other users if you are on a HPC. My recommendation is for large simulations you should use
 one single large file that you constantly append to, whereas smaller runs are probably fine to do using multiple files.
 
+## Bonus: Thread Safety
+
+Thread safety is the idea that parallel jobs don't interact with each other in unexpected ways. Parallel code is often technically simple to implement (particularly
+in the case of R), but ensuring that you don't end up with race conditions can become tricky. A race condition is where the output of a program is dependent
+on the timing of certain parts of the code. For example, in a simple program you might end up with:
+```{cpp racecond_none, eval = F}
+#include <iostream>
+
+int main()
+{
+  int x = 5
+  int y = 6
+
+  std::cout << x+y << std::endl;
+  return 0;
+}
+
+```
+
+In this example first x is declared to be equal to 5, then y is declared equal to 6, and then they are added. There is no way that this ordering can change, 
+because there is only one thread of execution going down the code.
+However, you can get some wacky results if this isn't the case. For instance:
+```{cpp racecond_true, eval = F}
+// To compile this, make sure you use g++ -pthread or the multithreading won't work!
+#include <thread>
+#include <iostream>
+
+int x = 0;
+int y = 0;
+int z = 0;
+
+void updateX()
+{
+  for (int i = 0; i < 100000; i++)
+    x += i;
+}
+
+void updateY()
+{
+  for (int i = 0; i < 1000; i++)
+    y += i;
+}
+
+void addNumbers()
+{
+  z = x + y;
+}
+
+int main()
+{
+  std::thread thread1(updateX);
+  std::thread thread2(updateY);
+  std::thread thread3(addNumbers);
+  // Close the threads after we are done with them
+  thread1.join();
+  thread2.join();
+  thread3.join();
+
+
+  std::cout << z << std::endl;
+  return 0;
+}
+
+```
+
+Here, we have a race condition: we create three threads of execution which concurrently do different things: thread1 calls the `updateX()` function, 
+which increments `x` until it gets to a certain size; thread2 calls the `updateY()` function, which does the same to `y`; and thread3 calls the 
+`addNumbers()` function which adds those two variables together into the variable `z`.
+Then the number `z` is spat out to the console. But we will get very different results when we run the program multiple times. This is because the call to 
+`addNumbers()` will generate a different result depending on how many iterations of `updateX()` and `updateY()` have happened on threads 1 and 2 by the time 
+thread 3 calls `addNumbers()`. This will depend on your processor's clock speed, which changes over time, as well as the timing of your operating system allocating
+memory to your program to use, and other technical details.
+In summary: race conditions ensure non-deterministic results!
+
+But we had to construct a whole scenario using C++ to get this to happen. Surely it can't be a problem for our case? Yes and no. R's `foreach` does a pretty good
+job at preventing these kinds of problems, but our problems with race conditions aren't really in the R code, but in the output we store from SLiM.
+See, the example SLiM script outputs a line of output every so often (as defined by the `sampleRate` parameter). If you have many SLiM simulations all writing to this
+file at once, there is a chance that 
+- They won't be put in the right order,
+- Some lines will be completely missed,
+- Various characters are removed at random (new lines)
+
+The first problem isn't really a problem for us: we aren't interested in the order of the data, and we can reorder it anyway after the fact. The second one is 
+problematic, but only if it occurs frequently: if one line representing a single generation in a single population in a simulation of 25,000 populations evolving
+over 100,000 generations gets missed, I think we can get over that. 
+The third is really the painful one. This would result in random empty columns being added to the .csv, and R having a tough time reading the file in general.
+Fortunately, in my experience these problems are not very common at all. In my around 100,000 simulations (mostly in parallel chunks of ~1000 cores), I have only
+had problems with the third issue once. Still annoying, but not absolutely backbreaking.
+
+However, we can still fix this issue. The fix is considerably more difficult to explain than the regular way of saving output, so I have decided to keep it as a 
+fix if you are planning to run a largesimulation. Otherwise, I don't think it's necessary to worry about.
+
+### The Fix
+
+What this fix does is saves each simulation's runs into separate files rather than a single master output that all simulations are free-for-alling over adding their
+data to. Once all the simulations are finished, we call another command to combine all of these files into a master output.
+This involves changing the filepath for each `writeFile()` command in the SLiM script to one that includes a unique identifier: this is a combination of the seed
+and the `modelindex` parameter (more on that [here][modelindex]).
+
+
+
 
 ## Footnotes
 [^fn4]: https://xkcd.com/612/
