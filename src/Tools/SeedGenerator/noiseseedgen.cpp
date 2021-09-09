@@ -187,6 +187,7 @@ int main(int argc, char* argv[])
     }
     // Initialise vector for generated numbers
     std::vector<uint64_t> seeds;
+    int initSeed = mersseed();
 
     // Generate seeds and fill vector
     if (bit64)
@@ -195,7 +196,7 @@ int main(int argc, char* argv[])
         for (int i = 0; i < n_samples; ++i)
         {
             // Multiply input position by large prime for some more unpredictability
-            uint64_t gen = randNoise(i * 0x982C28C631FE28B3, mersseed());
+            uint64_t gen = randNoise(i * 0x982C28C631FE28B3, initSeed);
             seeds.emplace_back(gen);
         }
     }
@@ -204,7 +205,7 @@ int main(int argc, char* argv[])
 
         for (int i = 0; i < n_samples; ++i)
         {
-            uint32_t gen = randNoise32(i * 0x982C28C631FE28B3, mersseed());
+            uint32_t gen = randNoise32(i * 0x982C28C631FE28B3, initSeed);
             seeds.emplace_back(gen);
         }
     }
