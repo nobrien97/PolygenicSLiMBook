@@ -12,14 +12,56 @@ using std::cout;
 #define required_argument 1
 #define optional_argument 2
 
+// Function to generate random number from noise - mangles bits, overflows
+static uint64_t randNoise(int position, unsigned int seed)
+{
+    uint64_t PRIME1 = 0xD56AC08568010DB9;
+    uint64_t PRIME2 = 0x3EE9CACE50B4F641;
+    uint64_t PRIME3 = 0xFB7D9F3F3DCAA0CD;
+
+    uint64_t mangled = position;
+    mangled *= PRIME1;
+    mangled += seed;
+    mangled ^= (mangled >> 8);
+    mangled *= PRIME2;
+    mangled ^= (mangled << 6);
+    mangled *= PRIME3;
+    mangled *= mangled;
+    mangled ^= (mangled >> 5);
+    return mangled;
+}
+
+// Function to generate random number from noise - mangles bits, overflows
+// Primes from: https://github.com/sublee/squirrel3-python/blob/master/squirrel3.py
+static uint32_t randNoise32(int position, unsigned int seed)
+{
+    uint32_t PRIME1 = 0xb5297a4d;
+    uint32_t PRIME2 = 0x68e31da4;
+    uint32_t PRIME3 = 0x1b56c4e9;
+
+    uint32_t mangled = position;
+    mangled *= PRIME1;
+    mangled += seed;
+    mangled ^= (mangled >> 8);
+    mangled *= PRIME2;
+    mangled ^= (mangled << 6);
+    mangled *= PRIME3;
+    mangled *= mangled;
+    mangled ^= (mangled >> 5);
+    return mangled;
+}
+
+
 
 // Function to write the csv file using ofstream
 template<typename T>
-void write_csv(std::string filename, std::vector<T> values, std::string header) {
+void write_csv(std::string filename, std::vector<T> values, std::string header) 
+{
     std::ofstream outfile(filename);
 
     // Check if a header is supplied and if the first character is = to write the header properly
-    if (header.size() && header != "") {
+    if (header.size() && header != "") 
+    {
         if (header[0] == '=') 
             header.erase(header.begin());
         outfile << header << "\n";
@@ -27,21 +69,24 @@ void write_csv(std::string filename, std::vector<T> values, std::string header) 
     
     // For each generated seed, put it in an output file with a newline character, 
     // unless it's the last value, in which case just the value itself
-    for (int i = 0; i < values.size(); ++i) {
-    if (i < values.size() - 1) {
-        outfile << values[i] << "\n";
+    for (int i = 0; i < values.size(); ++i) 
+    {
+        if (i < values.size() - 1) 
+        {
+            outfile << values[i] << "\n";
         }
-    else
-        outfile << values[i];
+        else
+            outfile << values[i];
     }
 
     outfile.close();
 }
 
 // Help function for displaying options
-void doHelp(char* appname) {
+void doHelp(char* appname) 
+{
     std::fprintf(stdout,
-    "Uniformly Distributed Seed Generator\n"
+    "Uniformly Distributed Noise-Based Seed Generator\n"
     "\n"
     "This program generates a .csv of uniformly distributed 32-bit integers for use as RNG seeds.\n"
     "Usage: %s [OPTION]...\n"
@@ -64,10 +109,10 @@ void doHelp(char* appname) {
     appname,
     appname
     );
-
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) 
+{
     
     // struct of long names for options
 
@@ -88,11 +133,12 @@ int main(int argc, char* argv[]) {
     bool debug = false;
     std::string headername = "Seed";
     int optionindex = 0;
-    int options; 
-    bool bit64 = false;
+    int options;
+    bool bit64 = false; 
 
     // Get commandline options and set variables to their associated entries
-    while (options != -1) {
+    while (options != -1) 
+    {
 
         options = getopt_long(argc, argv, "n:d:hlvt::", longopts, &optionindex);
 
@@ -129,42 +175,39 @@ int main(int argc, char* argv[]) {
             }
         }
 
-    // Use /dev/random to generate a seed for the Mersenne Twister
+    // Use /dev/random to generate a seed for the noise function
     std::random_device mersseed;
 
     // Test output if we're using the verbose command
-    if(debug) {
+    if(debug) 
+    {
         cout << "/dev/random seed for Mersenne Twister: " << mersseed() << "\n"
              << "Number of seeds =  " << n_samples << "\n"
              << "File written to: " << filename << endl;
     }
-
-    // Initialise MT generator and the distribution to pull from
-    std::mt19937 generator(mersseed());
-
     // Initialise vector for generated numbers
     std::vector<uint64_t> seeds;
 
+    // Generate seeds and fill vector
     if (bit64)
     {
-        std::uniform_int_distribution<uint64_t> distribution(1, UINT64_MAX - 1);
+
         for (int i = 0; i < n_samples; ++i)
         {
-            uint64_t gen = distribution(generator);
+            // Multiply input position by large prime for some more unpredictability
+            uint64_t gen = randNoise(i * 0x982C28C631FE28B3, mersseed());
             seeds.emplace_back(gen);
         }
     }
     else
     {
-        std::uniform_int_distribution<uint32_t> distribution(1, UINT32_MAX - 1);
+
         for (int i = 0; i < n_samples; ++i)
         {
-            uint32_t gen = distribution(generator);
+            uint32_t gen = randNoise32(i * 0x982C28C631FE28B3, mersseed());
             seeds.emplace_back(gen);
         }
     }
-    // Generate seeds and fill vector
-
     write_csv(filename, seeds, headername);
 
     return 0;
