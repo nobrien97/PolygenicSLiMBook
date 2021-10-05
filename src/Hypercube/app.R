@@ -70,7 +70,10 @@ modFacServ <- function(input, output, session, data) {
               numericInput(inputId = ns("fac_max"), label = "Maximum",
                            value = 1)
       })
+  
+  
 }
+
 
 
 
@@ -115,6 +118,7 @@ ui <- fluidPage(
                    h3("Number of hypercube parameters"),
                    min = 2, max = 20, step = 1, value = 2),
       
+      
       # Number of runs and LHC type
       fluidRow(
         column(width = 6, inline = T,
@@ -136,6 +140,25 @@ ui <- fluidPage(
         
       )),
     
+      fluidRow(
+        column(width = 12, inline = T,
+               h3("Maximum correlation between parameters"),
+               helpText("Set the maximum correlation between variables and the number
+                   of times you would like to try to find a hypercube with a 
+                   maximum correlation less than that value.")),
+        column(width = 6, inline = T,
+          numericInput("corr_thres",
+                       "Maximum correlation",
+                       value = 0.05)),
+        column(width = 6, inline = T,
+          numericInput("max_iter",
+                       "Maximum iterations",
+                       value = 10),
+          br()),
+        column(width = 12, inline = T,
+               h3("Parameters"),
+               br())
+      ),
     tags$div(id = "facInsert"),
     
     br(),
@@ -221,9 +244,6 @@ server <- function(input, output, session) {
     buttonLocker(buttons)
     
     
-    # Sample a random 32 bit int as a seed for the LHC generation
-    lhc_seed <- sample(0:.Machine$integer.max, 1)
-    
     # Store factor information to copy into properly formatted list
     facinput <- list(
       name = 1:as.integer(input$nfactors),
@@ -257,37 +277,51 @@ server <- function(input, output, session) {
         facoutput[[i]] = c(facinput$min[i], facinput$max[i])
     }
     
-    
     names(facoutput) <- facinput$name
     
+    # Run the lhc until we get a good result with acceptable correlations
+    iter <- 0
     
-    # Run the lhs
-    lhc <- lhs.design(
-      nruns = as.integer(trunc(input$nruns)),
-      nfactors = as.integer(input$nfactors),
-      type = input$lhctype,
-      factor.names = facoutput,
-      seed = lhc_seed
-    ) 
+    repeat {
+      iter <- iter + 1
+      # Sample a random 32 bit int as a seed for the LHC generation
+      if (iter >= ceiling(input$max_iter)) {
+        shinyalert("Error",
+          paste("Unable to find a hypercube with maximum correlation",
+            input$corr_thres, "within", input$max_iter, "attempts."),
+          type = "error")
+        break
+      }
+      
+      lhc_seed <- sample(0:.Machine$integer.max, 1)
+      lhc <- lhs.design(
+        nruns = as.integer(trunc(input$nruns)),
+        nfactors = as.integer(input$nfactors),
+        type = input$lhctype,
+        factor.names = facoutput,
+        seed = lhc_seed
+      )
+      maxCor <- max(abs(cor(lhc)[upper.tri(cor(lhc))]))
+      if (maxCor < input$corr_thres)
+        break
+    }
+    if (iter < ceiling(input$max_iter)) {
+      # If we've run this before, we need to remove the existing plot for the cor table to draw properly
+      removeUI(selector = "#hcPlotCor", immediate = T)
+      insertUI(selector = "#plotInsert",
+               ui = tags$div(id = "hcPlotCor",
+                             h3("Hypercube distribution and correlations"),
+                             plotOutput("hypercubeplot", width = 250*input$nfactors, height = 250*input$nfactors),
+                             h4(paste0("Seed: ", as.character(lhc_seed))),
+                             br(),
+                             h3("Correlation matrix"),
+                             fluidRow(
+                               column(width = 6, 
+                                      tableOutput("hcCorTable")
+                               )
+                             )
+               ))
     
-    # If we've run this before, we need to remove the existing plot for the cor table to draw properly
-    removeUI(selector = "#hcPlotCor", immediate = T)
-
-    
-
-    insertUI(selector = "#plotInsert",
-             ui = tags$div(id = "hcPlotCor",
-                           h3("Hypercube distribution and correlations"),
-                           plotOutput("hypercubeplot", width = 250*input$nfactors, height = 250*input$nfactors),
-                           h4(paste0("Seed: ", as.character(lhc_seed))),
-                           br(),
-                           h3("Correlation matrix"),
-                           fluidRow(
-                             column(width = 6, 
-                              tableOutput("hcCorTable")
-                           )
-             )
-    ))
     
     
     # Render output figures
@@ -310,12 +344,12 @@ server <- function(input, output, session) {
     })
     
 
-    buttonLocker(buttons)
 
     # return lhc for saving
     lhcFile <<- lhc
     
-    
+    }
+    buttonLocker(buttons)
   })
   
   # Save output
