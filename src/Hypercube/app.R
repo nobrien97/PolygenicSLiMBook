@@ -204,6 +204,12 @@ ui <- fluidPage(
 # Define server
 
 server <- function(input, output, session) {
+  # Cleanup global objects after we're done
+  onStop(function() {
+    if (exists("lhcFile"))
+      lhcFile <<- NULL
+  })
+  
   
   # Disable buttons while factors aren't generated: stops issues with trying to 
   # generate LHC while factors are still generating
@@ -272,6 +278,7 @@ server <- function(input, output, session) {
       shinyalert("Error", "Safeguard boolean genButton not checked. Tell a developer.")
       return()
     }
+    
     
     buttonLocker(buttons)
     
@@ -406,7 +413,6 @@ server <- function(input, output, session) {
      if (nchar(savePath) == 0)
          savePath <- findPlaceholderName()
     
-    # TODO: update placeholder text of save directory after saving
     tryCatch(
       expr = {
         write.csv(lhcFile, savePath)
@@ -424,6 +430,9 @@ server <- function(input, output, session) {
                                     savePath), type = "warning")
         write.csv(lhcFile, savePath)
       })
+    # Update placeholder value
+    updateTextInput(session, "saveText",
+                    placeholder = findPlaceholderName())
   
     buttonLocker(buttons)
     
