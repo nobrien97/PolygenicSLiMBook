@@ -24,6 +24,26 @@ buttonLocker <- function(buttons) {
 } 
 buttons <- c("saveButton", "genButton")
 
+# Helper function to set an appropriate placeholder name so we don't 
+# overwrite existing files
+findPlaceholderName <- function() {
+  placeholderName <- ""
+  prevCubes <- list.files("~", pattern = "hypercube[0-9]*.csv")
+  if (length(prevCubes) < 1)
+    placeholderName <- "~/hypercube.csv"
+  prevCubes <- regmatches(prevCubes, regexpr("[0-9]+", prevCubes))
+  if (length(prevCubes) < 1 & nchar(placeholderName) < 1) {
+    placeholderName <- "~/hypercube1.csv"
+  } else if (nchar(placeholderName) < 1) {
+    largestCube <- max(as.numeric(prevCubes))
+    placeholderName <- paste0("~/hypercube", largestCube + 1, ".csv")
+  }
+  return(placeholderName)
+}
+defaultSaveName <- findPlaceholderName()
+
+
+
 
 # Modules for factor generation: https://stackoverflow.com/questions/62811707/shiny-dynamic-ui-resetting-to-original-values
 
@@ -75,17 +95,15 @@ modFacServ <- function(input, output, session, data) {
 }
 
 
-
-
 # Define UI
 
 ui <- fluidPage(
   useShinyjs(),
   useShinyalert(),
   titlePanel(h1("Latin hypercube generator and visualiser")),
-  renderImage({
-    image
-  }),
+  img(src = 'Hypercubebanner.png',
+      height = 512, width = 512),
+  br(),
   sidebarLayout(
     sidebarPanel(
 #      h2("Debug"),
@@ -107,7 +125,7 @@ ui <- fluidPage(
                column(width = 10,
                       textInput(inputId = "saveText",
                                 label = "Filepath",
-                                placeholder = "~/hypercube.csv")
+                                placeholder = defaultSaveName)
                ),
                column(width = 2, style = "margin-top: 25px;",
                       actionButton(inputId = "saveButton",
@@ -164,7 +182,9 @@ ui <- fluidPage(
     br(),
     h6("© OB Lab, 2021"),
     h6(tags$a(href="https://github.com/nobrien97", target="_blank", 
-              "Author: Nick O'Brien"))
+              "Author: Nick O'Brien")),
+    h6(tags$a(href="https://en.wikipedia.org/wiki/File:Hypercube.svg", target = "_blank,",
+              "Banner image source: Wikimedia user Mouagip"))
 
     ),
     mainPanel(
@@ -184,10 +204,20 @@ ui <- fluidPage(
 # Define server
 
 server <- function(input, output, session) {
+  
   # Disable buttons while factors aren't generated: stops issues with trying to 
   # generate LHC while factors are still generating
-  
   buttonLocker(buttons)
+  defaultSaveName <- findPlaceholderName()
+  
+  # Every 10 seconds update the placeholder name
+  # TODO: get this to work - update placeholder text
+  observe({
+    invalidateLater(10000, session)
+    defaultSaveName <- findPlaceholderName()
+    updateTextInput(session, "saveText",
+                    placeholder = defaultSaveName)
+  })
   # Generate factors: on initial load
   
   for (i in seq_len(num_factors)) {
@@ -238,8 +268,10 @@ server <- function(input, output, session) {
     if (input$genButton == TRUE)
       hasBeenPressed[1] <<- TRUE
     
-    if (!hasBeenPressed[1])
+    if (!hasBeenPressed[1]) {
+      shinyalert("Error", "Safeguard boolean genButton not checked. Tell a developer.")
       return()
+    }
     
     buttonLocker(buttons)
     
@@ -358,17 +390,41 @@ server <- function(input, output, session) {
     if (input$saveButton == TRUE)
       hasBeenPressed[2] <<- TRUE
     
-    if (!hasBeenPressed[2])
+    if (!hasBeenPressed[2]) {
+      shinyalert("Error", "Safeguard boolean saveButton not checked. Tell a developer.")
       return()
+    }
     
     buttonLocker(buttons)
     savePath <- input$saveText
     if (!exists("lhcFile")) {
       shinyalert("Error", "To save a hypercube, you must first generate a hypercube. Such is the way of our linear understanding of time.", type = "error")
-    } else if (!exists("savePath")) {
-      shinyalert("Error", "Enter a filepath to save your hypercube to.")
-    } else
+      buttonLocker(buttons)
+      return()
+    } 
+    
+     if (nchar(savePath) == 0)
+         savePath <- findPlaceholderName()
+    
+    # TODO: update placeholder text of save directory after saving
+    tryCatch(
+      expr = {
         write.csv(lhcFile, savePath)
+        shinyalert("Success", paste("Hypercube .csv saved to", savePath), type = "success")
+      },
+      error=function(e) {
+        savePath <- findPlaceholderName()
+        shinyalert("Warning", paste("Improper save path - writing to default file",
+                                    savePath), type = "warning")
+        write.csv(lhcFile, savePath)
+      },
+      warning=function(w) {
+        savePath <- findPlaceholderName()
+        shinyalert("Warning", paste("Improper save path - writing to default file",
+                                    savePath), type = "warning")
+        write.csv(lhcFile, savePath)
+      })
+  
     buttonLocker(buttons)
     
   })
