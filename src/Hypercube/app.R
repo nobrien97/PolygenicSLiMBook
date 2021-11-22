@@ -3,9 +3,11 @@
 library(shiny)
 library(shinyjs)
 library(shinyalert)
+library(htmltools)
 library(DoE.wrapper)
 library(ggplot2)
 library(GGally)
+library(DT)
 
 
 # Initialise variables 
@@ -40,9 +42,8 @@ findPlaceholderName <- function() {
   }
   return(placeholderName)
 }
+
 defaultSaveName <- findPlaceholderName()
-
-
 
 
 # Modules for factor generation: https://stackoverflow.com/questions/62811707/shiny-dynamic-ui-resetting-to-original-values
@@ -71,7 +72,7 @@ modFacServ <- function(input, output, session, data) {
   ns <- session$ns
   
   output$facName <- renderUI({
-              textInput(inputId = ns("fac_name"), label = "Name", 
+              textInput(inputId = ns("fac_name"), label = "Name",
                         placeholder = paste("Parameter", substr(ns(NULL), 8, nchar(ns(NULL))))) # forgive me
   })                                                    # id is module_x, we need x, so substring it
     
@@ -101,103 +102,98 @@ ui <- fluidPage(
   useShinyjs(),
   useShinyalert(),
   titlePanel(h1("Latin hypercube generator and visualiser")),
-  img(src = 'Hypercubebanner.png',
-      height = 512, width = 512),
+  #  img(src = 'Hypercubebanner.png',
+  #      height = 512, width = 512),
   br(),
-  sidebarLayout(
-    sidebarPanel(
-#      h2("Debug"),
-#      textOutput("debugtext"),
-      
-      h2("Options"),
-      # Generate hypercube button
-      fluidRow(
-        column(width = 6, style = "margin-top: 25px;",
-               actionButton(inputId = "genButton",
-                            label = "Generate hypercube!",
-                            icon = icon("play")))
-
-      ),
-      
-      br(),
-      # Save button and filepath entry
-      fluidRow(style = "display:inline-block;",
-               column(width = 10,
-                      textInput(inputId = "saveText",
-                                label = "Filepath",
-                                placeholder = defaultSaveName)
-               ),
-               column(width = 2, style = "margin-top: 25px;",
-                      actionButton(inputId = "saveButton",
-                                   label = "Save file!",
-                                   icon = icon("save")))
-      ),
-      sliderInput("nfactors",
-                   h3("Number of hypercube parameters"),
-                   min = 2, max = 20, step = 1, value = 2),
-      
-      
-      # Number of runs and LHC type
-      fluidRow(
-        column(width = 6, inline = T,
-        numericInput("nruns",
-                    "Number of samples",
-                    value = 64, step = 1)),
-        column(width = 6, inline = T,
-        selectInput("lhctype", 
-                    "Sampling method",
-                    choices = list(
-                                "Genetic Algorithm" = "genetic",
-                                "Euclidean Distance" = "improved",
-                                "Maximise Minimum Distance" = "maximin",
-                                "Columnwise Pairwise" = "optimum",
-                                "Random" = "random"
-                    ), selected = "maximin"),
-        helpText(tags$a(href="https://cran.r-project.org/web/packages/lhs/lhs.pdf", target="_blank", 
-                        "Information on each option can be found in the docs for LHS")),
-        
-      )),
-    
-      fluidRow(
-        column(width = 12, inline = T,
-               h3("Maximum correlation between parameters"),
-               helpText("Set the maximum correlation between variables and the number
+  mainPanel(
+    tabsetPanel(id = "uiTabset",
+      tabPanel(title = "Options",
+               value = "tabOptions",
+                 # Generate hypercube button
+               
+               # h2("Debug"),
+               # actionButton("debugTabSwitch", "switch"),
+                br(),
+                 # Number of runs and LHC type
+                 fluidRow(
+                   column(width = 7, inline = T,
+                          sliderInput("nfactors",
+                                      h3("Number of hypercube parameters"),
+                                      min = 2, max = 12, step = 1, value = 2, width = '100%')),
+                   column(width = 5, inline = F,
+                          numericInput("nruns",
+                                       "Number of samples",
+                                       value = 64, step = 1)),
+                   column(width = 5, inline = F,
+                          selectInput("lhctype", 
+                                      "Sampling method",
+                                      choices = list(
+                                        "Genetic Algorithm" = "genetic",
+                                        "Euclidean Distance" = "improved",
+                                        "Maximise Minimum Distance" = "maximin",
+                                        "Columnwise Pairwise" = "optimum",
+                                        "Random" = "random"
+                                      ), selected = "maximin"),
+                          helpText(tags$a(href="https://cran.r-project.org/web/packages/lhs/lhs.pdf", target="_blank", 
+                                          "Information on each option can be found in the docs for LHS")),
+                   ),
+                   column(width = 12, inline = T,
+                          h3("Maximum correlation between parameters"),
+                          helpText("Set the maximum correlation between variables and the number
                    of times you would like to try to find a hypercube with a 
                    maximum correlation less than that value.")),
-        column(width = 6, inline = T,
-          numericInput("corr_thres",
-                       "Maximum correlation",
-                       value = 0.05)),
-        column(width = 6, inline = T,
-          numericInput("max_iter",
-                       "Maximum iterations",
-                       value = 10),
-          br()),
-        column(width = 12, inline = T,
-               h3("Parameters"),
-               br())
+                   column(width = 6, inline = T,
+                          numericInput("corr_thres",
+                                       "Maximum correlation",
+                                       value = 0.05)),
+                   column(width = 6, inline = T,
+                          numericInput("max_iter",
+                                       "Maximum iterations",
+                                       value = 10))
+                   
+                 ),
+#               ),
       ),
-    tags$div(id = "facInsert"),
-    
-    br(),
-    h6("© OB Lab, 2021"),
-    h6(tags$a(href="https://github.com/nobrien97", target="_blank", 
-              "Author: Nick O'Brien")),
-    h6(tags$a(href="https://en.wikipedia.org/wiki/File:Hypercube.svg", target = "_blank,",
-              "Banner image source: Wikimedia user Mouagip"))
-
-    ),
-    mainPanel(
-      h2("Diagnostics"),
-      column(width = 12,
-             tags$div(id = "plotInsert")),
-      div(),
-
       
+      tabPanel(title = "Parameters",
+               value = "tabParameters",
+               fluidRow(
+                 column(width = 12, inline = T,
+                        br())
+               ),
+               fluidRow(
+                 column(width = 4, style = "margin-top: 25px;",
+                        actionButton(inputId = "genButton",
+                                     label = "Generate hypercube!",
+                                     icon = icon("play"))),
+                 # Save button and filepath entry
+                 style = "display:inline-block;",
+                 column(width = 5,
+                        textInput(inputId = "saveText",
+                                  label = "Filepath",
+                                  placeholder = defaultSaveName)
+                 ),
+                 column(width = 2, style = "margin-top: 25px;",
+                        actionButton(inputId = "saveButton",
+                                     label = "Save file!",
+                                     icon = icon("save")))
+                 
+               ),
+               tags$div(id = "facInsert"),
+      ),
+      
+    
+    tabPanel(title = "Diagnostics",
+             value = "tabDiagnostics",
+             fluidRow(
+              # Fix the height and width of the image to the row dimensions
+              tags$style(HTML("div#plotInsert img {width: 100%; height: 100%;}")),
+                 column(12, tags$div(id = "plotInsert")
+                                )))
+      )
     )
   )
-  
-)
+
 
 
 
@@ -210,6 +206,10 @@ server <- function(input, output, session) {
       lhcFile <<- NULL
   })
   
+  # Debug button
+  # observeEvent(input$debugTabSwitch, {
+  #   updateTabsetPanel(inputId = "uiTabset", selected = "tabParameters")
+  # })
   
   # Disable buttons while factors aren't generated: stops issues with trying to 
   # generate LHC while factors are still generating
@@ -224,30 +224,27 @@ server <- function(input, output, session) {
     updateTextInput(session, "saveText",
                     placeholder = defaultSaveName)
   })
-  # Generate factors: on initial load
   
+  # Generate factors: on initial load
   for (i in seq_len(num_factors)) {
     insertUI(selector = "#facInsert",
              ui = modFacDraw(paste0("module_", current_id)))
-    
     callModule(modFacServ, paste0("module_", current_id))
-    
     current_id <<- current_id + 1
   }
+  
   buttonLocker(buttons)
   
   
-  # Update factors, adding or removing UI elements row wise
+  # When the user changes the number of factors, 
+  # update the list, adding or removing UI elements row wise
   observeEvent(input$nfactors, {
     buttonLocker(buttons)
     
     if (input$nfactors > num_factors) {
       for (i in seq_len(input$nfactors - num_factors)) {
-    
-        
         insertUI(selector = "#facInsert",
                  ui = modFacDraw(paste0("module_", current_id)))
-        
         callModule(modFacServ, paste0("module_", current_id))
         
         current_id <<- current_id + 1
@@ -260,7 +257,6 @@ server <- function(input, output, session) {
     }
     num_factors <<- input$nfactors
     
-    
     buttonLocker(buttons)
     
 }, ignoreInit = T)
@@ -270,7 +266,6 @@ server <- function(input, output, session) {
   # Generate hypercube
   
   observeEvent(input$genButton, {
-    
     if (input$genButton == TRUE)
       hasBeenPressed[1] <<- TRUE
     
@@ -279,7 +274,8 @@ server <- function(input, output, session) {
       return()
     }
     
-    
+
+
     buttonLocker(buttons)
     
     
@@ -290,9 +286,7 @@ server <- function(input, output, session) {
       max = 1:as.integer(input$nfactors),
       type = 1:as.integer(input$nfactors)
     )
-    
-    
-    
+  
     # Fill in min, max, type, and fix names so they are in the correct order
     for (i in seq_along(facinput$name)) {
       facinput$name[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_name`")))
@@ -302,10 +296,6 @@ server <- function(input, output, session) {
       facinput$max[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_max`")))
       facinput$type[i] = eval(parse(text = paste0("input$", "`module_", i, "-fac_type`")))
     }
-    
-
-    
-    # This puts min, max and type in the correct order
     
     # Factor information in proper format
     facoutput <- as.list(facinput$name)
@@ -320,18 +310,18 @@ server <- function(input, output, session) {
     
     # Run the lhc until we get a good result with acceptable correlations
     iter <- 0
-    
     repeat {
       iter <- iter + 1
-      # Sample a random 32 bit int as a seed for the LHC generation
       if (iter >= ceiling(input$max_iter)) {
+        updateTabsetPanel(inputId = "uiTabset", selected = "tabOptions")
         shinyalert("Error",
           paste("Unable to find a hypercube with maximum correlation",
             input$corr_thres, "within", input$max_iter, "attempts."),
           type = "error")
-        break
+        buttonLocker(buttons)
+        return()
       }
-      
+      # Sample a random 32 bit seed for the LHC generation
       lhc_seed <- sample(0:.Machine$integer.max, 1)
       lhc <- lhs.design(
         nruns = as.integer(trunc(input$nruns)),
@@ -349,21 +339,25 @@ server <- function(input, output, session) {
       removeUI(selector = "#hcPlotCor", immediate = T)
       insertUI(selector = "#plotInsert",
                ui = tags$div(id = "hcPlotCor",
-                             h3("Hypercube distribution and correlations"),
-                             plotOutput("hypercubeplot", width = 250*input$nfactors, height = 250*input$nfactors),
-                             h4(paste0("Seed: ", as.character(lhc_seed))),
+                             fluidRow(
+                               column(12,
+                                      h3("Hypercube distribution and correlations"),
+                                      br(),
+                                      h4(paste0("Seed: ", as.character(lhc_seed))),
+                                      plotOutput("hypercubeplot", width = '100%', height = '100%')
+                                      #250*input$nfactors, height = 250*input$nfactors),
+                               )),
                              br(),
                              h3("Correlation matrix"),
-                             fluidRow(
+                             fixedRow(
                                column(width = 6, 
-                                      tableOutput("hcCorTable")
+                                      DT::dataTableOutput("hcCorTable"), style = "width:100%; overflow-y: scroll;overflow-x: scroll;"
                                )
                              )
                ))
-    
-    
-    
-    # Render output figures
+      
+      
+      # Render output figures
     
     output$hypercubeplot <- renderPlot(
       width = 250*input$nfactors,
@@ -378,8 +372,8 @@ server <- function(input, output, session) {
           )
       })
     
-    output$hcCorTable <- renderTable({
-      cor(lhc)
+    output$hcCorTable <- renderDataTable({
+      datatable(round(cor(lhc), digits = 3), options = list(paging = FALSE, searching = FALSE))
     })
     
 
@@ -389,6 +383,7 @@ server <- function(input, output, session) {
     
     }
     buttonLocker(buttons)
+    updateTabsetPanel(inputId = "uiTabset", selected = "tabDiagnostics")
   })
   
   # Save output
