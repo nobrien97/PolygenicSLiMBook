@@ -104,7 +104,7 @@ ui <- fluidPage(
   titlePanel(h1("Latin hypercube generator and visualiser")),
   #  img(src = 'Hypercubebanner.png',
   #      height = 512, width = 512),
-  br(),
+  hr(),
   mainPanel(
     tabsetPanel(id = "uiTabset",
       tabPanel(title = "Options",
@@ -113,7 +113,8 @@ ui <- fluidPage(
                
                # h2("Debug"),
                # actionButton("debugTabSwitch", "switch"),
-                br(),
+               h2("Generation options"),
+               hr(),
                  # Number of runs and LHC type
                  fluidRow(
                    column(width = 7, inline = T,
@@ -157,10 +158,8 @@ ui <- fluidPage(
       
       tabPanel(title = "Parameters",
                value = "tabParameters",
-               fluidRow(
-                 column(width = 12, inline = T,
-                        br())
-               ),
+               h2("Hypercube parameters"),
+               hr(),
                fluidRow(
                  column(width = 4, style = "margin-top: 25px;",
                         actionButton(inputId = "genButton",
@@ -341,8 +340,8 @@ server <- function(input, output, session) {
                ui = tags$div(id = "hcPlotCor",
                              fluidRow(
                                column(12,
-                                      h3("Hypercube distribution and correlations"),
-                                      br(),
+                                      h2("Hypercube distribution and correlations"),
+                                      hr(),
                                       h4(paste0("Seed: ", as.character(lhc_seed))),
                                       plotOutput("hypercubeplot", width = '100%', height = '100%')
                                       #250*input$nfactors, height = 250*input$nfactors),
